@@ -22,12 +22,17 @@
     font-weight: 700;
     letter-spacing: 0.06em;
     font-size: 1rem;
+    background: transparent;
+    color: #f8fafc;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 .nav-bar-items {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    text-decoration: none;
 }
 
 .nav-item {

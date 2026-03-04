@@ -12,26 +12,25 @@ function App() {
         <BrowserRouter>
             <div className="App">
                 <NavBar />
-                    <Routes>
-                        <Route path="/homepage" element={<HomePage />} />
-            
-                        <Route path="/" element={<LearnPage />} />
-                        
-                        <Route path="/challenge" element={
-                            <SimplePage
-                                title="Challenge"
-                                description="Challenge"
-                            />
-                            }
+
+                <Routes>
+                    <Route path="/" element={<LearnPage />} />
+                    
+                    <Route path="/challenge" element={
+                        <SimplePage
+                            title="Challenge"
+                            description="Challenge"
                         />
-                        <Route path="/leaderboard" element={
-                            <SimplePage
-                                title="Leaderboard"
-                                description="Leaderboard"
-                            />
-                            }
+                        }
+                    />
+                    <Route path="/leaderboard" element={
+                        <SimplePage
+                            title="Leaderboard"
+                            description="Leaderboard"
                         />
-                    </Routes>
+                        }
+                    />
+                </Routes>
             </div>
         </BrowserRouter>
     );

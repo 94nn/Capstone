@@ -35,7 +35,7 @@ function TopBar() {
 				</NavLink>
 			</nav>
 			<div className="top-bar-right">
-				<button className="primary-button">Sign up</button>
+				<button className="primary-button">Log in</button>
 			</div>
 		</header>
 	);

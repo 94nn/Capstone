@@ -12,31 +12,17 @@ function App() {
                 <TopBar />
                     <Routes>
                     <Route path="/" element={<LearnPage />} />
-                    <Route path="/practice" element={
+                    <Route path="/challenge" element={
                         <SimplePage
-                            title="Practice"
-                            description="Practice"
+                            title="Challenge"
+                            description="Challenge"
                         />
                         }
                     />
-                    <Route path="/build" element={
+                    <Route path="/leaderboard" element={
                         <SimplePage
-                            title="Build"
-                            description="Build"
-                        />
-                        }
-                    />
-                    <Route path="/community" element={
-                        <SimplePage
-                            title="Community"
-                            description="Community"
-                        />
-                        }
-                    />
-                    <Route path="/pricing" element={
-                        <SimplePage
-                            title="Pricing"
-                            description="Plans and pricing"
+                            title="Leaderboard"
+                            description="Leaderboard"
                         />
                         }
                     />

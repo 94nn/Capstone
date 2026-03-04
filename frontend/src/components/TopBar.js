@@ -18,36 +18,20 @@ function TopBar() {
 				Learn
 				</NavLink>
 				<NavLink
-				to="/practice"
+				to="/challenge"
 				className={({ isActive }) =>
 					`nav-item ${isActive ? "nav-item-active" : ""}`
 				}
 				>
-				Practice
+				Challenge
 				</NavLink>
 				<NavLink
-				to="/build"
+				to="/leaderboard"
 				className={({ isActive }) =>
 					`nav-item ${isActive ? "nav-item-active" : ""}`
 				}
 				>
-				Build
-				</NavLink>
-				<NavLink
-				to="/community"
-				className={({ isActive }) =>
-					`nav-item ${isActive ? "nav-item-active" : ""}`
-				}
-				>
-				Community
-				</NavLink>
-				<NavLink
-				to="/pricing"
-				className={({ isActive }) =>
-					`nav-item ${isActive ? "nav-item-active" : ""}`
-				}
-				>
-				Pricing
+				Leaderboard
 				</NavLink>
 			</nav>
 			<div className="top-bar-right">

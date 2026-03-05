@@ -1,6 +1,4 @@
-import React from "react";
-
-function LessonLayout() {
+function ChapterLayout() {
 	return (
 		<section className="lesson-section">
 			<div className="lesson-header">
@@ -54,4 +52,4 @@ function LessonLayout() {
   	);
 }
 
-export default LessonLayout;
+export default ChapterLayout;

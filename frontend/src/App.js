@@ -4,7 +4,8 @@ import "./App.css";
 import TopBar from "./components/TopBar";
 import LearnPage from "./pages/LearnPage";
 import SimplePage from "./pages/SimplePage";
-
+import AdminPage from "./pages/AdminPage";
+ 
 function App() {
     return (
         <BrowserRouter>
@@ -26,6 +27,7 @@ function App() {
                         />
                         }
                     />
+                    < Route path="/admin" element={<AdminPage />}/>
                     </Routes>
             </div>
         </BrowserRouter>

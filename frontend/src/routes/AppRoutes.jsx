@@ -2,28 +2,31 @@ import { Routes, Route } from "react-router-dom";
 
 import ModulePage from "../pages/ModulePage";
 import ChapterPage from "../pages/ChapterPage";
+import SubChapterPage from "../pages/SubChapterPage";
 import SimplePage from "../pages/SimplePage";
 
 function AppRoutes() {
-  return (
-    <Routes>
+	return (
+		<Routes>
 
-      <Route path="/module" element={<ModulePage />} />
+		<Route path="/modules" element={<ModulePage />} />
 
-      <Route path="/module/:moduleId" element={<ChapterPage />} />
+		<Route path="/modules/:slug" element={<ChapterPage />} />
 
-      <Route 
-        path="/challenge"
-        element={<SimplePage title="Challenge" description="Challenge" />}
-      />
+		<Route path="/modules/:slug/:chapter_id" element={<SubChapterPage />} />
 
-      <Route 
-        path="/leaderboard"
-        element={<SimplePage title="Leaderboard" description="Leaderboard" />}
-      />
+		<Route 
+			path="/challenge"
+			element={<SimplePage title="Challenge" description="Challenge" />}
+		/>
 
-    </Routes>
-  );
+		<Route 
+			path="/leaderboard"
+			element={<SimplePage title="Leaderboard" description="Leaderboard" />}
+		/>
+
+		</Routes>
+	);
 }
 
 export default AppRoutes;

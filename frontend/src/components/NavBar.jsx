@@ -42,7 +42,7 @@ const NavBar = () => {
                 </NavLink>
             </div>
             <nav className="nav-bar-items">
-                <NavLink to="/module" end className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
+                <NavLink to="/modules" end className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
                     Learn
                 </NavLink>
                 <NavLink to="/challenge" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>

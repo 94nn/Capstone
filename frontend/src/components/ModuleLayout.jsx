@@ -1,6 +1,16 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 function ModuleLayout() {
+    const [modules, setModules] = useState([]);
+
+    useEffect(() => {
+        axios.get("/api/modules").then((res) => {
+            setModules(Array.isArray(res.data) ? res.data : []);
+        });
+    }, []);
+
     return (
         <section className="module-section">
             <div className="module-header">
@@ -13,38 +23,27 @@ function ModuleLayout() {
             </div>
 
             <div className="module-grid">
-                <Link to="/module/1" className="module-link-wrapper">
+                {modules.length === 0 ? (
                     <div className="module-card">
                         <div className="module-row">
-                            <h1 className="module-row-header">Calculus</h1>
+                            <h1 className="module-row-header">No modules found</h1>
                             <p className="module-row-description">
-                                Learn the fundamentals of differential and integral calculus.
+                                Your table returned an empty list.
                             </p>
                         </div>
                     </div>
-                </Link>
-
-                <Link to="/module/2" className="module-link-wrapper">
-                    <div className="module-card">
-                        <div className="module-row">
-                            <h1 className="module-row-header">Algebra</h1>
-                            <p className="module-row-description">
-                                Learn the fundamentals of algebraic concepts and equations.
-                            </p>
-                        </div>
-                    </div>
-                </Link>
-
-                <Link to="/module/3" className="module-link-wrapper">
-                    <div className="module-card">
-                        <div className="module-row">
-                            <h1 className="module-row-header">Geometry</h1>
-                            <p className="module-row-description">
-                                Learn the fundamentals of geometric principles and shapes.
-                            </p>
-                        </div>
-                    </div>
-                </Link>
+                ) : (
+                    modules.map((m) => (
+                        <Link to={`/modules/${m.slug}`} className="module-link-wrapper">
+                            <div className="module-card">
+                                <div className="module-row">
+                                    <h1 className="module-row-header">{m.title}</h1>
+                                    <p className="module-row-description">{m.description}</p>
+                                </div>
+                            </div>
+                        </Link>
+                    ))
+                )}
             </div>
         </section>
     );

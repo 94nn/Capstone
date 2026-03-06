@@ -1,55 +1,64 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
+
 function ChapterLayout() {
-	return (
-		<section className="lesson-section">
-			<div className="lesson-header">
-				<div className="step-indicator">1</div>
-				<div>
-				<h1 className="lesson-title">Differentiation</h1>
-				</div>
-			</div>
+    const { slug } = useParams();
+    const [chapters, setChapters] = useState([]);
+	const chapter = chapters[0];
 
-			<div className="lesson-card">
-				<p className="lesson-description">
-				Learn how to differentiate functions.
-				</p>
+    useEffect(() => {
+        async function loadData() {
+            try {
+				const res = await axios.get(`/api/modules/${slug}`);
+				setChapters(Array.isArray(res.data) ? res.data : []);
+            } catch (error) {
+                console.log("Failed to load data", error);
+                setChapters([]);
+            }
+        }
 
-				<div className="exercise-list">
-				<div className="exercise-row exercise-row-header">
-					<span>Exercise</span>
-					<span>Title</span>
-					<span>Status</span>
-				</div>
+        if (slug) loadData();
+    }, [slug]);
 
-				<div className="exercise-row">
-					<span className="exercise-label">Exercise 1</span>
-					<span className="exercise-title">Basics</span>
-					<button className="start-button">Start</button>
-				</div>
+    return (
+        <section className="lesson-section">
+            <div className="lesson-header">
+                <div>
+                    <h1 className="lesson-title">{chapter?.module_title}</h1>
+                </div>
+            </div>
 
-				<div className="exercise-row">
-					<span className="exercise-label">Exercise 2</span>
-					<span className="exercise-title">First Derivative</span>
-					<button className="start-button">Start</button>
-				</div>
+            <div className="lesson-card">
+                {chapters.length === 0 ? (
+                    <div className="chapter-row">
+                        <h1 className="chapter-row-header">No chapters found</h1>
+                    </div>
+                ) : (
+                    <div className="exercise-list">
+                        <div className="exercise-row exercise-row-header">
+                            <span>Chapter</span>
+                            <span>Title</span>
+                            <span>Status</span>
+                        </div>
 
-				<div className="exercise-row">
-					<span className="exercise-label">Exercise 3</span>
-					<span className="exercise-title">Second Derivative</span>
-					<button className="start-button">Start</button>
-				</div>
-				</div>
-			</div>
-
-			<div className="next-chapter">
-				<span className="next-chapter-header">Next Chapter</span>
-				<div className="next-chapter-preview">
-				<span className="next-chapter-step-indicator">2</span>
-				<span className="next-chapter-title">Integration</span>
-				</div>
-				<button className="next-chapter-button">Next Chapter</button>
-			</div>
-		</section>
-  	);
+                        {chapters.map((c) => (
+                            <div key={c.id} className="exercise-row">
+                                <span className="exercise-label">
+                                    Chapter {c.chapter_order}
+                                </span>
+                                <span className="exercise-title">{c.title}</span>
+								<Link to={`/modules/${slug}/${c.id}`} className="start-link">
+									<button className="start-button">Go</button>
+								</Link>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+        </section>
+    );
 }
 
 export default ChapterLayout;

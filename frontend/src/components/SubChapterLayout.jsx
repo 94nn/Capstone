@@ -28,7 +28,7 @@ function SubChapterLayout() {
     return (
         <section className="lesson-section">
             <div className="lesson-header">
-                <div className="step-indicator">{subchapter?.chapter_order}</div>
+                <div className="step-indicator">{subchapter?.level}</div>
                 <div>
                     <h1 className="lesson-title">{subchapter?.chapter_title}</h1>
                 </div>

@@ -26,7 +26,7 @@ function ChapterLayout() {
         <section className="lesson-section">
             <div className="lesson-header">
                 <div>
-                    <h1 className="lesson-title">{chapter?.module_title}</h1>
+                    <h1 className="lesson-title">{chapter?.module_name}</h1>
                 </div>
             </div>
 
@@ -38,7 +38,7 @@ function ChapterLayout() {
                 ) : (
                     <div className="exercise-list">
                         <div className="exercise-row exercise-row-header">
-                            <span>Chapter</span>
+                            <span>Level</span>
                             <span>Title</span>
                             <span>Status</span>
                         </div>
@@ -46,7 +46,7 @@ function ChapterLayout() {
                         {chapters.map((c) => (
                             <div key={c.id} className="exercise-row">
                                 <span className="exercise-label">
-                                    Chapter {c.chapter_order}
+                                    Level {c.level}
                                 </span>
                                 <span className="exercise-title">{c.title}</span>
 								<Link to={`/modules/${slug}/${c.id}`} className="start-link">

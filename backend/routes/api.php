@@ -11,10 +11,10 @@ Route::get('/modules/{slug}', function ($slug) {
     return DB::table('chapters')
         ->join('modules', 'chapters.module_id', '=', 'modules.id')
         ->where('modules.slug', $slug)
-        ->orderBy('chapters.chapter_order')
+        ->orderBy('chapters.level')
         ->select(
             'chapters.*',
-            'modules.title as module_title'
+            'modules.name as module_name'
         )
         ->get();
 });
@@ -26,7 +26,7 @@ Route::get('/modules/{slug}/{chapter_id}', function ($slug, $chapter_id) {
         ->orderBy('subchapter_order')
         ->select(
             'subchapters.*',
-            'chapters.chapter_order as chapter_order',
+            'chapters.level as chapter_level',
             'chapters.title as chapter_title'
         )
         ->get();

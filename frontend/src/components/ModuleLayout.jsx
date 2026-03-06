@@ -37,7 +37,7 @@ function ModuleLayout() {
                         <Link to={`/modules/${m.slug}`} className="module-link-wrapper">
                             <div className="module-card">
                                 <div className="module-row">
-                                    <h1 className="module-row-header">{m.title}</h1>
+                                    <h1 className="module-row-header">{m.name}</h1>
                                     <p className="module-row-description">{m.description}</p>
                                 </div>
                             </div>

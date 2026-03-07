@@ -4,7 +4,7 @@ import "./App.css";
 import TopBar from "./components/TopBar";
 import LearnPage from "./pages/LearnPage";
 import SimplePage from "./pages/SimplePage";
-import HomePage from "./components/HomePage";
+import HomePage from "./pages/HomePage";
 import NavBar from "./components/NavBar";
 
 function App() {
@@ -14,6 +14,7 @@ function App() {
                 <NavBar />
 
                 <Routes>
+                    <Route path="/homepage" element={<HomePage />} />
                     <Route path="/" element={<LearnPage />} />
                     
                     <Route path="/challenge" element={

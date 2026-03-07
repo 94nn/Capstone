@@ -26,10 +26,15 @@
 .welcome-message {
     font-family: 'Press Start 2P', cursive;
     color: white;
-    font-size: 18px; /* Small text size */
-    border: 1px solid #e5e7eb; 
-    margin-left: 5px;
-    padding: 0px 10px;
+    font-size: 18px;
+    background-color: #232634; 
+    padding: 3px 18px 6px;
+    border-radius: 8px;
+    border: 2px solid #4b4f67; /* Light border color */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    height: 45px;
+    margin-top: 8px;
 }
 
 /* Username styles */

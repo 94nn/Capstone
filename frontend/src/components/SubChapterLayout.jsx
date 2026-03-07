@@ -28,7 +28,7 @@ function SubChapterLayout() {
     return (
         <section className="lesson-section">
             <div className="lesson-header">
-                <div className="step-indicator">{subchapter?.level}</div>
+                <div className="step-indicator">{subchapter?.chapter_level}</div>
                 <div>
                     <h1 className="lesson-title">{subchapter?.chapter_title}</h1>
                 </div>
@@ -54,7 +54,7 @@ function SubChapterLayout() {
                                 </span>
                                 <span className="exercise-title">{s?.title}</span>
                                 <Link to={`/modules/${slug}/${chapter_id}/${s.id}`} className="start-link">
-									<button className="start-button">Start</button>
+									<button className="secondary-button">Start</button>
 								</Link>
                             </div>
                         ))}

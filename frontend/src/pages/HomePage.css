@@ -1,0 +1,39 @@
+/* Header container styles */
+.header {
+  background-color: transparent;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  height: 150px;
+}
+
+/* Profile section styles */
+.profile-section {
+    display: flex;
+    align-items: center;
+    gap: 2px; /* Space between the icon and app name */
+    margin-left: 50px;
+}
+
+/* Profile icon styles */
+.profile-icon {
+  width: 130px;
+  height: 130px;
+  object-fit: cover;
+}
+
+/* Welcome message styles */
+.welcome-message {
+    font-family: 'Press Start 2P', cursive;
+    color: white;
+    font-size: 18px; /* Small text size */
+    border: 1px solid #e5e7eb; 
+    margin-left: 5px;
+    padding: 0px 10px;
+}
+
+/* Username styles */
+.username {
+  font-weight: bold;
+  color: #3b82f6; /* Tailwind's blue-400 color */
+}

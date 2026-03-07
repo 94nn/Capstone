@@ -50,7 +50,7 @@ function ChapterLayout() {
                                 </span>
                                 <span className="exercise-title">{c.title}</span>
 								<Link to={`/modules/${slug}/${c.id}`} className="start-link">
-									<button className="start-button">Go</button>
+									<button className="secondary-button">Go</button>
 								</Link>
                             </div>
                         ))}

@@ -26,19 +26,17 @@
     align-items: center;
 }
 
-/* Profile icon styles */
 .profile-icon {
   width: 130px;
   height: 130px;
   object-fit: cover;
 }
 
-/* Welcome message styles */
 .welcome-message {
     font-family: 'Press Start 2P', cursive;
     color: white;
     font-size: 15px;
-    background-color: #232634; 
+    background-color: #23263499; 
     padding: 3px 18px 6px;
     border-radius: 8px;
     border: 2px solid #4b4f67; /* Light border color */
@@ -48,8 +46,81 @@
     margin-top: 8px;
 }
 
-/* Username styles */
 .username {
   font-weight: bold;
   color: #3b82f6; /* Tailwind's blue-400 color */
+}
+
+/* Get started container styles*/
+.get-started-container {
+  display: flex;
+  flex-direction: column;
+  background-color: #2326344d;
+  border-radius: 8px;
+  border: 2px solid #4b4f67;
+  max-width: 710px;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: -20px;
+  margin-left: 28px;
+}
+
+.student-icons {
+  display: flex;
+  gap: 40px;
+  margin-top: 5px;
+}
+
+.boy-student-icon {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin-top: 25.5px;
+}
+
+.girl-student-icon {
+  width: 110px;
+  height: 135px;
+  margin-top: 5px;
+}
+
+.welcome-text {
+  text-align: center;
+  margin: 20px;
+}
+
+.welcome-text h1{
+  font-family: 'Press Start 2P', cursive;
+  color: white;
+  font-size: 25px;
+}
+
+.welcome-text p {
+  color: white;
+  font-size: 18px;
+  padding: 0 40px;
+  margin-top: 25px;
+}
+
+.get-started-button button{
+  background-color: #3b82f6; /* Tailwind's blue-400 color */
+  color: white;
+  font-family: 'Press Start 2P', cursive;
+  padding: 10px 20px;
+  border: none;
+  border-bottom: 5px solid #2563eb;
+  border-left: 2px solid #2563eb; 
+  border-right: 1px solid #2563eb; 
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  height: 45px;
+}
+
+.get-started-button button:hover {
+  background-color: #2563eb;
+  border-bottom: 2px solid #3b82f6;
+  border-left: 1px solid #3b82f6; 
+  border-right: 1px solid #3b82f6; 
 }

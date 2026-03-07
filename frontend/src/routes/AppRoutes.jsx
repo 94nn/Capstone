@@ -10,7 +10,7 @@ function AppRoutes() {
 	return (
 		<Routes>
 
-			<Route path="/homepage" element={<HomePage />} />
+			<Route path="/" element={<HomePage />} />
 
 			<Route path="/modules" element={<ModulePage />} />
 

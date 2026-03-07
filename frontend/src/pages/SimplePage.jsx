@@ -1,5 +1,3 @@
-import React from "react";
-
 function SimplePage({ title, description }) {
   return (
     <main className="main-layout">

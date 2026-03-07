@@ -6,6 +6,7 @@ import LearnPage from "./pages/LearnPage";
 import SimplePage from "./pages/SimplePage";
 import HomePage from "./components/HomePage";
 import NavBar from "./components/NavBar";
+import './index.css'
 
 function App() {
     return (

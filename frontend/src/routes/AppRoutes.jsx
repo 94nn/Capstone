@@ -4,6 +4,7 @@ import ModulePage from "../pages/ModulePage";
 import ChapterPage from "../pages/ChapterPage";
 import SubChapterPage from "../pages/SubChapterPage";
 import SimplePage from "../pages/SimplePage";
+import HomePage from "../pages/HomePage";
 
 function AppRoutes() {
 	return (

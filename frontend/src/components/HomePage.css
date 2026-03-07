@@ -7,11 +7,18 @@
   height: 150px;
 }
 
+.main-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2.3fr) minmax(260px, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
 .lesson-section {
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
-}
+  }
 
 /* Profile section styles */
 .profile-section {

@@ -13,7 +13,7 @@ const WlcMessage = () => {
         </div>
 
         <div className="welcome-message">
-          <p>Welcome back, <span className="username">@Hanni101</span>! Let's get it.</p>
+          <p>Welcome back, <span className="username">@Hann1101</span>! Let's get it.</p>
         </div>
       </div>
       <div className="get-started-container">

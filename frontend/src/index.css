@@ -5,7 +5,15 @@ body {
     -moz-osx-font-smoothing: grayscale;
     background-color: #050816;
     color: #f8fafc;
+
 }
+
+/* body {
+    cursor: url("/images/idle-cursor.png") 16 16, auto;
+}
+body:active {
+    cursor: url("/images/click-cursor.png") 16 16, auto;
+} */
 
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',

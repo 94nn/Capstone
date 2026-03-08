@@ -63,6 +63,13 @@
     box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.45);
 }
 
+.header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px;
+}
+
 /* Profile container */
 .profile-container {
   display: flex;
@@ -82,6 +89,27 @@
 
 /* Profile name styles */
 .profile-name {
+  font-size: 23px;
+  font-weight: bold;
+}
+
+/* Coin container */
+.coins-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* Coin picture styles */
+.coins-pic {
+  width: 37px;
+  height: 55px;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+/* Coins display styles */
+.coins {
   font-size: 23px;
   font-weight: bold;
 }

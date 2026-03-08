@@ -1,0 +1,49 @@
+.page-layout {
+  display: flex;
+  width: 100%;
+}
+
+.right-box {
+  margin-left: auto;
+  width: 300px;
+  height: 200px;
+  border: 3px solid red; /* temporary for testing */
+}
+
+.profile-header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.profile-avatar{
+  width:48px;
+  height:48px;
+}
+
+.profile-stats{
+  display:flex;
+  gap:30px;
+  margin-top:15px;
+}
+
+.stat-container{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.stat-pic{
+  width:26px;
+  height:26px;
+  image-rendering: pixelated;
+}
+
+.stat-number{
+  font-weight:bold;
+}
+
+.stat-text{
+  font-size:0.9rem;
+  color:#9ca3af;
+}

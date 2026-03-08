@@ -54,7 +54,7 @@ const NavBar = () => {
             </nav>
             <div className="nav-bar-right">
                 <div className="profile-container" onClick={toggleDropdown}>
-                    <img src="/images/profilepicture.jpeg" alt="Profile" className="profile-pic" />
+                    <img src="/images/pixelated_profile_pic.png" alt="Profile" className="profile-pic" />
                     <span className="profile-name">Hann</span>
                 </div>
             </div>

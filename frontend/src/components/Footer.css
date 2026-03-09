@@ -12,7 +12,7 @@
 }
 
 .footer-header {
-    width: 1150px;
+    width: 1130px;
     margin-right: 25px;
     margin-left: 25px;
     display: flex;
@@ -39,7 +39,7 @@
 
 .footer-content {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    width: 1150px;
+    width: 1130px;
     margin-right: 25px;
     margin-left: 25px;
     display: flex;
@@ -63,6 +63,12 @@
     font-size: 13px;
     color: #f8fafc;
     text-decoration: none;
+    width: fit-content;
+}
+
+.footer-links:hover {
+    color: #f8fafc;
+    text-decoration: underline 2px;
 }
 
 .copyright {

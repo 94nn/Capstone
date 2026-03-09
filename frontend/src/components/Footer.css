@@ -1,0 +1,73 @@
+.footer-container {
+    background-color: #2326344d;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-top: 2px solid #4b4f67;
+    width: 1256px;
+    height: 300px;
+    margin-left: -56px;
+    padding-bottom: 0;
+    margin-bottom: -45px;
+}
+
+.footer-header {
+    width: 1150px;
+    margin-right: 25px;
+    margin-left: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.footer-header p {
+    font-size: 20px;
+    color: #f8fafc;
+}
+
+.mathdex-header {
+    display: flex;
+    align-items: center;
+}
+
+.mathdex-logo {
+    width: 45px;
+    height: 45px;
+    margin-left: 10px;
+}
+
+.footer-content {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    width: 1150px;
+    margin-right: 25px;
+    margin-left: 25px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    padding: 0px;
+}
+
+.footer-category {
+    width: 230px;
+}
+
+.footer-content p {
+    font-size: 12px;
+    color: #fafafa75;
+}
+
+.footer-links {
+    display: flex;
+    padding-bottom: 5px;
+    font-size: 13px;
+    color: #f8fafc;
+    text-decoration: none;
+}
+
+.copyright {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: 13px;
+    color: #fafafa75;
+    margin-top: 35px;
+}

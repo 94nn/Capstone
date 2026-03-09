@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 function ChapterPage() {
     return (
-        <main className="main-layout main-layout-split">
+        <main className="main-layout">
             <div className="chapter-column">
                 <div className="page-actions">
                     <Link to="/modules" className="back-link">

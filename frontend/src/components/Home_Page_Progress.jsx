@@ -2,7 +2,7 @@ import React from "react";
 
 export default function ContinueProgress({
   courseLabel = "COURSE",
-  courseTitle = "HTML",
+  courseTitle = "Algebra",
   imageSrc = "images/course_background.jpg",
   imageAlt = "Course Banner",
   progress = 40,

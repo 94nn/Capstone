@@ -243,10 +243,65 @@
 }
 
 .view-profile-button button:hover {
-    background-color: #1c2332; /* Darker background on hover */
-    color: #fafafa; /* Optionally adjust text color for contrast */
+    background-color: #1c2332;
+    color: #fafafa;
     border-bottom: 2px solid #fafafa;
     border-left: 1px solid #fafafa;
     border-right: 1px solid #fafafa;
     border-top: none;
+}
+
+/* ---------------Leaderboard section---------------- */
+.leaderboard-card {
+  display: flex;
+  flex-direction: column;
+  background-color: #2326344d;
+  border-radius: 8px;
+  border: 2px solid #4b4f67;
+  max-width: 710px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.leaderboard-header {
+    font-family: 'Press Start 2P', cursive;
+    color: white;
+    font-size: 8px;
+    padding-top: 15px;
+    padding-left: 30px;
+}
+
+.leaderboard-content {
+  padding-left: 30px;
+  padding-top: 10px;
+}
+
+.view-more-button {
+    display: flex;
+    justify-content: right;
+}
+
+.view-more-button button {
+    background-color: transparent;
+    color: #3b82f6;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-bottom: 5px;
+    height: 38px;
+    font-size: 11px;
+}
+
+.view-more-button button:hover {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+.explore-container {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 10px;
+  margin-left: 27px;
+  width: 1115px;
+  padding: 5px;
 }

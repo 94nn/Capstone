@@ -41,6 +41,17 @@ const SideProfile = () => {
                     <button>View Profile</button>
                 </div>
 			</div>
+            <div className='leaderboard-card'>
+                <div className='leaderboard-header'>
+                    <h2>#Leaderboard</h2>
+                </div>
+                <div className='leaderboard-content'>
+                    LEADERBOARD
+                </div>
+                <div className='view-more-button'>
+                    <button>View more</button>
+                </div>
+            </div>
 		</aside>
   )
 }

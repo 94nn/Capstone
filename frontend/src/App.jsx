@@ -1,9 +1,10 @@
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
-import AppRoutes from "./routes/AppRoutes";
+import "./index.css";
+
 import NavBar from "./components/NavBar";
-import './index.css'
 import LandingPage from "./pages/LandingPage";
+import SimplePage from "./pages/SimplePage";
 
 function App() {
     return (
@@ -14,15 +15,19 @@ function App() {
 
                     {/* Student pages (with NavBar)  */}
                     <Route 
-                        path="/learn" 
-                        element={
-                            <>
-                                <NavBar />
-                                <LearnPage />
-                                </>
-                        }
+                    path="/login"
+                    element={
+                    <div className="text-white p-10">Login Page</div>
+                    }
                     />
                     
+                    <Route
+                    path="/register"
+                    element={
+                        <div className="text-white p-10">Register Page</div>
+                    }
+                    />
+
                     <Route 
                         path="/challenge" 
                         element={

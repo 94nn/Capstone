@@ -1,5 +1,6 @@
 import ChapterLayout from "../components/ChapterLayout";
 import SidebarProfile from "../components/SidebarProfile";
+import ProgressCard from "../components/ProgressCard";
 import { Link } from "react-router-dom";
 
 function ChapterPage() {
@@ -16,7 +17,10 @@ function ChapterPage() {
                 </div>
                 <ChapterLayout />
             </div>
-            <SidebarProfile />
+            <aside className="sidebar">
+                <SidebarProfile />
+                <ProgressCard />
+            </aside>
         </main>
     );
 }

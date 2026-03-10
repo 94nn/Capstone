@@ -4,10 +4,12 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
+//Modules
 Route::get('/modules', function () {
     return DB::table('modules')->get();
 });
 
+//Chapters
 Route::get('/modules/{slug}', function ($slug) {
     return DB::table('chapters')
         ->join('modules', 'chapters.module_id', '=', 'modules.id')
@@ -20,6 +22,7 @@ Route::get('/modules/{slug}', function ($slug) {
         ->get();
 });
 
+//Subchapters
 Route::get('/modules/{slug}/{chapter_id}', function ($slug, $chapter_id) {
     return DB::table('subchapters')
         ->join('chapters', 'subchapters.chapter_id', '=', 'chapters.id')
@@ -33,6 +36,7 @@ Route::get('/modules/{slug}/{chapter_id}', function ($slug, $chapter_id) {
         ->get();
 });
 
+//Quizzes
 Route::get('/modules/{slug}/{chapter_id}/{subchapter_id}', function ($slug, $chapter_id, $subchapter_id) {
     $quizzes = DB::table('quizzes')
         ->join('subchapters', 'quizzes.subchapter_id', '=', 'subchapters.id')

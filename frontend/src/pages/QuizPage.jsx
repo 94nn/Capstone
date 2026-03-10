@@ -4,14 +4,13 @@ import ProgressCard from "../components/ProgressCard";
 import { Link, useParams } from "react-router-dom";
 
 function QuizPage() {
-    const { slug } = useParams();
-    const {subchapter_id} = useParams();
+    const { slug, chapter_id } = useParams();
 
     return (
         <main className="main-layout">
             <div className="chapter-column">
                 <div className="page-actions">
-                    <Link to={`/modules/${slug}/${subchapter_id}/`} className="back-link">
+                    <Link to={`/modules/${slug}/${chapter_id}`} className="back-link">
                         <button type="button" className="icon-button">
                             <img src="/images/back.svg" alt="Back" id="back-icon" />
                             Back to SubChapters

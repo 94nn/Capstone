@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { redirectDocument, Route, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function QuizLayout() {
     const { slug, chapter_id, subchapter_id } = useParams();
+    const navigate = useNavigate();
+    const [subchapters, setSubchapters] = useState([]);
     const [quizzes, setQuizzes] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [selectedOptionId, setSelectedOptionId] = useState(null);
@@ -14,6 +16,16 @@ function QuizLayout() {
     const [correctCount, setCorrectCount] = useState(0);
 
     useEffect(() => {
+        async function loadSubChapters() {
+            try {
+                const res = await axios.get(`/api/modules/${slug}/${chapter_id}`);
+                setSubchapters(Array.isArray(res.data) ? res.data : []);
+            } catch (error) {
+                console.log("Failed to load subchapter data", error);
+                setSubchapters([]);
+            }
+        }
+
         async function loadQuiz() {
             try {
                 const res = await axios.get(`/api/modules/${slug}/${chapter_id}/${subchapter_id}`);
@@ -24,14 +36,32 @@ function QuizLayout() {
             }
         }
 
+        if (slug && chapter_id) {
+            loadSubChapters();
+        }
+
         if (slug && chapter_id && subchapter_id) {
             loadQuiz();
         }
     }, [slug, chapter_id, subchapter_id]);
 
+    useEffect(() => {
+        setCurrentIndex(0);
+        setSelectedOptionId(null);
+        setCorrectOptionId(null);
+        setIsCorrect(null);
+        setExplanation("");
+        setAnswered(false);
+        setCorrectCount(0);
+    }, [subchapter_id]);
+
     const currentQuiz = quizzes[currentIndex];
     const isLastQuestion = currentIndex === quizzes.length - 1;
-    const passed = correctCount >= quizzes.length - 1;
+    const passMark = Math.max(1, quizzes.length - 1);
+    const passed = correctCount >= passMark;
+    const currentSubchapterIndex = subchapters.findIndex((s) => String(s.id) === String(subchapter_id));
+    const nextSubchapter = subchapters[currentSubchapterIndex + 1];
+    const isLastSubchapter = currentSubchapterIndex !== -1 && currentSubchapterIndex === subchapters.length - 1;
 
     async function handleAnswer(optionId) {
         if (!currentQuiz || answered) return;
@@ -64,6 +94,14 @@ function QuizLayout() {
         setIsCorrect(null);
         setExplanation("");
         setAnswered(false);
+    }
+
+    function handleNextQuiz() {
+        if (nextSubchapter) {
+            navigate(`/modules/${slug}/${chapter_id}/${nextSubchapter.id}`);
+        } else {
+            navigate(`/modules/${slug}/${chapter_id}`);
+        }
     }
 
     function handleRetryQuiz() {
@@ -139,8 +177,8 @@ function QuizLayout() {
                                         <>
                                             <h2>Congratulations! You have completed the quiz</h2>
                                             <p>You answered {correctCount} out of {quizzes.length} questions correctly!</p>
-                                            <button className="next-button">
-                                                Finish Quiz
+                                            <button className="next-button" onClick={handleNextQuiz}>
+                                                {isLastSubchapter ? "Back to Chapters" : "Next Quiz"}
                                             </button>
                                         </>
 
@@ -148,7 +186,7 @@ function QuizLayout() {
                                         <>
                                             <h2>Quiz Completed</h2>
                                             <p>You answered {correctCount} out of {quizzes.length} questions correctly</p>
-                                            <p>You have to answer at least {quizzes.length - 1} questions correctly to pass</p>
+                                            <p>You have to answer at least {passMark} questions correctly to pass</p>
                                             <button className="retry-button" onClick={handleRetryQuiz}>
                                                 Retry Quiz
                                             </button>

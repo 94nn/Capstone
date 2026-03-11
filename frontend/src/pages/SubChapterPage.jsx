@@ -1,5 +1,6 @@
 import SubChapterLayout from "../components/SubChapterLayout";
 import SidebarProfile from "../components/SidebarProfile";
+import ProgressCard from "../components/ProgressCard";
 import { Link, useParams } from "react-router-dom";
 
 function SubChapterPage() {
@@ -18,7 +19,10 @@ function SubChapterPage() {
                 </div>
                 <SubChapterLayout />
             </div>
-            <SidebarProfile />
+            <aside className="sidebar">
+                <SidebarProfile />
+                <ProgressCard />
+            </aside>
         </main>
     );
 }

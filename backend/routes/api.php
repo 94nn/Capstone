@@ -99,3 +99,19 @@ Route::post('/quiz/check', function (Request $request) {
         'explanation' => $quiz->explanation,
     ]);
 });
+
+Route::get('/challenge', function ($module_id) {
+    return DB::table('challenge')
+        ->join('chapters', 'challenge.chapter_id', '=', 'chapters.id')
+        ->join('modules', 'challenge.module_id', '=', 'modules.id')
+        ->where('modules.id', $module_id)
+        ->select(
+            'challenge.id',
+            'challenge.title',
+            'challenge.content',
+            'challenge.badges',
+            'modules.name as module_name',
+            'chapters.title as chapter_title'
+        )
+        ->get();
+});

@@ -37,7 +37,7 @@ const NavBar = () => {
     return (
         <div className='nav-bar'>
             <div className="nav-bar-left">
-                <NavLink to="/homepage" end className="logo-text">
+                <NavLink to="/" end className="logo-text">
                     MathDex
                 </NavLink>
             </div>

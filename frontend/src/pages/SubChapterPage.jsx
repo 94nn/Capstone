@@ -1,12 +1,13 @@
 import SubChapterLayout from "../components/SubChapterLayout";
 import SidebarProfile from "../components/SidebarProfile";
+import ProgressCard from "../components/ProgressCard";
 import { Link, useParams } from "react-router-dom";
 
 function SubChapterPage() {
     const { slug } = useParams();
 
     return (
-        <main className="main-layout main-layout-split">
+        <main className="main-layout">
             <div className="chapter-column">
                 <div className="page-actions">
                     <Link to={`/modules/${slug}`} className="back-link">
@@ -18,7 +19,10 @@ function SubChapterPage() {
                 </div>
                 <SubChapterLayout />
             </div>
-            <SidebarProfile />
+            <aside className="sidebar">
+                <SidebarProfile />
+                <ProgressCard />
+            </aside>
         </main>
     );
 }

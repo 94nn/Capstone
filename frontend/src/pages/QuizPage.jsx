@@ -1,21 +1,23 @@
-import ChapterLayout from "../components/ChapterLayout";
+import QuizLayout from "../components/QuizLayout";
 import SidebarProfile from "../components/SidebarProfile";
 import ProgressCard from "../components/ProgressCard";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
-function ChapterPage() {
+function QuizPage() {
+    const { slug, chapter_id } = useParams();
+
     return (
         <main className="main-layout">
             <div className="chapter-column">
                 <div className="page-actions">
-                    <Link to="/modules" className="back-link">
+                    <Link to={`/modules/${slug}/${chapter_id}`} className="back-link">
                         <button type="button" className="icon-button">
-                            <img src="/images/back.svg" alt="Back" id="back-icon"/>
-                            Back to Modules
+                            <img src="/images/back.svg" alt="Back" id="back-icon" />
+                            Back to SubChapters
                         </button>
                     </Link>
                 </div>
-                <ChapterLayout />
+                <QuizLayout />
             </div>
             <aside className="sidebar">
                 <SidebarProfile />
@@ -25,4 +27,4 @@ function ChapterPage() {
     );
 }
 
-export default ChapterPage;
+export default QuizPage;

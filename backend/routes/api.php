@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\ModuleController;
 
 Route::get('/modules', function () {
     return DB::table('modules')->get();
@@ -36,4 +37,10 @@ Route::get('/subchapters/{subchapter_id}/quiz', function ($subchapter_id) {
     return DB::table('quizzes')
         ->where('subchapter_id', $subchapter_id)
         ->first();
+
 });
+
+Route::post('/modules', [ModuleController::class, 'store']);
+Route::put('/modules/{id}', [ModuleController::class, 'update']);
+Route::delete('/modules/{id}', [ModuleController::class, 'destroy']);
+Route::get('/modules/details', [ModuleController::class, 'indexWithDetails']);  

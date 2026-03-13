@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
+use App\Models\Student;
 
 Route::get('/modules', function () {
     return DB::table('modules')->get();
@@ -36,4 +37,11 @@ Route::get('/subchapters/{subchapter_id}/quiz', function ($subchapter_id) {
     return DB::table('quizzes')
         ->where('subchapter_id', $subchapter_id)
         ->first();
+});
+
+Route::get('/student/{id}', function($id) {
+    $student = DB::table('student')->where('id', $id)->first();
+    return response()->json([
+        'username' => $student->name
+    ]);
 });

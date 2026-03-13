@@ -1,6 +1,29 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
+import axios from 'axios'
+
+const messages = (username) => [
+  { before: "Welcome back, ", after: "! Let's get it." },
+  { before: "Nice to see you again, ", after: "! Ready to dive into some math?" },
+  { before: "Hey ", after: "! Let's crush some math today. 💪" },
+  { before: "You're back, ", after: "! Time to level up your math skills! 🚀" },
+  { before: "Great to have you back, ", after: "! Let's make some math magic happen! ✨" },
+]
 
 const WlcMessage = () => {
+  const [username, setUsername] = useState('')
+
+  useEffect(() => {
+    axios.get('/api/student/1')
+      .then(res => setUsername(res.data.username))
+      .catch(err => console.error('Error fetching user data:', err))
+
+      const count = parseInt(localStorage.getItem('visitCount') || '0')
+      localStorage.setItem('visitCount', (count + 1)%5)
+  }, [])
+
+  const visitCount = parseInt(localStorage.getItem('visitCount') || '0')
+  const welcomeText = username ? messages(username)[visitCount] : { before: '', after: '' }
+
   return (
     <section className="lesson-section">
       <div className="header">
@@ -13,7 +36,11 @@ const WlcMessage = () => {
         </div>
 
         <div className="welcome-message">
-          <p>Welcome back, <span className="username">@Hann1101</span>! Let's get it.</p>
+          <p>
+            {welcomeText.before}
+            <span className="username">@{username}</span>
+            {welcomeText.after}
+        </p>
         </div>
       </div>
       <div className="get-started-container">

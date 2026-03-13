@@ -1,13 +1,22 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
+import axios from 'axios'
 
 const SideProfile = () => {
-  return (
+    const [student_name, setStudentName] = useState('')
+
+    useEffect(() => {
+        axios.get('/api/student/1')
+        .then(res => setStudentName(res.data.username))
+        .catch(err => console.error('Error fetching user data:', err))
+    }, [])
+
+    return (
         <aside className="sidebar">
 			<div className="card">
                 <div className='side-profile-card'>
                     <img src="/images/pixelated_profile_pic.png" alt="Profile" className="profile-pic" />
                     <div>
-                        <p className="side-profile-name">Hann1101</p>
+                        <p className="side-profile-name">{student_name}</p>
 				        <p className="side-profile-level">Level 1</p>
                     </div>
                 </div>

@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-function ProgressCard() {
-    const { chapter_id } = useParams();
+function ProgressSummary() {
+    const { slug } = useParams();
     const studentId = 1;
 
     const [progress, setProgress] = useState({
@@ -13,26 +13,26 @@ function ProgressCard() {
     });
 
     useEffect(() => {
-        async function loadProgress() {
+        async function loadProgressSummary() {
             try {
-                const res = await axios.get(`/api/progress/${studentId}/${chapter_id}`);
+                const res = await axios.get(`/api/progress-summary/${studentId}/${slug}`);
                 setProgress(res.data);
             } catch (error) {
-                console.error("Failed to fetch progress", error);
+                console.error("Failed to fetch progress summary", error);
             }
         }
 
-        if (chapter_id) {
-            loadProgress();
+        if (slug) {
+            loadProgressSummary();
         }
-    }, [chapter_id]);
+    }, [slug]);
 
     return (
         <aside className="sidebar">
             <div className="card progress-card">
-                <h1 className="progress-header">Progress of Level {chapter_id}</h1>
+                <h1 className="progress-header">Progress Summary</h1>
                 <p>
-                    You have completed {progress.percentage}% ({progress.completed} out of {progress.total}) lessons of this subchapter. Keep up the good work!
+                    You have completed {progress.completed} out of {progress.total} chapters
                 </p>
                 <div className="progress-bar">
                     <div
@@ -45,4 +45,4 @@ function ProgressCard() {
     );
 }
 
-export default ProgressCard;
+export default ProgressSummary;

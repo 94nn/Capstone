@@ -96,7 +96,39 @@ function QuizLayout() {
         setAnswered(false);
     }
 
-    function handleNextQuiz() {
+    async function updateProgress() {
+        try {
+            await axios.post("/api/progress/update", {
+                student_id: 1,
+                subchapter_id: subchapter_id,
+                correct_answers: correctCount,
+                total_questions: quizzes.length,
+                passed: passed
+            });
+        } catch (error) {
+            console.error("Failed to update progress", error);
+        }
+    }
+
+    async function handleNextQuiz() {
+        // await updateProgress();
+        console.log("handleNextQuiz called");
+
+        try {
+            const res = await axios.post("/api/progress/update", {
+                student_id: 1,
+                subchapter_id: subchapter_id,
+                correct_answers: correctCount,
+                total_questions: quizzes.length,
+                passed: passed
+            });
+
+            console.log("progress update response:", res.data);
+        } catch (error) {
+            console.error("Failed to update progress", error);
+            console.log("error response:", error.response?.data);
+        }
+
         if (nextSubchapter) {
             navigate(`/modules/${slug}/${chapter_id}/${nextSubchapter.id}`);
         } else {
@@ -104,7 +136,9 @@ function QuizLayout() {
         }
     }
 
-    function handleRetryQuiz() {
+    async function handleRetryQuiz() {
+        await updateProgress();
+
         setCurrentIndex(0);
         setSelectedOptionId(null);
         setCorrectOptionId(null);

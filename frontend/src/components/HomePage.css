@@ -366,6 +366,7 @@
   margin-left: 27px;
   width: 1105px;
   padding: 5px;
+  margin-top: 23px;
 }
 
 .explore-header {
@@ -461,12 +462,12 @@
   color: #ffffff;
   margin: 0 0 16px 0;
   letter-spacing: 0.5px;
-  margin-top: 20px;
+  margin-top: -40px;
 }
 
 .cp-card {
   width: 260px;
-  margin-top: 20px;
+  margin-top: 25px;
   background: #0f1923;
   border: 2px solid #2a3a50;
   border-radius: 10px;

@@ -105,6 +105,7 @@ Route::post('/quiz/check', function (Request $request) {
     ]);
 });
 
+//Home Page Student
 Route::get('/student/{id}', function($id) {
     $student = DB::table('student')->where('id', $id)->first();
     return response()->json([
@@ -116,6 +117,8 @@ Route::get('/student/{id}', function($id) {
     ]);
 });
 
+
+//Home Page Leaderboard
 Route::get('/leaderboard', function() {
     $students = DB::table('student')
         ->orderBy('xp_balance', 'desc')
@@ -123,4 +126,18 @@ Route::get('/leaderboard', function() {
         ->get();
         
     return response()->json($students);
+});
+
+//Home Page Progress
+Route::get('/progress/{student_id}', function($student_id) {
+    $progress = DB::table('progress')
+        ->join('modules', 'progress.module_id', '=', 'modules.id')
+        ->where('progress.student_id', $student_id)
+        ->select(
+            'modules.name as course_label',
+            'progress.progress_percentage'
+        )
+        ->first();
+
+    return response()->json($progress);
 });

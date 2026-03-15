@@ -157,7 +157,7 @@ Route::get('/progress-summary/{student_id}/{slug}', function ($student_id, $slug
         })
         ->count();
 
-    $percentage = $total > 0 ? ($completed / $total) * 100 : 0;
+    $percentage = $total > 0 ? round(($completed / $total) * 100, 2) : 0;
 
     return response()->json([
         'completed' => $completed,
@@ -167,6 +167,10 @@ Route::get('/progress-summary/{student_id}/{slug}', function ($student_id, $slug
 });
 
 Route::get('/progress/{student_id}/{chapter_id}', function ($student_id, $chapter_id) {
+    $chapter = DB::table('chapters')
+        ->where('id', $chapter_id)
+        ->first();
+        
     $total = DB::table('subchapters')
         ->where('chapter_id', $chapter_id)
         ->count();
@@ -178,9 +182,10 @@ Route::get('/progress/{student_id}/{chapter_id}', function ($student_id, $chapte
         ->where('subchapters.chapter_id', $chapter_id)
         ->count();
 
-    $percentage = $total > 0 ? ($completed / $total) * 100 : 0;
+    $percentage = $total > 0 ? round(($completed / $total) * 100, 2) : 0;
 
     return response()->json([
+        'level' => $chapter ? $chapter->level : null,
         'completed' => $completed,
         'total' => $total,
         'percentage' => $percentage

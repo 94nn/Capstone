@@ -32,7 +32,7 @@ function ProgressSummary() {
             <div className="card progress-card">
                 <h1 className="progress-header">Progress Summary</h1>
                 <p>
-                    You have completed {progress.completed} out of {progress.total} chapters
+                    You have completed {progress.completed} out of {progress.total} levels
                 </p>
                 <div className="progress-bar">
                     <div

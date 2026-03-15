@@ -2,7 +2,7 @@ import ModuleLayout from "../components/ModuleLayout";
 
 function ModulePage() {
     return (
-        <main className="module-page-container">
+        <main className="main-layout-full">
             <ModuleLayout />
         </main>
     );

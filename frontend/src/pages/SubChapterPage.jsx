@@ -13,7 +13,7 @@ function SubChapterPage() {
                     <Link to={`/modules/${slug}`} className="back-link">
                         <button type="button" className="icon-button">
                             <img src="/images/back.svg" alt="Back" id="back-icon" />
-                            Back to Chapters
+                            Back to Levels
                         </button>
                     </Link>
                 </div>

@@ -1,13 +1,11 @@
 import QuizLayout from "../components/QuizLayout";
-import SidebarProfile from "../components/SidebarProfile";
-import ProgressCard from "../components/ProgressCard";
 import { Link, useParams } from "react-router-dom";
 
 function QuizPage() {
     const { slug, chapter_id } = useParams();
 
     return (
-        <main className="main-layout">
+        <main className="main-layout-full">
             <div className="chapter-column">
                 <div className="page-actions">
                     <Link to={`/modules/${slug}/${chapter_id}`} className="back-link">
@@ -19,10 +17,6 @@ function QuizPage() {
                 </div>
                 <QuizLayout />
             </div>
-            <aside className="sidebar">
-                <SidebarProfile />
-                <ProgressCard />
-            </aside>
         </main>
     );
 }

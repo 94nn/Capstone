@@ -63,6 +63,21 @@
     box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.45);
 }
 
+.nav-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.bell-icon {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    transition: filter 0.15s ease;
+    margin-top: 5px;
+    margin-right: -5px;
+}
+
 /* Profile container */
 .profile-container {
   display: flex;

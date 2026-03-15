@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use App\Models\Student;
 
 //Modules
 Route::get('/modules', function () {
@@ -102,4 +103,24 @@ Route::post('/quiz/check', function (Request $request) {
         'correct_option_text' => $correctOption?->option_text,
         'explanation' => $quiz->explanation,
     ]);
+});
+
+Route::get('/student/{id}', function($id) {
+    $student = DB::table('student')->where('id', $id)->first();
+    return response()->json([
+        'username' => $student->name,
+        'level' => $student->level,
+        'xp' => $student->xp_balance,
+        'badges' => $student->badges_balance,
+        'image_url' => $student->profile_pic
+    ]);
+});
+
+Route::get('/leaderboard', function() {
+    $students = DB::table('student')
+        ->orderBy('xp_balance', 'desc')
+        ->limit(3)
+        ->get();
+        
+    return response()->json($students);
 });

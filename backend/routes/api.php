@@ -42,6 +42,19 @@ Route::get('/subchapters/{subchapter_id}/quiz', function ($subchapter_id) {
 Route::get('/student/{id}', function($id) {
     $student = DB::table('student')->where('id', $id)->first();
     return response()->json([
-        'username' => $student->name
+        'username' => $student->name,
+        'level' => $student->level,
+        'xp' => $student->xp_balance,
+        'badges' => $student->badges_balance,
+        'image_url' => $student->profile_pic
     ]);
+});
+
+Route::get('/leaderboard', function() {
+    $students = DB::table('student')
+        ->orderBy('xp_balance', 'desc')
+        ->limit(3)
+        ->get();
+        
+    return response()->json($students);
 });

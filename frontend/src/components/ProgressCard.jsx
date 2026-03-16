@@ -16,7 +16,7 @@ function ProgressCard() {
     useEffect(() => {
         async function loadProgress() {
             try {
-                const res = await axios.get(`/api/progress/${studentId}/${chapter_id}`);
+                const res = await axios.get(`/api/subchapter_progress/${studentId}/${chapter_id}`);
                 setProgress(res.data);
             } catch (error) {
                 console.error("Failed to fetch progress", error);
@@ -33,7 +33,10 @@ function ProgressCard() {
             <div className="card progress-card">
                 <h1 className="progress-header">Progress of Level {progress.level}</h1>
                 <p>
-                    You have completed {progress.percentage}% ({progress.completed} out of {progress.total}) lessons of this subchapter. Keep up the good work!
+                    You have completed {progress.percentage}% of this level
+                </p>
+                <p>
+                    {progress.completed} out of {progress.total} exercises completed
                 </p>
                 <div className="progress-bar">
                     <div

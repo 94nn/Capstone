@@ -5,12 +5,15 @@ import ChapterPage from "../pages/ChapterPage";
 import SubChapterPage from "../pages/SubChapterPage";
 import SimplePage from "../pages/SimplePage";
 import HomePage from "../pages/HomePage";
+import RegisterPage from "../pages/RegisterPage";
 
 function AppRoutes() {
 	return (
 		<Routes>
 
 			<Route path="/homepage" element={<HomePage />} />
+
+			<Route path="/register" element={<RegisterPage />} />
 
 			<Route path="/modules" element={<ModulePage />} />
 

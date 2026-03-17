@@ -5,6 +5,7 @@ import "./index.css";
 import NavBar from "./components/NavBar";
 import LandingPage from "./pages/LandingPage";
 import SimplePage from "./pages/SimplePage";
+import RegisterPage from "./pages/RegisterPage";
 
 function App() {
     return (
@@ -21,13 +22,8 @@ function App() {
                     }
                     />
                     
-                    <Route
-                    path="/register"
-                    element={
-                        <div className="text-white p-10">Register Page</div>
-                    }
-                    />
-
+                    <Route path="/register" element={<RegisterPage />} />
+            
                     <Route 
                         path="/challenge" 
                         element={

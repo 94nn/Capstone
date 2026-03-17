@@ -48,6 +48,7 @@
 
 .banner-container{
   position:relative;
+  padding: 60px;
 }
 
 .profile-banner{
@@ -60,14 +61,15 @@
 
 .profile-picture{
   position:absolute;
-  bottom:0;
-  left:30px;
+  bottom: 0;
+  left:90px;
+  
 
   display:flex;
   align-items:center;
   gap:12px;
 
-  transform: translateY(50%);
+  transform: translateY(0%);
 }
 
 .profilePicBanner {
@@ -120,12 +122,13 @@
 
 .sidebar{
   width:300px;
+  margin-top:100px;
 }
 
 .profile-section{
   position:absolute;
-  bottom:-140px;
-  left:30px;
+  bottom:-100px;
+  left:90px;
 
   display:flex;
   flex-direction:column;

@@ -5,8 +5,9 @@ import ChapterPage from "../pages/ChapterPage";
 import SubChapterPage from "../pages/SubChapterPage";
 import SimplePage from "../pages/SimplePage";
 import HomePage from "../pages/HomePage";
-import ProfilePage from "../components/ProfilePage";
+import ProfilePage from "../pages/ProfilePage";
 import SettingsPage from "../pages/SettingsPage";
+import EditProfilePage from "../pages/EditProfilePage";
 
 function AppRoutes() {
 	return (
@@ -38,6 +39,11 @@ function AppRoutes() {
 			<Route 
 				path="/SettingsPage"
 				element={<SettingsPage />}
+			/>
+
+			<Route 
+				path="/EditProfilePage"
+				element={<EditProfilePage />}
 			/>
 
 		</Routes>

@@ -1,5 +1,5 @@
 import React from 'react';
-import './Profile.css';
+import '../components/Profile.css';
 
 function ProfilePage() {
   return (
@@ -27,7 +27,7 @@ function ProfilePage() {
           
           
             <button className="edit-profile-btn">
-              Edit profile
+                Edit profile
             </button>
 
         </div>
@@ -51,8 +51,8 @@ function ProfilePage() {
 
             <div className="stat-container">
               <img src="/images/tempPoints.png" alt="Points" className="stat-pic"/>
-              <span className="stat-number">0</span>
-              <span className="stat-text">Points</span>
+              <span className="stat-number">0/100</span>
+              <span className="stat-text">XP</span>
             </div>
 
             <div className="stat-container">

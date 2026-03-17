@@ -7,55 +7,6 @@
     font-family: "VT323", monospace;
 }
 
-.primary-button {
-    border-radius: 999px;
-    border: 3px solid #0284c7;
-    padding: 0.5rem 1.25rem;
-    background: #22d3ee;
-    color: #020617;
-    font-weight: bold;
-    font-size: 0.9rem;
-    cursor: pointer;
-    box-shadow: 4px 4px 0px #020617;
-    transition: transform 0.1s ease;
-}
-
-.primary-button:hover {
-    filter: brightness(1.05);
-    transform: translate(2px,2px);
-    box-shadow: 2px 2px 0px #020617;
-}
-
-.primary-button.full-width {
-    width: 100%;
-    justify-content: center;
-    display: inline-flex;
-}
-
-.icon-button {
-    border-radius: 999px;
-    border: 1px solid rgba(148, 163, 184, 0.45);
-    padding: 0.5rem 1.15rem;
-    background: rgba(15, 23, 42, 0.55);
-    color: #f8fafc;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    box-shadow: 4px 4px 0 #020617;
-    transition: transform 0.08s ease;
-    font-family: "VT323", monospace;
-    font-size: 1rem;
-}
-
-.icon-button:hover {
-    border: 1px solid rgba(56, 189, 248, 0.45);
-    filter: brightness(1.03);
-    transform: translate(2px,2px);
-    box-shadow: 2px 2px 0 #020617;
-    background: #1e293b;
-}
-
 #back-icon {
     width: 16px;
     height: 16px;
@@ -76,14 +27,11 @@
     gap: 1rem;
 }
 
-.main-layout {
-    display: grid;
+.main-layout, .main-layout-full {
+    display: flex;
+    flex-direction: column;
     gap: 2rem;
     padding: 2rem 3.5rem 3rem;
-}
-
-.main-layout-split {
-    grid-template-columns: minmax(0, 2.3fr) minmax(260px, 1fr);
 }
 
 .module-link-wrapper {
@@ -248,27 +196,6 @@
     color: #6b7280;
 }
 
-.secondary-button {
-    justify-self: end;
-    padding: 0.4rem 1.1rem;
-    border-radius: 999px;
-    border: 1px solid rgba(56, 189, 248, 0.9);
-    background: linear-gradient(to bottom, #22d3ee, #0284c7);
-    color: #0f172a;
-    font-weight: 700;
-    font-size: 0.9rem;
-    font-family: "Press Start 2P", monospace;
-    cursor: pointer;
-    box-shadow: 4px 4px 0 #020617;
-    transition: transform 0.08s ease;
-}
-
-.secondary-button:hover {
-    filter: brightness(1.05);
-    transform: translate(2px,2px);
-    box-shadow: 2px 2px 0 #020617;
-}
-
 .next-chapter {
     display: flex;
     flex-direction: column;
@@ -308,27 +235,6 @@
     background: radial-gradient(circle at 30% 0, #0f172a, #020617);
 }
 
-.next-chapter-button {
-    justify-self: end;
-    padding: 0.4rem 1.1rem;
-    border-radius: 999px;
-    border: 1px solid rgba(220, 230, 77, 0.9);
-    background: linear-gradient(to bottom, #e1f00f, #d8d822);
-    color: #0f172a;
-    font-weight: 700;
-    font-size: 0.9rem;
-    cursor: pointer;
-    box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.7),
-        0 14px 28px rgba(235, 238, 34, 0.4);
-    transition: transform 0.1s ease, box-shadow 0.1s ease, filter 0.1s ease;
-}
-
-.next-chapter-button:hover {
-    filter: brightness(1.05);
-    transform: translateY(-1px);
-    box-shadow: 0 18px 34px rgba(235, 238, 34, 0.5);
-}
-
 .sidebar {
     display: flex;
     flex-direction: column;
@@ -343,7 +249,7 @@
     box-shadow: 0 20px 38px rgba(15, 23, 42, 0.85);
 }
 
-.profile-card {
+.profile-card, .progress-card {
     display: flex;
     flex-direction: column;
     gap: 0.9rem;
@@ -383,6 +289,78 @@
     margin: 0.35rem 0 0;
     color: #9ca3af;
     font-size: 0.86rem;
+}
+
+.question-row {
+    display: block;
+    margin-bottom: 20px;
+}
+
+.question-header {
+    color: #e5e7eb;
+    font-size: larger;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+}
+
+.question-title {
+    font-size: large;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.quiz-explanation {
+    font-size: 1.1rem;
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    color: #f8fafc;
+}
+
+.quiz-result {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-top: 1rem;
+}
+
+.progress-card {
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.progress-header {
+    font-size: 30px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.progress-card p {
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 12px;
+    background-color: #e5e5e5;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #66BB6A);
+    border-radius: 10px;
+    transition: width 0.4s ease;
 }
 
 

@@ -1,10 +1,11 @@
 import ChapterLayout from "../components/ChapterLayout";
 import SidebarProfile from "../components/SidebarProfile";
+import ProgressSummary from "../components/ProgressSummary";
 import { Link } from "react-router-dom";
 
 function ChapterPage() {
     return (
-        <main className="main-layout main-layout-split">
+        <main className="main-layout">
             <div className="chapter-column">
                 <div className="page-actions">
                     <Link to="/modules" className="back-link">
@@ -16,7 +17,10 @@ function ChapterPage() {
                 </div>
                 <ChapterLayout />
             </div>
-            <SidebarProfile />
+            <aside className="sidebar">
+                <SidebarProfile />
+                <ProgressSummary />
+            </aside>
         </main>
     );
 }

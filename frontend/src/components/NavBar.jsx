@@ -1,5 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react'
 import { NavLink } from 'react-router-dom'
+import {Bell} from 'lucide-react'
 import './NavBar.css'
 
 const NavBar = () => {
@@ -37,7 +38,7 @@ const NavBar = () => {
     return (
         <div className='nav-bar'>
             <div className="nav-bar-left">
-                <NavLink to="/homepage" end className="logo-text">
+                <NavLink to="/" end className="logo-text">
                     MathDex
                 </NavLink>
             </div>
@@ -53,8 +54,11 @@ const NavBar = () => {
                 </NavLink>
             </nav>
             <div className="nav-bar-right">
+                <div>
+                    <img src="images/bell.png" alt="Bell Icon" className='bell-icon' />
+                </div>
                 <div className="profile-container" onClick={toggleDropdown}>
-                    <img src="/images/profilepicture.jpeg" alt="Profile" className="profile-pic" />
+                    <img src="/images/pixelated_profile_pic.png" alt="Profile" className="profile-pic" />
                     <span className="profile-name">Hann</span>
                 </div>
             </div>

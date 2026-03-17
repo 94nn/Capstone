@@ -4,8 +4,7 @@ import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 function SubChapterLayout() {
-    const { slug } = useParams();
-    const { chapter_id } = useParams();
+    const { slug, chapter_id } = useParams();
     const [subchapters, setSubchapters] = useState([]);
 
     useEffect(() => {
@@ -61,19 +60,6 @@ function SubChapterLayout() {
                     </div>
                 )}
             </div>
-
-            {/* <div className="next-chapter">
-                <span className="next-chapter-header">Next Chapter</span>
-                <div className="next-chapter-preview">
-                    <span className="next-chapter-step-indicator">
-                        {nextChapter?.chapter_order || ""}
-                    </span>
-                    <span className="next-chapter-title">
-                        {nextChapter?.title || "No next chapter"}
-                    </span>
-                </div>
-                <button className="next-chapter-button">Next Chapter</button>
-            </div> */}
         </section>
     );
 }

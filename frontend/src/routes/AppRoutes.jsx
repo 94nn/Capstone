@@ -6,12 +6,13 @@ import SubChapterPage from "../pages/SubChapterPage";
 import SimplePage from "../pages/SimplePage";
 import HomePage from "../pages/HomePage";
 import RegisterPage from "../pages/RegisterPage";
+import QuizPage from "../pages/QuizPage";
 
 function AppRoutes() {
 	return (
 		<Routes>
 
-			<Route path="/homepage" element={<HomePage />} />
+			<Route path="/" element={<HomePage />} />
 
 			<Route path="/register" element={<RegisterPage />} />
 
@@ -20,6 +21,8 @@ function AppRoutes() {
 			<Route path="/modules/:slug" element={<ChapterPage />} />
 
 			<Route path="/modules/:slug/:chapter_id" element={<SubChapterPage />} />
+
+			<Route path="/modules/:slug/:chapter_id/:subchapter_id" element={<QuizPage />} />
 
 			<Route 
 				path="/challenge"

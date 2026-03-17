@@ -8,6 +8,7 @@ import HomePage from "../pages/HomePage";
 import ProfilePage from "../pages/ProfilePage";
 import SettingsPage from "../pages/SettingsPage";
 import EditProfilePage from "../pages/EditProfilePage";
+import QuizPage from "../pages/QuizPage";
 
 function AppRoutes() {
 	return (
@@ -20,6 +21,8 @@ function AppRoutes() {
 			<Route path="/modules/:slug" element={<ChapterPage />} />
 
 			<Route path="/modules/:slug/:chapter_id" element={<SubChapterPage />} />
+
+			<Route path="/modules/:slug/:chapter_id/:subchapter_id" element={<QuizPage />} />
 
 			<Route 
 				path="/challenge"

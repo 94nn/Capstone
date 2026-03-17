@@ -76,6 +76,21 @@
     margin-top: 3px;
 }
 
+.nav-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.bell-icon {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    transition: filter 0.15s ease;
+    margin-top: 5px;
+    margin-right: -5px;
+}
+
 /* Profile container */
 .profile-container {
   display: flex;

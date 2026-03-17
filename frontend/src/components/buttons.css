@@ -1,0 +1,149 @@
+.primary-button {
+    border-radius: 999px;
+    border: 3px solid #0284c7;
+    padding: 0.5rem 1.25rem;
+    background: #22d3ee;
+    color: #020617;
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    box-shadow: 4px 4px 0px #020617;
+    transition: transform 0.1s ease;
+}
+
+.primary-button:hover {
+    filter: brightness(1.05);
+    transform: translate(2px,2px);
+    box-shadow: 2px 2px 0px #020617;
+}
+
+.primary-button.full-width {
+    width: 100%;
+    justify-content: center;
+    display: inline-flex;
+}
+
+.secondary-button {
+    justify-self: end;
+    padding: 0.4rem 1.1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(56, 189, 248, 0.9);
+    background: linear-gradient(to bottom, #22d3ee, #0284c7);
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 0.9rem;
+    font-family: "Press Start 2P", monospace;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 #020617;
+    transition: transform 0.08s ease;
+}
+
+.secondary-button:hover {
+    filter: brightness(1.05);
+    transform: translate(2px,2px);
+    box-shadow: 2px 2px 0 #020617;
+}
+
+.icon-button {
+    border-radius: 999px;
+    border: 1px solid rgba(148, 163, 184, 0.45);
+    padding: 0.5rem 1.15rem;
+    background: rgba(15, 23, 42, 0.55);
+    color: #f8fafc;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 4px 4px 0 #020617;
+    transition: transform 0.08s ease;
+    font-family: "VT323", monospace;
+    font-size: 1rem;
+}
+
+.icon-button:hover {
+    border: 1px solid rgba(56, 189, 248, 0.45);
+    filter: brightness(1.03);
+    transform: translate(2px,2px);
+    box-shadow: 2px 2px 0 #020617;
+    background: #1e293b;
+}
+
+.quiz-option {
+    display: block;
+    width: 100%;
+    margin: 8px 0;
+    padding: 0.5rem 1.25rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(56, 189, 248, 0.9);
+    background: #1e293b;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    font-family: "Press Start 2P", cursive;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 #020617;
+    transition: transform 0.08s ease;
+    display: "block";
+    margin: "10px 0";
+}
+
+.quiz-option:hover {
+    filter: brightness(1.05);
+    transform: translate(2px,2px);
+    box-shadow: 2px 2px 0 #020617;
+    background: #2a76c3;
+}
+
+.quiz-option.correct {
+    background-color: #84eb87;
+    color: white;
+    border-color: #4CAF50;
+}
+
+.quiz-option.wrong {
+    background-color: #e53935;
+    color: white;
+    border-color: #e5110ee0;
+}
+
+.next-button {
+    justify-self: end;
+    padding: 0.4rem 1.1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(220, 230, 77, 0.9);
+    background: linear-gradient(to bottom, #e1f00f, #d8d822);
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 0.9rem;
+    font-family: "Press Start 2P", monospace;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 #020617;
+    transition: transform 0.08s ease;
+}
+
+.next-button:hover {
+    filter: brightness(1.05);
+    transform: translate(2px,2px);
+    box-shadow: 2px 2px 0 #020617;
+}
+
+.retry-button {
+    justify-self: end;
+    padding: 0.4rem 1.1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(230, 77, 77, 0.9);
+    background: linear-gradient(to bottom, #f00f0f, #d82222);
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 0.9rem;
+    font-family: "Press Start 2P", monospace;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 #020617;
+    transition: transform 0.08s ease;
+}
+
+.retry-button:hover {
+    filter: brightness(1.05);
+    transform: translate(2px,2px);
+    box-shadow: 2px 2px 0 #020617;
+}

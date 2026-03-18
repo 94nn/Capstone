@@ -133,11 +133,15 @@ Route::get('/progress/{student_id}', function($student_id) {
     $progress = DB::table('progress')
         ->join('modules', 'progress.module_id', '=', 'modules.id')
         ->where('progress.student_id', $student_id)
+        ->where('progress.progress', '<', 100)
+        ->where('progress.progress', '>', 0)
+        ->orderBy('progress.id', 'desc')
         ->select(
-            'modules.name as course_label',
-            'progress.progress_percentage'
+            'modules.name as course_title',
+            'modules.slug as course_slug',
+            'progress.progress as progress_percentage'
         )
-        ->first();
+        ->get();
 
     return response()->json($progress);
 });

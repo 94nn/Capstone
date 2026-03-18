@@ -25,7 +25,7 @@ const Footer = () => {
             <div className='footer-content'>
                 <div className='footer-category'>
                     <p>COMPANY</p>
-                    <Link to="/about" className='footer-links'>About Us</Link>
+                    <Link to="/aboutus" className='footer-links'>About Us</Link>
                 </div>
                 <div className='footer-category'>
                     <p>PRACTICE</p>

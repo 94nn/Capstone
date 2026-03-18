@@ -6,6 +6,7 @@ import SubChapterPage from "../pages/SubChapterPage";
 import SimplePage from "../pages/SimplePage";
 import HomePage from "../pages/HomePage";
 import QuizPage from "../pages/QuizPage";
+import AboutUsPage from "../pages/AboutUsPage";
 
 function AppRoutes() {
 	return (
@@ -30,6 +31,8 @@ function AppRoutes() {
 				path="/leaderboard"
 				element={<SimplePage title="Leaderboard" description="Leaderboard" />}
 			/>
+
+			<Route path="/aboutus" element={<AboutUsPage />} />
 
 		</Routes>
 	);

@@ -5,6 +5,12 @@ import SubChapterPage from "../pages/SubChapterPage";
 import SimplePage from "../pages/SimplePage";
 import HomePage from "../pages/HomePage";
 import QuizPage from "../pages/QuizPage";
+import AdminPage from "../pages/AdminPage";
+import AdminChapterPage from "../pages/AdminChapterPage";
+import AdminSubChapterPage from "../pages/AdminSubChapterPage";
+import AdminQuizPage from "../pages/AdminQuizPage";
+import FeedbackPage from "../pages/FeedbackPage";
+import AdminChallengePage from "../pages/AdminChallengePage";
 
 function AppRoutes() {
 	return (
@@ -20,18 +26,28 @@ function AppRoutes() {
 
 			<Route path="/modules/:slug/:chapter_id/:subchapter_id" element={<QuizPage />} />
 
-			<Route 
-				path="/challenge"
-				element={<SimplePage title="Challenge" description="Challenge" />}
-			/>
+
 
 			<Route 
 				path="/leaderboard"
 				element={<SimplePage title="Leaderboard" description="Leaderboard" />}
 			/>
+			<Route path="/admin" element={<AdminPage />} />
 
-		</Routes>
-	);
+			<Route path="/admin/:slug" element={<AdminChapterPage />} />
+
+			<Route path="/admin/:slug/:chapter_id" element={<AdminSubChapterPage />} />
+
+			<Route path="/admin/:slug/:chapter_id/:subchapter_id" element={<AdminQuizPage />} />
+
+			<Route path="/feedback"element={<FeedbackPage  />}/>
+			
+			<Route path="/challenge"element={<AdminChallengePage  />}/>
+
+
+
+			</Routes>
+		);
 }
 
 export default AppRoutes;

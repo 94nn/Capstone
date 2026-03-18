@@ -37,25 +37,22 @@ const NavBar = () => {
     return (
         <div className='nav-bar'>
             <div className="nav-bar-left">
-                <NavLink to="/" end className="logo-text">
-                    MathDex
+                <NavLink to="/admin" end className="logo-text">
+                    Admin
                 </NavLink>
             </div>
             <nav className="nav-bar-items">
-                <NavLink to="/modules" end className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
-                    Learn
+                <NavLink to="/feedback" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
+                    Feedback
                 </NavLink>
                 <NavLink to="/challenge" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
                     Challenge
-                </NavLink>
-                <NavLink to="/leaderboard" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
-                    Leaderboard
                 </NavLink>
             </nav>
             <div className="nav-bar-right">
                 <div className="profile-container" onClick={toggleDropdown}>
                     <img src="/images/profilepicture.jpeg" alt="Profile" className="profile-pic" />
-                    <span className="profile-name">Hann</span>
+                    <span className="profile-name">Kahock</span>
                 </div>
             </div>
             {isDropdownVisible && (

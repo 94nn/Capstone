@@ -229,3 +229,8 @@ Route::get('/progress/{student_id}/{chapter_id}', function ($student_id, $chapte
         'percentage' => $percentage
     ]);
 });
+
+// Admin Team Route
+Route::get('/team', function() {
+    return DB::table('admin')->get();
+});

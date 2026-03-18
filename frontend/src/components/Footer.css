@@ -4,18 +4,19 @@
     flex-direction: column;
     align-items: center;
     border-top: 2px solid #4b4f67;
-    width: 1256px;
+    width: 100%; 
+    box-sizing: border-box;
     height: 350px;
-    margin-left: -56px;
+    margin-left: 0;
     padding-bottom: 0;
     margin-bottom: -45px;
     margin-top: 40px;
 }
 
 .footer-header {
-    width: 1130px;
-    margin-right: 25px;
-    margin-left: 25px;
+    width: 90%;
+    margin-right: auto;
+    margin-left: auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -40,9 +41,9 @@
 
 .footer-content {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    width: 1130px;
-    margin-right: 25px;
-    margin-left: 25px;
+    width: 90%;
+    margin-right: auto;
+    margin-left: auto;
     display: flex;
     justify-content: space-between;
     margin-top: 5px;

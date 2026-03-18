@@ -1,5 +1,5 @@
 import './Admin.css';
-import { Link , useNavigate} from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -78,8 +78,7 @@ const handleSubmit = async () => {
 
 const closeModal = () => {
     setShowModal(false);
-  };
-
+};
 
     return (
     <div className='adminmodule'>
@@ -137,26 +136,27 @@ const closeModal = () => {
                     <h2 className="edit-module">{isEdit ? "Edit Module" : "Add Module"}</h2>
                     <button className="close-button" onClick={closeModal}>X</button>
                 </div>
-                <br />
                 <input
                     type="text"
-                    placeholder="Module Name"
                     className="module-name"
+                    placeholder="Module Name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                 />
-
-                <input
-                    type="text"
+                <br /> 
+                <textarea
+                    className="description"
                     placeholder="Description"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
+                    rows={3}
+                    style={{ width: "85%", resize: "vertical" }} // fills width, allows vertical resize
                 />
-
-                <br /><br />
-
-                <button className="submit-button" onClick={handleSubmit}>Submit</button> &nbsp;
-                <button className="cancel-button" onClick={() => setShowModal(false)}>Cancel</button>
+                <br />
+                <div className="modal-box-bottom">
+                    <button className="submit-button" onClick={handleSubmit}>Submit</button> &nbsp;
+                    <button className="cancel-button" onClick={() => setShowModal(false)}>Cancel</button>
+                </div>
             </div>
         </div>
         )}

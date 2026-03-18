@@ -72,12 +72,15 @@ function AdminSubChapter() {
             console.error(err);
         }
     };
-    
+
+const closeModal = () => {
+    setShowModal(false);
+};
+
   return (
     <section>
       <div className="lesson-header">
-                <div className="step-indicator">{subchapter?.chapter_level}</div>
-                <div>
+                    <div>
                   <h1>SubChapter Management</h1>
                     <h3 className="lesson-title">{subchapter?.chapter_title}</h3>
                 </div>
@@ -133,34 +136,42 @@ function AdminSubChapter() {
                 {/* Modal for user */}
                         {showModal && (
                         <div className="modal-overlay">
-                            <div className="modal-box">
-                                <h2>{isEdit ? "Edit SubChapter" : "Add SubChapter"}</h2> 
-
+                            <div className="subchapter-box">
+                                <div className="modal-box-header">
+                                    <h2 className="edit-module">{isEdit ? "Edit SubChapter" : "Add SubChapter"}</h2> 
+                                    <button className="close-button" onClick={closeModal}>X</button>
+                                </div>
+                                <br />
                                 <input
                                     type="text"
+                                    className="module-name"
                                     placeholder="SubChapter Name"
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
                                 />
 
-                                <input
-                                    type="text"
+                                <textarea
+                                    className="description"
                                     placeholder="Description"
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
+                                    rows={3}
+                                    style={{ width: "80%", resize: "vertical" }} // fills width, allows vertical resize
                                 />
                                  {isEdit && (
                                 <input
                                     type="number"
+                                    className="module-name"
                                     placeholder="Subchapter order"
                                     value={subchapter_order}
                                     onChange={(e) => setsubchapter_order(e.target.value)}
                                 />
                                 )} 
                                 <br /><br />
-
-                                <button onClick={handleSubmit}>Submit</button>
-                                <button onClick={() => setShowModal(false)}>Cancel</button>
+                                <div className="modal-box-bottom">
+                                    <button className="submit-button" onClick={handleSubmit}>Submit</button>
+                                    <button className="cancel-button" onClick={() => setShowModal(false)}>Cancel</button>
+                                </div>
                             </div>
                         </div>
                         )}

@@ -94,20 +94,82 @@
 }
 
 .edit-module{
-    font-size: 1rem;
+    font-size: 1.5rem;
     font-weight: 700;
-    color: black;
+    color: #38bdf8;
     margin: 0;
-    font-family: "Press Start 2P", cursive;
+    font-family: Arial, sans-serif;
 }
 
 .close-button{
+    color: white;
     background: none;
     border: none;
     font-size: 1rem;
     cursor: pointer;
 }
 
+.module-name{
+    padding: 20px;
+    border-radius: 10px;
+    width: 320px;
+    color: white;
+    background: #0f172a;
+    border: 1px solid #38bdf8;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    height: 25px;
+}
+
+.description{
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    background: #0f172a;
+    border: 1px solid #38bdf8;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    font-family: Arial, sans-serif;
+    font-size: 0.9rem;
+}
+
+.modal-box-bottom{
+    display: flex;          /* enable flex layout */
+    justify-content: flex-end; /* push children to the end (right) */
+    gap: 0.5rem;            /* optional: space between buttons */
+}
+
+.submit-button{
+    justify-content: right;
+    padding: 0.4rem 1.1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(56, 189, 248, 0.9);
+    background: linear-gradient(to bottom, #355ef1, #1815d2);
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 0.5rem;
+    font-family: "Press Start 2P", monospace;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 #020617;
+    transition: transform 0.08s ease;
+}
+
+.cancel-button{
+    justify-content: right;
+    padding: 0.4rem 1.1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(56, 189, 248, 0.9);
+    background: linear-gradient(to bottom, #e95757, #fb1414);
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 0.5rem;
+    font-family: "Press Start 2P", monospace;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 #020617;
+    transition: transform 0.08s ease;
+}
 
 /* Modal design */
 .modal-overlay {
@@ -124,14 +186,46 @@
 }
 
 .modal-box {
-    background: white;
     padding: 20px;
     border-radius: 10px;
     width: 300px;
+    background: #0f172a;
+    border: 1px solid #38bdf8;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    box-shadow: 6px 6px 0px #020617;
+    height: 250px;
+}
+
+.chapter-box{
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    background: #0f172a;
+    border: 1px solid #38bdf8;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    box-shadow: 6px 6px 0px #020617;
+    height: 350px;
+}
+
+.subchapter-box{
+   padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    background: #0f172a;
+    border: 1px solid #38bdf8;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    box-shadow: 6px 6px 0px #020617;
+    height: 350px; 
 }
 
 .modal-box input {
-    width: 80%;
+    width: 85%;
     margin-top: 10px;
     padding: 8px;
 }

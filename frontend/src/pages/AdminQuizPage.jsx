@@ -10,8 +10,7 @@ function AdminPage() {
         <AdminQuiz/>
         </div>
     </main>
-    
-
+ 
   );
 }
 

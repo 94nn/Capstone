@@ -90,6 +90,10 @@ const handleSubmit = async () => {
     }
 };
 
+const closeModal = () => {
+    setShowModal(false);
+};
+
   return (
       <section className="lesson-section">
             <div className="lesson-header">
@@ -157,34 +161,44 @@ const handleSubmit = async () => {
                         {/* Modal for user */}
                         {showModal && (
                         <div className="modal-overlay">
-                            <div className="modal-box">
-                                <h2>{isEdit ? "Edit Chapter" : "Add Chapter"}</h2>
-
+                            <div className="chapter-box">
+                                <div className="modal-box-header">
+                                    <h2 className="edit-module">{isEdit ? "Edit Chapter" : "Add Chapter"}</h2>
+                                    <button className="close-button" onClick={closeModal}>X</button>
+                                </div>
+                                <br />
                                 <input
                                     type="text"
+                                    className="module-name"
                                     placeholder="Chapter Name"
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
                                 />
 
-                                <input
-                                    type="text"
+                                <textarea
+                                    className="description"
                                     placeholder="Description"
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
+                                    rows={3}
+                                    style={{ width: "80%", resize: "vertical" }} // fills width, allows vertical resize
                                 />
+
                                 {isEdit && (
                                 <input
                                     type="number"
+                                    className="module-name"
                                     placeholder="Level"
                                     value={level}
                                     onChange={(e) => setLevel(e.target.value)}
                                 />
                                 )}
                                 <br /><br />
-
-                                <button onClick={handleSubmit}>Submit</button>
-                                <button onClick={() => setShowModal(false)}>Cancel</button>
+                                <div className="modal-box-bottom">
+                                    <button className="submit-button" onClick={handleSubmit}>Submit</button>
+                                    <button className="cancel-button" onClick={() => setShowModal(false)}>Cancel</button>
+                                </div>
+                                
                             </div>
                         </div>
                         )}

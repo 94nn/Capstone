@@ -7,6 +7,7 @@ import SimplePage from "../pages/SimplePage";
 import HomePage from "../pages/HomePage";
 import QuizPage from "../pages/QuizPage";
 import ChallengePage from "../pages/ChallengePage";
+import ChallengeQuestionPage from "../pages/ChallengeQuestionPage";
 
 
 function AppRoutes() {
@@ -24,6 +25,8 @@ function AppRoutes() {
 			<Route path="/modules/:slug/:chapter_id/:subchapter_id" element={<QuizPage />} />
 
 			<Route path="/challenge" element={<ChallengePage />} />
+			<Route path="/challenge/module/:module_id" element={<ChallengePage />} />
+			<Route path="/challenge/:slug" element={<ChallengeQuestionPage />} />
 
 			<Route 
 				path="/leaderboard"

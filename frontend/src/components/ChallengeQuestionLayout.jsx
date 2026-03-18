@@ -1,46 +1,63 @@
 import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
-import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
 
-function ChallengeQuestionLayout() {
-    const { slug, chapter_id } = useParams();
-    const [challenge, setChallenge] = useState([]);
+
+function ChallengeQuestionLayout() { // 这里要接api拿到challenge的内容
+    const { slug } = useParams();
+    const [challenge, setChallenges] = useState([]);
+    // const challenge = challenges[0];
+
+    useEffect(() => {
+        async function loadData() {
+            try {
+				const res = await axios.get(`/api/challenge/${slug}`);
+				setChallenges(Array.isArray(res.data) ? res.data : []);
+            } catch (error) {
+                console.log("Failed to load data", error);
+                setChallenges([]);
+            }
+        }
+
+        if (slug) loadData();
+    }, [slug]);
+    
+
 
     return (
-        <section className="lesson-section">
-            <div className="lesson-header">
+        <section className="challenge-section">
+            <div className="challenge-header">
                 <div>
-                    <h1 className="lesson-title">{chapter?.module_name}</h1>
+                    <h1 className="challenge-title">{challenge?.title}</h1>
                 </div>
             </div>
 
-            <div className="lesson-card">
-                {chapters.length === 0 ? (
-                    <div className="chapter-row">
-                        <h1 className="chapter-row-header">No chapters found</h1>
-                    </div>
-                ) : (
-                    <div className="exercise-list">
-                        <div className="exercise-row exercise-row-header">
-                            <span>Level</span>
-                            <span>Title</span>
-                            <span>Status</span>
+            <div className="challenge-card">
+                <div className="question-row">
+                    
+                    {challenge.length === 0 ? (
+                        <div className="challenge-question-header">
+                            <p>No challenge found</p>
                         </div>
+                    ) : (
+                    
+                    challenge.map((c) => (
 
-                        {chapters.map((c) => (
-                            <div key={c.id} className="exercise-row">
-                                <span className="exercise-label">
-                                    Level {c.level}
-                                </span>
-                                <span className="exercise-title">{c.title}</span>
-								<Link to={`/modules/${slug}/${c.id}`} className="start-link">
-									<button className="secondary-button">Go</button>
-								</Link>
-                            </div>
-                        ))}
-                    </div>
-                )}
+                        <div className="challenge-question-header" key={c.id} >
+                            <p>{c.content}</p>
+                        </div>
+                    ))
+                    )}
+                </div>
+            </div>
+            <br />
+            <div className="challenge-card">
+                <div className="answer-row">
+                    <h3 className="challenge-question-header">Question</h3>
+
+                    
+                </div>
+                
             </div>
         </section>
     );

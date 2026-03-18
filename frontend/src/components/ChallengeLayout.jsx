@@ -1,20 +1,36 @@
 import { Link } from "react-router-dom";
-import { useParams, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import axios from "axios";
-import { NavLink } from 'react-router-dom'
+import { NavLink,useParams } from 'react-router-dom'
 import "./ChallengeLayout.css";
 
 function ChallengeLayout() {
     const [challenge, setChallenge] = useState([]);
     const [modules, setModules] = useState([]);
     const [chapters, setChapters] = useState([]);
-    const { moduleId, chapterId } = useParams();
+    const { module_id } = useParams();
+
+    useEffect(() => {
+    async function loadModules() {
+        try {
+            const res = await axios.get("/api/modules"); // 你需要在后端建这个 API
+            setModules(Array.isArray(res.data) ? res.data : []);
+        } catch (err) {
+            console.error("Failed to load modules", err);
+            setModules([]);
+        }
+    }
+    loadModules();
+}, []); // 空依赖数组，只执行一次
 
     useEffect(() => {    
         async function loadChallenge() {
             try {
-                const res = await axios.get(`/api/challenge`);
-                setChallenge(Array.isArray(res.data) ? res.data : []);
+            const url = module_id
+                ? `/api/challenge/module/${module_id}`
+                : `/api/challenge`;
+            const res = await axios.get(url);
+            setChallenge(Array.isArray(res.data) ? res.data : []);
             } catch (error) {
                 console.log("Failed to load challenge data", error);
                 setChallenge([]);
@@ -22,7 +38,7 @@ function ChallengeLayout() {
         }
 
         loadChallenge();
-    }, [moduleId]);
+    }, [module_id]);
 
     return (
         <section className="module-section">
@@ -37,24 +53,26 @@ function ChallengeLayout() {
 
             <div className="challenge-nav-bar">
                 <nav className="challenge-nav-bar-items">
+                    <NavLink
+                        to="/challenge"
+                        end
+                        className={({ isActive }) =>
+                            `challenge-nav-item ${isActive ? "challenge-nav-item-active" : ""}`
+                        }
+                    >
+                        All
+                    </NavLink>
                     {modules.map((module) => (
-                        <NavLink to={`/challenge/module/${module.id}`} key={module.id} className={({ isActive }) => `challenge-nav-item ${isActive ? "challenge-nav-item-active" : ""}`}>
+                        <NavLink
+                            to={`/challenge/module/${module.id}`}
+                            key={module.id}
+                            className={({ isActive }) =>
+                                `challenge-nav-item ${isActive ? "challenge-nav-item-active" : ""}`
+                            }
+                        >                       
                             {module.name}
                         </NavLink>
                     ))}
-
-                    {/* <NavLink to="/" end className={({ isActive }) => `challenge-nav-item ${isActive ? "challenge-nav-item-active" : ""}`}>
-                        All
-                    </NavLink>
-                    <NavLink to="/" end className={({ isActive }) => `challenge-nav-item ${isActive ? "challenge-nav-item-active" : ""}`}>
-                        Algebra
-                    </NavLink>
-                    <NavLink to="/" className={({ isActive }) => `challenge-nav-item ${isActive ? "challenge-nav-item-active" : ""}`}>
-                        Calculus
-                    </NavLink>
-                    <NavLink to="/" className={({ isActive }) => `challenge-nav-item ${isActive ? "challenge-nav-item-active" : ""}`}>
-                        Probability
-                    </NavLink> */}
                 </nav>
             </div>
             <br />
@@ -71,7 +89,7 @@ function ChallengeLayout() {
                     </div>
                 ) : (
                     challenge.map((c) => (
-                        <Link to={`/challenges/${c.id}`} key={c.id}>
+                        <Link to={`/challenge/${c.slug}`} key={c.id} className="module-link">
                             <div className="module-card">
                                 <div className="module-row">
                                     <h1 className="module-row-header">{c.module_name}</h1>

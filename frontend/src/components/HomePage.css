@@ -7,7 +7,7 @@
   height: 150px;
 }
 
-.main-layout {
+.homepage-main-layout {
   display: grid;
   grid-template-columns: minmax(0, 2.3fr) minmax(260px, 1fr);
   gap: 1.25rem;

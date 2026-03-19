@@ -10,14 +10,14 @@ import '../components/Footer.css'
 const HomePage = () => {
   return (
     <div>
-      <main className="main-layout">
-        <WlcMessage />
-        <SideProfile />
-        <div className='left-column'>
-          <Home_Page_Progress />
-          <Home_Page_Explore />
-        </div>
-      </main>
+		<main className="main-layout">
+			<WlcMessage />
+			<SideProfile />
+			<div className='left-column'>
+				<Home_Page_Progress />
+				<Home_Page_Explore />
+			</div>
+		</main>
       <Footer /> 
     </div> 
   )

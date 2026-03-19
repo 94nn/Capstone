@@ -1,6 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react'
 import { NavLink } from 'react-router-dom'
-import {Bell} from 'lucide-react'
+import {Bell} from 'lucide-react' 
 import './NavBar.css'
 
 const NavBar = () => {
@@ -57,7 +57,7 @@ const NavBar = () => {
                 <div>
                     <img src="images/bell.png" alt="Bell Icon" className='bell-icon' />
                 </div>
-                <div className="profile-container" onClick={toggleDropdown}>
+                <div className="profile-container" onClick={toggleDropdown} ref={profileContainerRef}>
                     <img src="/images/pixelated_profile_pic.png" alt="Profile" className="profile-pic" />
                     <span className="profile-name">Hann</span>
                 </div>

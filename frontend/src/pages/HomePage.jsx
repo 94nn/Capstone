@@ -9,17 +9,17 @@ import '../components/Footer.css'
 
 const HomePage = () => {
   return (
-    <main className="main-layout">
-      <div className="home-content">
+    <div>
+      <main className="main-layout">
         <WlcMessage />
+        <SideProfile />
         <div className='left-column'>
           <Home_Page_Progress />
           <Home_Page_Explore />
-          <Footer />
         </div>
-      </div>
-      <SideProfile />
-    </main>  
+      </main>
+      <Footer /> 
+    </div> 
   )
 }
 

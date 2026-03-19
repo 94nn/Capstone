@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const messages = (username) => [
   { before: "Welcome back, ", after: "! Let's get it." },
@@ -11,6 +12,7 @@ const messages = (username) => [
 
 const WlcMessage = () => {
   const [username, setUsername] = useState('')
+  const navigate = useNavigate()
 
   useEffect(() => {
     axios.get('/api/student/1')
@@ -61,7 +63,7 @@ const WlcMessage = () => {
           <p>Discover a world of math learning with us. Explore interactive lessons and practice problems to boost your math skills. Let's embark on this exciting journey together!</p>
         </div>
         <div className="get-started-button">
-          <button>Get Started</button>
+          <button onClick={() => navigate('/modules')}>Get Started</button>
         </div>
       </div>
     </section>

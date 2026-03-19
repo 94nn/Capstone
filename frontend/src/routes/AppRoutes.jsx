@@ -5,20 +5,17 @@ import ChapterPage from "../pages/ChapterPage";
 import SubChapterPage from "../pages/SubChapterPage";
 import SimplePage from "../pages/SimplePage";
 import HomePage from "../pages/HomePage";
-import RegisterPage from "../pages/RegisterPage";
 import ProfilePage from "../pages/ProfilePage";
 import SettingsPage from "../pages/SettingsPage";
 import EditProfilePage from "../pages/EditProfilePage";
 import QuizPage from "../pages/QuizPage";
-import LandingPage from "../pages/LandingPage";
+import AboutUsPage from "../pages/AboutUsPage";
 
 function AppRoutes() {
 	return (
 		<Routes>
-			<Route path="/" element={<LandingPage />} />
-			<Route path="/home" element={<HomePage />} />
 
-			<Route path="/register" element={<RegisterPage />} />
+			<Route path="/homepage" element={<HomePage />} />
 
 			<Route path="/modules" element={<ModulePage />} />
 
@@ -54,6 +51,9 @@ function AppRoutes() {
 			/>
 
 			<Route path="*" element={<Navigate to="/" replace />} />
+			
+			<Route path="/aboutus" element={<AboutUsPage />} />
+
 		</Routes>
 	);
 }

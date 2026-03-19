@@ -1,37 +1,24 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import "./TopBar.css";
 
 function TopBar() {
 	return (
 		<header className="top-bar">
 			<div className="top-bar-left">
-				<span className="logo-text">MathDex</span>
+				<NavLink to="/" end className="top-bar-logo-text">
+					MathDex
+				</NavLink>
 			</div>
 			<nav className="top-nav">
-				<NavLink
-				to="/modules"
-				end
-				className={({ isActive }) =>
-					`nav-item ${isActive ? "nav-item-active" : ""}`
-				}
-				>
-				Learn
+				<NavLink to="/modules/b4login" end className={({ isActive }) => `top-nav-item ${isActive ? "top-nav-item-active" : ""}`}>
+					Learn
 				</NavLink>
-				<NavLink
-				to="/challenge"
-				className={({ isActive }) =>
-					`nav-item ${isActive ? "nav-item-active" : ""}`
-				}
-				>
-				Challenge
+				<NavLink to="/challenge/b4login" className={({ isActive }) => `top-nav-item ${isActive ? "top-nav-item-active" : ""}`}>
+					Challenge
 				</NavLink>
-				<NavLink
-				to="/leaderboard"
-				className={({ isActive }) =>
-					`nav-item ${isActive ? "nav-item-active" : ""}`
-				}
-				>
-				Leaderboard
+				<NavLink to="/leaderboard/b4login" className={({ isActive }) => `top-nav-item ${isActive ? "top-nav-item-active" : ""}`}>
+					Leaderboard
 				</NavLink>
 			</nav>
 			<div className="top-bar-right">

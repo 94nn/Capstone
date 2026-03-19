@@ -37,7 +37,7 @@ const Footer = () => {
                         {modules.map(module => (
                             <Link 
                                 key={module.id}
-                                to={`/module/${module.slug}`} 
+                                to={`/modules/${module.slug}`} 
                                 className='footer-links'
                             >
                                 {module.name}

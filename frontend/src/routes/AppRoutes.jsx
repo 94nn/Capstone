@@ -5,6 +5,7 @@ import ChapterPage from "../pages/ChapterPage";
 import SubChapterPage from "../pages/SubChapterPage";
 import SimplePage from "../pages/SimplePage";
 import HomePage from "../pages/HomePage";
+import RegisterPage from "../pages/RegisterPage";
 import QuizPage from "../pages/QuizPage";
 import AboutUsPage from "../pages/AboutUsPage";
 
@@ -13,6 +14,8 @@ function AppRoutes() {
 		<Routes>
 
 			<Route path="/" element={<HomePage />} />
+
+			<Route path="/register" element={<RegisterPage />} />
 
 			<Route path="/modules" element={<ModulePage />} />
 

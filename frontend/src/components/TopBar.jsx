@@ -6,16 +6,18 @@ function TopBar() {
 	return (
 		<header className="top-bar">
 			<div className="top-bar-left">
-				<span className="top-bar-logo-text">MathDex</span>
+				<NavLink to="/" end className="top-bar-logo-text">
+					MathDex
+				</NavLink>
 			</div>
 			<nav className="top-nav">
-				<NavLink to="/modules" end className={({ isActive }) => `top-nav-item ${isActive ? "top-nav-item-active" : ""}`}>
+				<NavLink to="/modules/b4login" end className={({ isActive }) => `top-nav-item ${isActive ? "top-nav-item-active" : ""}`}>
 					Learn
 				</NavLink>
-				<NavLink to="/challenge" className={({ isActive }) => `top-nav-item ${isActive ? "top-nav-item-active" : ""}`}>
+				<NavLink to="/challenge/b4login" className={({ isActive }) => `top-nav-item ${isActive ? "top-nav-item-active" : ""}`}>
 					Challenge
 				</NavLink>
-				<NavLink to="/leaderboard" className={({ isActive }) => `top-nav-item ${isActive ? "top-nav-item-active" : ""}`}>
+				<NavLink to="/leaderboard/b4login" className={({ isActive }) => `top-nav-item ${isActive ? "top-nav-item-active" : ""}`}>
 					Leaderboard
 				</NavLink>
 			</nav>

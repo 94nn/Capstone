@@ -10,7 +10,7 @@ import TopBar from "./components/TopBar";
 function AppContent() {
     const location = useLocation()
 
-    const beforeLoginPages = ['/', '/login', '/register', '/aboutus', '/modules', '/modules/:slug', '/modules/:slug/:chapter_id', '/modules/:slug/:chapter_id/:subchapter_id']
+    const beforeLoginPages = ['/', '/login', '/register', '/aboutus/b4login', '/modules/b4login', '/modules/b4login/:slug', '/modules/b4login/:slug/:chapter_id', '/modules/b4login/:slug/:chapter_id/:subchapter_id', '/challenge/b4login', '/leaderboard/b4login']
     const isBeforeLogin = beforeLoginPages.includes(location.pathname)
 
     return (

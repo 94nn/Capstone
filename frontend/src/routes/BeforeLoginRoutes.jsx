@@ -20,25 +20,25 @@ function BeforeLoginRoutes() {
 
 			<Route path="/login" element={<LoginPage />} />
 
-			<Route path="/modules" element={<ModulePage />} />
+			<Route path="/modules/b4login" element={<ModulePage />} />
 
-			<Route path="/modules/:slug" element={<ChapterPage />} />
+			<Route path="/modules/b4login/:slug" element={<ChapterPage />} />
 
-			<Route path="/modules/:slug/:chapter_id" element={<SubChapterPage />} />
+			<Route path="/modules/b4login/:slug/:chapter_id" element={<SubChapterPage />} />
 
-			<Route path="/modules/:slug/:chapter_id/:subchapter_id" element={<QuizPage />} />
+			<Route path="/modules/b4login/:slug/:chapter_id/:subchapter_id" element={<QuizPage />} />
 
 			<Route 
-				path="/challenge"
+				path="/challenge/b4login"
 				element={<SimplePage title="Challenge" description="Challenge" />}
 			/>
 
 			<Route 
-				path="/leaderboard"
+				path="/leaderboard/b4login"
 				element={<SimplePage title="Leaderboard" description="Leaderboard" />}
 			/>
 
-			<Route path="/aboutus" element={<AboutUsPage />} />
+			<Route path="/aboutus/b4login" element={<AboutUsPage />} />
 
 		</Routes>
 	);

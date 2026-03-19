@@ -340,9 +340,7 @@
 }
 
 .challenge-question-header{
-    display: grid;
     align-items: center;
-    padding: 0.5rem;
     border-radius: 0.75rem;
     color: #f8fafc;
     font-size: 1.3rem;

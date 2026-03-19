@@ -50,9 +50,22 @@ useEffect(() => {
             <br />
             <div className="challenge-card">
                 <div className="answer-row">
-                    <h3 className="challenge-question-header">Question</h3>
+                    <h3 className="challenge-question-header">Question 1</h3>
                 </div>
             </div>
+            <br />
+            <div className="challenge-card">
+                <div className="answer-row">
+                    <h3 className="challenge-question-header">Question 2</h3>
+                </div>
+            </div>
+            <br />
+            <div className="challenge-card">
+                <div className="answer-row">
+                    <h3 className="challenge-question-header">Question 3</h3>
+                </div>
+            </div>
+
         </section>
     );
 }

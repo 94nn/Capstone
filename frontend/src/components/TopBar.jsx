@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import "./TopBar.css";
 
 function TopBar() {
 	return (
@@ -8,30 +9,14 @@ function TopBar() {
 				<span className="logo-text">MathDex</span>
 			</div>
 			<nav className="top-nav">
-				<NavLink
-				to="/"
-				end
-				className={({ isActive }) =>
-					`nav-item ${isActive ? "nav-item-active" : ""}`
-				}
-				>
-				Learn
+				<NavLink to="/modules" end className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
+					Learn
 				</NavLink>
-				<NavLink
-				to="/challenge"
-				className={({ isActive }) =>
-					`nav-item ${isActive ? "nav-item-active" : ""}`
-				}
-				>
-				Challenge
+				<NavLink to="/challenge" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
+					Challenge
 				</NavLink>
-				<NavLink
-				to="/leaderboard"
-				className={({ isActive }) =>
-					`nav-item ${isActive ? "nav-item-active" : ""}`
-				}
-				>
-				Leaderboard
+				<NavLink to="/leaderboard" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
+					Leaderboard
 				</NavLink>
 			</nav>
 			<div className="top-bar-right">

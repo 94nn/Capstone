@@ -1,61 +1,40 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import "./App.css";
 import "./index.css";
-
+import BeforeLoginRoutes from "./routes/BeforeLoginRoutes";
 import "./components/buttons.css";
 import AppRoutes from "./routes/AppRoutes";
 import NavBar from "./components/NavBar";
-import LandingPage from "./pages/LandingPage";
-import SimplePage from "./pages/SimplePage";
-import RegisterPage from "./pages/RegisterPage";
-import LoginPage from "./pages/LoginPage";
+import TopBar from "./components/TopBar";
+
+function AppContent() {
+    const location = useLocation()
+
+    const beforeLoginPages = ['/', '/login', '/register', '/aboutus', '/modules', '/modules/:slug', '/modules/:slug/:chapter_id', '/modules/:slug/:chapter_id/:subchapter_id']
+    const isBeforeLogin = beforeLoginPages.includes(location.pathname)
+
+    return (
+        <div className="App">
+            {isBeforeLogin ? (
+                <>
+                    <TopBar />
+                    <BeforeLoginRoutes />
+                </>
+            ) : (
+                <>
+                    <NavBar />
+                    <AppRoutes />
+                </>
+            )}
+        </div>
+    )
+}
 
 function App() {
     return (
         <BrowserRouter>
-            <div className="App">
-                <Routes>
-                    <Route path="/" element={<LandingPage />} />
-
-                    {/* Student pages (with NavBar)  */}
-                    <Route 
-                    path="/login"
-                    element={
-                    <div className="text-white p-10">Login Page</div>
-                    }
-                    />
-                    
-                    <Route path="/register" element={<RegisterPage />} />
-            
-                    <Route 
-                        path="/challenge" 
-                        element={
-                            <>
-                                <NavBar />
-                                <SimplePage
-                                    title="Challenge"
-                                    description="Challenge"
-                                />
-                            </>
-                        }
-                    />
-                    
-                    <Route path="/login" element={<LoginPage />}
-                      
-                    />
-                    <Route
-                        path="/leaderboard"
-                        element={
-                            <>
-                                <NavBar />
-                                <SimplePage
-                                    title="Leaderboard"
-                                    description="Leaderboatd"
-                                />
-                            </>
-                        }
-                        />
-                </Routes>
+             <div className="App">
+                <AppContent />
             </div>
         </BrowserRouter>
     );

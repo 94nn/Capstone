@@ -4,15 +4,21 @@ import ModulePage from "../pages/ModulePage";
 import ChapterPage from "../pages/ChapterPage";
 import SubChapterPage from "../pages/SubChapterPage";
 import SimplePage from "../pages/SimplePage";
-import HomePage from "../pages/HomePage";
+import RegisterPage from "../pages/RegisterPage";
 import QuizPage from "../pages/QuizPage";
 import AboutUsPage from "../pages/AboutUsPage";
+import LandingPage from "../pages/LandingPage";
+import LoginPage from "../pages/LoginPage";
 
-function AppRoutes() {
+function BeforeLoginRoutes() {
 	return (
 		<Routes>
 
-			<Route path="/homepage" element={<HomePage />} />
+			<Route path="/" element={<LandingPage />} />
+
+			<Route path="/register" element={<RegisterPage />} />
+
+			<Route path="/login" element={<LoginPage />} />
 
 			<Route path="/modules" element={<ModulePage />} />
 
@@ -38,4 +44,4 @@ function AppRoutes() {
 	);
 }
 
-export default AppRoutes;
+export default BeforeLoginRoutes;

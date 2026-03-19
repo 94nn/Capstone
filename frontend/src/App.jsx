@@ -8,6 +8,7 @@ import NavBar from "./components/NavBar";
 import LandingPage from "./pages/LandingPage";
 import SimplePage from "./pages/SimplePage";
 import RegisterPage from "./pages/RegisterPage";
+import LoginPage from "./pages/LoginPage";
 
 function App() {
     return (
@@ -39,6 +40,9 @@ function App() {
                         }
                     />
                     
+                    <Route path="/login" element={<LoginPage />}
+                      
+                    />
                     <Route
                         path="/leaderboard"
                         element={

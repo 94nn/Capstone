@@ -89,7 +89,7 @@ function ChallengeLayout() {
                     </div>
                 ) : (
                     challenge.map((c) => (
-                        <Link to={`/challenge/${c.slug}`} key={c.id} className="module-link">
+                        <Link to={`/challenge/${c.slug}`} key={c.id} className="module-link-wrapper">
                             <div className="module-card">
                                 <div className="module-row">
                                     <h1 className="module-row-header">{c.module_name}</h1>

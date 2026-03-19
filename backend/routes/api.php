@@ -271,3 +271,7 @@ Route::get('/challenge/{slug}', function ($slug) {
 
     return response()->json($challenge);
 });
+
+Route::get('/challenge_question', function () {
+    return DB::table('challenge_question')->get();
+});

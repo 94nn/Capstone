@@ -7,6 +7,5 @@ function LeaderboardPage() {
         </main>
     );
 }
-
 export default LeaderboardPage;
 

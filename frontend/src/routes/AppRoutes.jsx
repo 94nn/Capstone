@@ -6,6 +6,9 @@ import SubChapterPage from "../pages/SubChapterPage";
 import SimplePage from "../pages/SimplePage";
 import HomePage from "../pages/HomePage";
 import RegisterPage from "../pages/RegisterPage";
+import ProfilePage from "../pages/ProfilePage";
+import SettingsPage from "../pages/SettingsPage";
+import EditProfilePage from "../pages/EditProfilePage";
 import QuizPage from "../pages/QuizPage";
 
 function AppRoutes() {
@@ -32,6 +35,21 @@ function AppRoutes() {
 			<Route 
 				path="/leaderboard"
 				element={<SimplePage title="Leaderboard" description="Leaderboard" />}
+			/>
+
+			<Route 
+				path="/ProfilePage"
+				element={<ProfilePage />}
+			/>
+
+			<Route 
+				path="/SettingsPage"
+				element={<SettingsPage />}
+			/>
+
+			<Route 
+				path="/EditProfilePage"
+				element={<EditProfilePage />}
 			/>
 
 		</Routes>

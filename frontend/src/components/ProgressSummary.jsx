@@ -7,8 +7,6 @@ function ProgressSummary() {
     const studentId = 1;
 
     const [progress, setProgress] = useState({
-        completed: 0,
-        total: 0,
         percentage: 0,
     });
 
@@ -32,7 +30,7 @@ function ProgressSummary() {
             <div className="card progress-card">
                 <h1 className="progress-header">Progress Summary</h1>
                 <p>
-                    You have completed {progress.completed} out of {progress.total} levels
+                    You have completed {progress.percentage}% of this module
                 </p>
                 <div className="progress-bar">
                     <div

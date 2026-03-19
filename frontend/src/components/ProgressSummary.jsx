@@ -26,7 +26,7 @@ function ProgressSummary() {
     }, [slug]);
 
     return (
-        <aside className="sidebar">
+        <aside className="learning-sidebar">
             <div className="card progress-card">
                 <h1 className="progress-header">Progress Summary</h1>
                 <p>

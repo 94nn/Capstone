@@ -9,7 +9,7 @@ function TopBar() {
 			</div>
 			<nav className="top-nav">
 				<NavLink
-				to="/"
+				to="/modules"
 				end
 				className={({ isActive }) =>
 					`nav-item ${isActive ? "nav-item-active" : ""}`

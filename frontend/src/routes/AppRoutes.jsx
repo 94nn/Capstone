@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import ModulePage from "../pages/ModulePage";
 import ChapterPage from "../pages/ChapterPage";
@@ -10,12 +10,13 @@ import ProfilePage from "../pages/ProfilePage";
 import SettingsPage from "../pages/SettingsPage";
 import EditProfilePage from "../pages/EditProfilePage";
 import QuizPage from "../pages/QuizPage";
+import LandingPage from "../pages/LandingPage";
 
 function AppRoutes() {
 	return (
 		<Routes>
-
-			<Route path="/" element={<HomePage />} />
+			<Route path="/" element={<LandingPage />} />
+			<Route path="/home" element={<HomePage />} />
 
 			<Route path="/register" element={<RegisterPage />} />
 
@@ -52,6 +53,7 @@ function AppRoutes() {
 				element={<EditProfilePage />}
 			/>
 
+			<Route path="*" element={<Navigate to="/" replace />} />
 		</Routes>
 	);
 }

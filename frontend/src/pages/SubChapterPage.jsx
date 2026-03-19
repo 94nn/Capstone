@@ -19,7 +19,7 @@ function SubChapterPage() {
                 </div>
                 <SubChapterLayout />
             </div>
-            <aside className="sidebar">
+            <aside className="learning-sidebar">
                 <SidebarProfile />
                 <ProgressCard />
             </aside>

@@ -29,7 +29,7 @@ function ProgressCard() {
     }, [chapter_id]);
 
     return (
-        <aside className="sidebar">
+        <aside className="learning-sidebar">
             <div className="card progress-card">
                 <h1 className="progress-header">Progress of Level {progress.level}</h1>
                 <p>

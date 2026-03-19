@@ -1,6 +1,5 @@
 import React, {useState, useRef, useEffect} from 'react'
 import { NavLink } from 'react-router-dom'
-import {Bell} from 'lucide-react' 
 import './NavBar.css'
 
 const NavBar = () => {
@@ -36,7 +35,7 @@ const NavBar = () => {
     }, []);
 
     return (
-        <div className='nav-bar'>
+        <header className='nav-bar'>
             <div className="nav-bar-left">
                 <NavLink to="/" end className="logo-text">
                     MathDex
@@ -53,7 +52,7 @@ const NavBar = () => {
                     Leaderboard
                 </NavLink>
             </nav>
-            <div className="header">
+            <div className="nav-bar-right">
                 <div>
                     <img src="images/bell.png" alt="Bell Icon" className='bell-icon' />
                 </div>
@@ -80,7 +79,7 @@ const NavBar = () => {
                 </ul>
                 </div>
             )}
-        </div>
+        </header>
     )
 }
 

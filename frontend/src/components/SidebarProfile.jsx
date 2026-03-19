@@ -1,6 +1,6 @@
 function SidebarProfile() {
   	return (
-		<aside className="sidebar">
+		<aside className="learning-sidebar">
 			<div className="card profile-card">
 				<div className="avatar-circle">Y</div>
 				<div className="profile-info">

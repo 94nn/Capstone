@@ -17,7 +17,7 @@ function ChapterPage() {
                 </div>
                 <ChapterLayout />
             </div>
-            <aside className="sidebar">
+            <aside className="learning-sidebar">
                 <SidebarProfile />
                 <ProgressSummary />
             </aside>

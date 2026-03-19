@@ -1,0 +1,241 @@
+.about-us-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 100%;
+}
+
+.about-us-section {
+    display: flex;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.about-us-image {
+    width: 450px;
+    height: 450px;
+    margin-left: 10px;
+    margin-top: 35px;
+    animation: fadeInLeft 0.8s ease forwards;
+}
+
+.calculator {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.about-us-content {
+    margin-top: 35px;
+    margin-left: 70px;
+    width: 500px;
+    animation: fadeInRight 0.8s ease forwards;
+    animation-delay: 0.2s;
+    opacity: 0;
+}
+
+.about-us-content h1 {
+    font-size: 30px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    font-family: 'Press Start 2P', cursive;
+    margin-top: 50px;
+    color: #e0e1e3;
+}
+
+.about-us-text {
+    color: #6778a9;
+    margin-top: 50px;
+    font-size: 15px;
+    line-height: 1.6;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+
+.about-us-emoji {
+    font-size: 30px;
+    margin-top: 45px;
+    color: #6778a9;
+    text-decoration: bold;
+}
+/* #2b9beb */
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-60px) rotate(-10deg);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) rotate(-10deg);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(60px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    opacity: 0;
+    animation: twinkle 3s infinite alternate;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Twinkle animation */
+@keyframes twinkle {
+    from { opacity: 0.5; }
+    to   { opacity: 1; }
+}
+
+.about-us-image,
+.about-us-content {
+    position: relative;
+    z-index: 1;
+}
+
+
+/* --------------------------------Team Section---------------------------------- */
+.team-title {
+    text-align: center;
+    margin: 150px 0 40px 0;
+}
+
+.team-title h1 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 24px;
+    color: #e0e1e3;
+    margin-bottom: 15px;
+}
+
+.team-title p {
+    color: #6778a9;
+    font-size: 14px;
+    font-family: 'Lucida Sans', Geneva, Verdana, sans-serif;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.team-cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    padding: 20px;
+}
+
+.team-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.card-frame {
+    background-color: #e8e4d9;
+    border-radius: 12px;
+    padding: 12px;
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 4px 4px 0px #a09880;
+}
+
+.card-dots {
+    display: flex;
+    gap: 5px;
+    padding: 2px 4px;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    background-color: #e05555;
+    border-radius: 50%;
+}
+
+.card-image {
+    width: 100%;
+    height: 160px;
+    overflow: hidden;
+    border-radius: 6px;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-footer {
+    display: flex;
+    align-items: center;
+    margin-left: 3px;
+    gap: 10px;
+}
+
+.card-button {
+    width: 14px;
+    height: 14px;
+    background-color: #e05555;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.card-username {
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: #333;
+}
+
+.card-role-wrap {
+    display: flex;
+    justify-content: center;
+    width: 225px;
+    margin-bottom: -1px;
+}
+
+.card-role {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 8.5px;
+    color: #e0e1e3;
+    max-width: 200px;
+    line-height: 1.6;
+}
+
+.card-social {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: -5px;
+    width: 225px;
+}
+
+.social-icon {
+    color: #e0e1e3;
+    font-size: 20px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.social-icon:hover {
+    color: #3b82f6;
+}

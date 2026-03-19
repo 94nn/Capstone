@@ -3,7 +3,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 0.75rem 3.5rem;
-    height: 60px;
+    height: 80px;
     border-bottom: 1px solid rgba(148, 163, 184, 0.3);
     backdrop-filter: blur(10px);
     background: linear-gradient(
@@ -11,6 +11,11 @@
         rgba(15, 23, 42, 0.95),
         rgba(2, 6, 23, 0.9)
     );
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
 }
 
 .nav-bar-left {
@@ -35,6 +40,8 @@
     gap: 0.5rem;
     text-decoration: none;
     font-family: "VT323", monospace;
+    flex: 1;
+    justify-content: center;
 }
 
 .nav-item {
@@ -63,6 +70,22 @@
     box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.45);
 }
 
+.nav-bar-right {
+    display: flex;
+    align-items: center;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.bell-icon {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    transition: filter 0.15s ease;
+    margin-top: 5px;
+    margin-right: -5px;
+}
+
 /* Profile container */
 .profile-container {
   display: flex;
@@ -80,8 +103,38 @@
   margin-right: 10px;
 }
 
+.profile-pic2 {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 2px solid rgba(208, 214, 223, 0.447);
+  object-fit: cover;
+  margin-right: 10px;
+}
+
 /* Profile name styles */
 .profile-name {
+  font-size: 23px;
+  font-weight: bold;
+}
+
+/* Coin container */
+.coins-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* Coin picture styles */
+.coins-pic {
+  width: 37px;
+  height: 55px;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+/* Coins display styles */
+.coins {
   font-size: 23px;
   font-weight: bold;
 }
@@ -102,6 +155,16 @@
   padding: 10px;
   width: 200px;
   z-index: 9999;
+}
+
+@media (max-width: 960px) {
+  .nav-bar {
+    padding: 0.75rem 1.25rem;
+  }
+
+  .nav-bar-items {
+    display: none;
+  }
 }
 
 .dropdown ul {

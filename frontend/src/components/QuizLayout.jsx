@@ -14,6 +14,7 @@ function QuizLayout() {
     const [explanation, setExplanation] = useState("");
     const [answered, setAnswered] = useState(false);
     const [correctCount, setCorrectCount] = useState(0);
+    const [finished, setFinished] = useState(false);
 
     useEffect(() => {
         async function loadSubChapters() {
@@ -96,7 +97,32 @@ function QuizLayout() {
         setAnswered(false);
     }
 
-    function handleNextQuiz() {
+    async function updateProgress() {
+        try {
+            await axios.post("/api/progress/update", {
+                student_id: 1,
+                subchapter_id: subchapter_id,
+                correct_answers: correctCount,
+                total_questions: quizzes.length,
+                passed: passed
+            });
+        } catch (error) {
+            console.error("Failed to update progress", error);
+        }
+    }
+
+    async function handleOpenPopup() {
+        await updateProgress();
+        setFinished(true);
+    }
+
+    function handleClosePopup() {
+        setFinished(false);
+    }
+
+    async function handleNextQuiz() {
+        setFinished(false);
+
         if (nextSubchapter) {
             navigate(`/modules/${slug}/${chapter_id}/${nextSubchapter.id}`);
         } else {
@@ -104,7 +130,14 @@ function QuizLayout() {
         }
     }
 
-    function handleRetryQuiz() {
+    function handleFinishNow() {
+        setFinished(false);
+        navigate(`/modules/${slug}/${chapter_id}`);
+    }
+
+    async function handleRetryQuiz() {
+        await updateProgress();
+
         setCurrentIndex(0);
         setSelectedOptionId(null);
         setCorrectOptionId(null);
@@ -175,13 +208,10 @@ function QuizLayout() {
                                 <div className="quiz-result">
                                     {passed ? (
                                         <>
-                                            <h2>Congratulations! You have completed the quiz</h2>
-                                            <p>You answered {correctCount} out of {quizzes.length} questions correctly!</p>
-                                            <button className="next-button" onClick={handleNextQuiz}>
-                                                {isLastSubchapter ? "Back to Chapters" : "Next Quiz"}
+                                            <button className="next-button" onClick={handleOpenPopup}>
+                                                Continue
                                             </button>
                                         </>
-
                                     ) : (
                                         <>
                                             <h2>Quiz Completed</h2>
@@ -198,6 +228,25 @@ function QuizLayout() {
                     )}
                 </div>
             </div>
+            {finished && (
+                <div className="popup-overlay" onClick={handleClosePopup}>
+                    <div className="popup-box" onClick={(e) => e.stopPropagation()}>
+                        <h2>Congratulations! You have completed the quiz</h2>
+                        <p>You answered {correctCount} out of {quizzes.length} questions correctly</p>
+
+                        <div className="popup-buttons">
+                            <button className="retry-button" onClick={handleFinishNow}>
+                                Finish Now
+                            </button>
+                            {!isLastSubchapter && (
+                                <button className="next-button" onClick={handleNextQuiz}>
+                                    Next Quiz
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </section>
     );
 }

@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "tailwindcss": "^3.4.19",
+    "lucide": "^0.577.0"
+  }
+}

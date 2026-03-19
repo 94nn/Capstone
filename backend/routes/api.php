@@ -215,8 +215,8 @@ $maxOrder = DB::table('subchapters')
     ]);
 });
 
-//edit chapter
-Route::put('/modules/{slug}/{chapter_id}', function (Request $request,$slug, $chapter_id){
+//edit Subchapter
+Route::put('/modules/{slug}/{chapter_id}/{id}', function (Request $request, $slug, $chapter_id, $id) {
 
     $subchapter = DB::table('subchapters')->where('id', $id)->first();
 
@@ -257,7 +257,28 @@ Route::put('/modules/{slug}/{chapter_id}', function (Request $request,$slug, $ch
     ]);
 });
 
+//delete chapter
+Route::delete('/modules/{slug}/{chapter_id}/{id}', function ($slug, $chapter_id, $id) {
+
+    $subchapter = DB::table('subchapters')->where('id', $id)->first();
+    $chapterId = $subchapter->chapter_id;
+    $deletedOrder = $subchapter->subchapter_order;
     
+    // 删除
+    DB::table('subchapters')->where('id', $id)->delete();
+
+
+    // 后面的往前补
+    DB::table('subchapters')
+        ->where('chapter_id', $chapterId)
+        ->where('subchapter_order', '>', $deletedOrder)
+        ->decrement('subchapter_order');
+
+    return response()->json([
+        'message' => 'Deleted successfully'
+    ]);
+});
+
 
 //Quizzes
 Route::get('/modules/{slug}/{chapter_id}/{subchapter_id}', function ($slug, $chapter_id, $subchapter_id) {

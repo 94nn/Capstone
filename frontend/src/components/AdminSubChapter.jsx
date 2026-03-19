@@ -19,6 +19,7 @@ function AdminSubChapter() {
     const [currentId, setCurrentId] = useState(null);
 
     useEffect(() => {
+    
         async function loadSubChapter() {
             try {
 				const res = await axios.get(`/api/modules/${slug}/${chapter_id}`);
@@ -38,7 +39,7 @@ function AdminSubChapter() {
     try {
         if (isEdit) {
             // UPDATE
-            const res = await axios.put(`/api/modules/${slug}/${chapter_id}`, {
+             const res = await axios.put(`/api/modules/${slug}/${chapter_id}/${currentId}`, {
                 title: title,
                 description: description,
                 subchapter_order: subchapter_order,
@@ -54,12 +55,13 @@ function AdminSubChapter() {
             setSubchapters(updated);
 
             } else {
-            const res = await axios.post(`/api/modules/${slug}/${chapter_id}`, {
+             const res = await axios.post(`/api/modules/${slug}/${chapter_id}`, {
                 title: title,
                 description: description,
                 subchapter_order: subchapters.length + 1
             });
             // 更新 UI
+                      
             setSubchapters([...subchapters, res.data]);
         }
             // reset
@@ -72,6 +74,25 @@ function AdminSubChapter() {
             console.error(err);
         }
     };
+
+            //delete function
+    const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete?");
+
+    if (!confirmDelete) return;
+
+    try {
+        await fetch(`/api/modules/${slug}/${chapter_id}/${id}`, {
+            method: "DELETE",
+        });
+
+        // 删除后更新 UI（很重要）
+        setSubchapters(subchapters.filter(s => s.id !== id));
+
+    } catch (error) {
+        console.error("Delete failed:", error);
+    }
+};
 
 const closeModal = () => {
     setShowModal(false);
@@ -108,7 +129,7 @@ const closeModal = () => {
                                 </span>
                                 <span className="exercise-title">{s?.title}</span>
                                 <div className="button-row">
-                                    <Link to={`/modules/${slug}/${chapter_id}/${s.id}`} >
+                                    <Link to={`/admin/${slug}/${chapter_id}/${s.id}`} >
 									<button className="secondary-button">Enter</button>
 								    </Link> &nbsp;
                                     
@@ -122,12 +143,16 @@ const closeModal = () => {
                                         setCurrentId(s.id);
                                         setTitle(s.title);
                                         setDescription(s.description);
-                                        setsubchapter_order(s.level); 
+                                        setsubchapter_order(s.subchapter_order); 
                                     }}>Edit</button>
 								     &nbsp;
-                                    <Link to={`/modules/${slug}/${chapter_id}/${s.id}`} className="link">
-									<button className="delete-button">Delete</button>
-								    </Link>
+                                    
+									<button className="delete-button"
+                                    onClick={(e) => {
+                                    e.preventDefault();
+                                    handleDelete(s.id);
+                                    }}>Delete</button>
+								    
                                 </div>
                             </div>
                         ))}
@@ -167,7 +192,7 @@ const closeModal = () => {
                                     onChange={(e) => setsubchapter_order(e.target.value)}
                                 />
                                 )} 
-                                <br /><br />
+                                <br /><br />    
                                 <div className="modal-box-bottom">
                                     <button className="submit-button" onClick={handleSubmit}>Submit</button>
                                     <button className="cancel-button" onClick={() => setShowModal(false)}>Cancel</button>

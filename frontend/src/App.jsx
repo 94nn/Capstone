@@ -20,9 +20,7 @@ function App() {
                     {/* Student pages (with NavBar)  */}
                     <Route 
                     path="/login"
-                    element={
-                    <div className="text-white p-10">Login Page</div>
-                    }
+                    element={<LoginPage />} 
                     />
                     
                     <Route path="/register" element={<RegisterPage />} />

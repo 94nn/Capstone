@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import axios from 'axios'
-import { Crown } from 'lucide-react'
+// import { Crown } from 'lucide-react'
 
 const SideProfile = () => {
     const [student_name, setStudentName] = useState('')

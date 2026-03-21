@@ -1,14 +1,34 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import "./App.css";
 import "./index.css";
-
+import BeforeLoginRoutes from "./routes/BeforeLoginRoutes";
 import "./components/buttons.css";
 import AppRoutes from "./routes/AppRoutes";
 import NavBar from "./components/NavBar";
-import LandingPage from "./pages/LandingPage";
-import SimplePage from "./pages/SimplePage";
-import RegisterPage from "./pages/RegisterPage";
-import LoginPage from "./pages/LoginPage";
+import TopBar from "./components/TopBar";
+
+function AppContent() {
+    const location = useLocation()
+
+    const beforeLoginPages = ['/', '/login', '/register', '/aboutus/b4login', '/modules/b4login', '/modules/b4login/:slug', '/modules/b4login/:slug/:chapter_id', '/modules/b4login/:slug/:chapter_id/:subchapter_id', '/challenge/b4login', '/leaderboard/b4login']
+    const isBeforeLogin = beforeLoginPages.includes(location.pathname)
+
+    return (
+        <div className="App">
+            {isBeforeLogin ? (
+                <>
+                    <TopBar />
+                    <BeforeLoginRoutes />
+                </>
+            ) : (
+                <>
+                    <NavBar />
+                    <AppRoutes />
+                </>
+            )}
+        </div>
+    )
+}
 
 function App() {
     return (
@@ -54,7 +74,10 @@ function App() {
                         }
                         />
                 </Routes>
+             <div className="App">
+                <AppContent />
             </div>
+        </div>
         </BrowserRouter>
     );
 }

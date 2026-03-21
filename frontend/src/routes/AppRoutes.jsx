@@ -1,20 +1,21 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import ModulePage from "../pages/ModulePage";
 import ChapterPage from "../pages/ChapterPage";
 import SubChapterPage from "../pages/SubChapterPage";
 import SimplePage from "../pages/SimplePage";
 import HomePage from "../pages/HomePage";
-import RegisterPage from "../pages/RegisterPage";
+import ProfilePage from "../pages/ProfilePage";
+import SettingsPage from "../pages/SettingsPage";
+import EditProfilePage from "../pages/EditProfilePage";
 import QuizPage from "../pages/QuizPage";
+import AboutUsPage from "../pages/AboutUsPage";
 
 function AppRoutes() {
 	return (
 		<Routes>
 
-			<Route path="/" element={<HomePage />} />
-
-			<Route path="/register" element={<RegisterPage />} />
+			<Route path="/homepage" element={<HomePage />} />
 
 			<Route path="/modules" element={<ModulePage />} />
 
@@ -33,6 +34,25 @@ function AppRoutes() {
 				path="/leaderboard"
 				element={<SimplePage title="Leaderboard" description="Leaderboard" />}
 			/>
+
+			<Route 
+				path="/ProfilePage"
+				element={<ProfilePage />}
+			/>
+
+			<Route 
+				path="/SettingsPage"
+				element={<SettingsPage />}
+			/>
+
+			<Route 
+				path="/EditProfilePage"
+				element={<EditProfilePage />}
+			/>
+
+			<Route path="*" element={<Navigate to="/" replace />} />
+			
+			<Route path="/aboutus" element={<AboutUsPage />} />
 
 		</Routes>
 	);

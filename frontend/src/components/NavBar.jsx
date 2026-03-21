@@ -1,6 +1,5 @@
 import React, {useState, useRef, useEffect} from 'react'
 import { NavLink } from 'react-router-dom'
-import {Bell} from 'lucide-react'
 import './NavBar.css'
 
 const NavBar = () => {
@@ -27,18 +26,18 @@ const NavBar = () => {
         };
 
         // Add event listener to detect clicks outside
-        document.addEventListener('click', handleClickOutside);
+        document.addEventListener('mousedown', handleClickOutside);
 
         // Clean up the event listener when the component unmounts
         return () => {
-        document.removeEventListener('click', handleClickOutside);
+        document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
 
     return (
-        <div className='nav-bar'>
+        <header className='nav-bar'>
             <div className="nav-bar-left">
-                <NavLink to="/" end className="logo-text">
+                <NavLink to="/homepage" end className="logo-text">
                     MathDex
                 </NavLink>
             </div>
@@ -57,21 +56,30 @@ const NavBar = () => {
                 <div>
                     <img src="images/bell.png" alt="Bell Icon" className='bell-icon' />
                 </div>
-                <div className="profile-container" onClick={toggleDropdown}>
+                <div className="profile-container" onClick={toggleDropdown} ref={profileContainerRef}>
                     <img src="/images/pixelated_profile_pic.png" alt="Profile" className="profile-pic" />
                     <span className="profile-name">Hann</span>
                 </div>
+                <div className="coins-container">
+                    <img src="/images/Coins.png" alt="Coins" className="coins-pic" />
+                    <span className="coins">100</span>
+                </div>
             </div>
+
             {isDropdownVisible && (
-                <div className="dropdown">
+                <div className="dropdown" ref={dropdownRef}>
                 <ul>
-                    <li>Profile</li>
-                    <li>Settings</li>
+                    <li><NavLink to="/ProfilePage" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
+                        Profile
+                    </NavLink></li>
+                    <li><NavLink to="/SettingsPage" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
+                        Settings
+                    </NavLink></li>
                     <li>Logout</li>
                 </ul>
                 </div>
             )}
-        </div>
+        </header>
     )
 }
 

@@ -261,21 +261,6 @@
     background: radial-gradient(circle at 30% 0, #0f172a, #020617);
 }
 
-.card {
-    background: rgba(15, 23, 42, 0.92);
-    border-radius: 1.25rem;
-    padding: 1.25rem 1.35rem 1.4rem;
-    border: 1px solid rgba(148, 163, 184, 0.3);
-    box-shadow: 0 20px 38px rgba(15, 23, 42, 0.85);
-}
-
-.progress-card {
-    display: flex;
-    flex-direction: column;
-    gap: 0.9rem;
-    width: 400px;
-}
-
 .avatar-circle {
     width: 56px;
     height: 56px;
@@ -327,66 +312,6 @@
     font-size: 1.1rem;
     font-weight: 500;
     margin-top: 1rem;
-}
-
-.progress-card {
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-
-.progress-header {
-    font-size: 30px;
-    font-weight: 600;
-    margin-bottom: 10px;
-}
-
-.progress-card p {
-    font-size: 20px;
-    margin-bottom: 12px;
-}
-
-.progress-bar {
-    width: 100%;
-    height: 12px;
-    background-color: #e5e5e5;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #4CAF50, #66BB6A);
-    border-radius: 10px;
-    transition: width 0.4s ease;
-}
-
-.popup-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
-
-.popup-box {
-    background: #0f172a;
-    border-radius: 16px;
-    padding: 24px;
-    width: 360px;
-    max-width: 90%;
-    text-align: center;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-}
-
-.popup-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-top: 20px;
-    flex-wrap: wrap;
 }
 
 @media (max-width: 960px) {

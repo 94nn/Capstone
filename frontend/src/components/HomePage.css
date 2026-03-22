@@ -21,6 +21,7 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  grid-column: 1 / -1;
 }
 
 .hp-lesson-section {
@@ -144,6 +145,8 @@
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
+    margin-left: -15px;
+    margin-right: 30px;
 }
 
 .hp-card {
@@ -371,9 +374,7 @@
 
 /* ------------------------------------------Explore Section--------------------------------------------- */
 .hp-explore-container { 
-  margin-left: 27px;
-  width: 1105px;
-  padding: 5px;
+  padding: 0 30px 20px 30px;
   margin-top: 23px;
 }
 
@@ -389,7 +390,7 @@
 }
 
 .hp-explore-card {
-  width: 405px;
+  width: 50%;
   height: 115px;
 }
 
@@ -459,9 +460,7 @@
 .cp-section {
   display: flex;
   flex-direction: column;
-  margin-left: 27px;
-  width: 1105px;
-  padding: 5px;
+  padding: 0 30px 15px 30px;
 }
 
 .cp-heading {
@@ -577,4 +576,513 @@
   font-size: 7px;
   color: #6b7f99;
   text-align: right;
+}
+
+/* =====================================================================
+   RESPONSIVE BREAKPOINTS ONLY — base styles above are untouched
+   ===================================================================== */
+
+/* --- Large desktop (1440px+) --- */
+@media (min-width: 1440px) {
+  .hp-main-layout {
+    padding-left: 80px;
+    padding-right: 80px;
+    gap: 1.75rem;
+  }
+ 
+  .hp-computer-icon {
+    width: 140px;
+    height: 140px;
+  }
+ 
+  .hp-welcome-message {
+    font-size: 16px;
+  }
+ 
+  .hp-welcome-text h1 {
+    font-size: 28px;
+  }
+ 
+  .hp-welcome-text p {
+    font-size: 19px;
+  }
+ 
+  .hp-side-profile-name {
+    font-size: 25px;
+  }
+ 
+  .hp-side-profile-level {
+    font-size: 20px;
+  }
+ 
+  .hp-achievement-text {
+    font-size: 23px;
+  }
+ 
+  .hp-leaderboard-name {
+    font-size: 19px;
+  }
+ 
+  .hp-leaderboard-xp {
+    font-size: 16px;
+  }
+ 
+  .hp-leaderboard-header {
+    font-size: 15px;
+  }
+ 
+  .hp-explore-container,
+  .cp-section {
+    width: 100%;
+    margin-left: 0;
+    box-sizing: border-box;
+  }
+ 
+  .hp-explore-button {
+    width: 100%;
+    height: 120px;
+  }
+ 
+  .hp-explore-text h3 {
+    font-size: 17px;
+  }
+ 
+  .hp-explore-text p {
+    font-size: 12px;
+  }
+ 
+  .cp-heading {
+    font-size: 22px;
+  }
+ 
+  .cp-card {
+    width: 290px;
+  }
+}
+ 
+/* --- Full HD (1920px+) --- */
+@media (min-width: 1920px) {
+  .hp-main-layout {
+    padding-left: 160px;
+    padding-right: 160px;
+    gap: 2rem;
+  }
+ 
+  .hp-computer-icon {
+    width: 150px;
+    height: 150px;
+  }
+ 
+  .hp-welcome-message {
+    font-size: 17px;
+  }
+ 
+  .hp-welcome-text h1 {
+    font-size: 30px;
+  }
+ 
+  .hp-welcome-text p {
+    font-size: 20px;
+  }
+ 
+  .hp-side-profile-name {
+    font-size: 27px;
+  }
+ 
+  .hp-side-profile-level {
+    font-size: 21px;
+  }
+ 
+  .hp-achievement-text {
+    font-size: 25px;
+  }
+ 
+  .hp-diamond-icon,
+  .hp-badge-icon {
+    width: 55px;
+    height: 55px;
+  }
+ 
+  .hp-profile-pic,
+  .hp-first img, .hp-second img, .hp-third img {
+    width: 65px;
+    height: 65px;
+  }
+ 
+  .hp-avatar-wrapper {
+    width: 65px;
+    height: 65px;
+  }
+ 
+  .hp-leaderboard-name {
+    font-size: 21px;
+  }
+ 
+  .hp-leaderboard-xp {
+    font-size: 17px;
+  }
+ 
+  .hp-leaderboard-header {
+    font-size: 16px;
+    padding-left: 36px;
+  }
+ 
+  .hp-leaderboard-content {
+    padding-left: 36px;
+  }
+ 
+  .hp-explore-button {
+    height: 130px;
+  }
+ 
+  .hp-explore-text h3 {
+    font-size: 18px;
+  }
+ 
+  .hp-explore-text p {
+    font-size: 13px;
+  }
+ 
+  .hp-challenge-icon {
+    width: 65px;
+    height: 65px;
+  }
+ 
+  .hp-tutorial-icon {
+    width: 80px;
+    height: 80px;
+  }
+ 
+  .cp-heading {
+    font-size: 24px;
+  }
+ 
+  .cp-card {
+    width: 320px;
+  }
+ 
+  .cp-title {
+    font-size: 16px;
+  }
+}
+ 
+/* --- 2K / QHD (2560px+) --- */
+@media (min-width: 2560px) {
+  .hp-main-layout {
+    padding-left: 300px;
+    padding-right: 300px;
+    gap: 2.5rem;
+  }
+ 
+  .hp-computer-icon {
+    width: 170px;
+    height: 170px;
+  }
+ 
+  .hp-welcome-message {
+    font-size: 19px;
+  }
+ 
+  .hp-welcome-text h1 {
+    font-size: 34px;
+  }
+ 
+  .hp-welcome-text p {
+    font-size: 22px;
+  }
+ 
+  .hp-side-profile-name {
+    font-size: 30px;
+  }
+ 
+  .hp-side-profile-level {
+    font-size: 23px;
+  }
+ 
+  .hp-achievement-text {
+    font-size: 28px;
+  }
+ 
+  .hp-achievement-name {
+    font-size: 14px;
+  }
+ 
+  .hp-diamond-icon,
+  .hp-badge-icon {
+    width: 62px;
+    height: 62px;
+  }
+ 
+  .hp-profile-pic,
+  .hp-first img, .hp-second img, .hp-third img {
+    width: 72px;
+    height: 72px;
+  }
+ 
+  .hp-avatar-wrapper {
+    width: 72px;
+    height: 72px;
+  }
+ 
+  .hp-leaderboard-name {
+    font-size: 24px;
+  }
+ 
+  .hp-leaderboard-xp {
+    font-size: 19px;
+  }
+ 
+  .hp-leaderboard-header {
+    font-size: 18px;
+  }
+ 
+  .hp-explore-button {
+    height: 145px;
+  }
+ 
+  .hp-explore-text h3 {
+    font-size: 20px;
+  }
+ 
+  .hp-explore-text p {
+    font-size: 14px;
+  }
+ 
+  .hp-challenge-icon {
+    width: 72px;
+    height: 72px;
+  }
+ 
+  .hp-tutorial-icon {
+    width: 90px;
+    height: 90px;
+  }
+ 
+  .cp-heading {
+    font-size: 27px;
+  }
+ 
+  .cp-card {
+    width: 380px;
+  }
+ 
+  .cp-title {
+    font-size: 18px;
+  }
+ 
+  .cp-image-wrap {
+    height: 160px;
+  }
+}
+
+/* --- Small desktop / tablet landscape (max 1280px) --- */
+@media (max-width: 1280px) {
+  .hp-main-layout {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .hp-explore-container,
+  .cp-section {
+    width: 100%;
+    margin-left: 0;
+    box-sizing: border-box;
+  }
+
+  .hp-explore-content-container {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 20px;
+  }
+
+  .hp-explore-card,
+  .hp-explore-button {
+    width: 100%;
+  }
+
+  .hp-explore-card {
+    height: auto;
+    width: 450px;
+  }
+}
+
+/* --- Tablet portrait (max 1024px) --- */
+/* Two-column grid kept for lesson + sidebar row only.
+   hp-left-column (progress + explore) spans full width. */
+@media (max-width: 1024px) {
+  .hp-main-layout {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 90px;
+  }
+
+  /* Sidebar sits below the lesson section, side by side in a flex row */
+  .hp-sidebar {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .hp-card,
+  .hp-leaderboard-card {
+    flex: 1 1 260px;
+    max-width: 100%;
+  }
+
+  /* Fix the negative margin hack for profile card at this size */
+  .hp-side-profile-card {
+    margin-left: 0;
+  }
+
+  /* Make leaderboard rows fill the card */
+  .hp-first, .hp-second, .hp-third {
+    width: 100%;
+  }
+
+  .hp-leaderboard-content {
+    padding-right: 20px;
+  }
+
+  /* View Profile button — constrained, no overflow */
+  .hp-view-profile-button button {
+    width: calc(100% - 40px);
+    max-width: 260px;
+    min-width: 160px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Welcome message fits available space */
+  .hp-welcome-message {
+    max-width: 100%;
+    font-size: 13px;
+  }
+
+  /* Get started container fills lesson section width */
+  .hp-get-started-container {
+    max-width: 100%;
+    margin-left: 0;
+  }
+
+  /* Explore + progress go full width */
+  .hp-explore-container,
+  .cp-section {
+    width: 100%;
+    margin-left: 0;
+    box-sizing: border-box;
+  }
+
+  .hp-explore-content-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .hp-explore-card,
+  .hp-explore-button {
+    width: 100%;
+  }
+
+  .hp-explore-card {
+    height: auto;
+    width: 450px;
+  }
+}
+
+/* --- Large phones (max 768px) --- */
+@media (max-width: 768px) {
+  .hp-main-layout {
+    grid-template-columns: 1fr;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 85px;
+  }
+
+  .hp-computer-icon {
+    width: 80px;
+    height: 80px;
+  }
+
+  .hp-welcome-message {
+    font-size: 11px;
+    max-width: 100%;
+  }
+
+  .hp-get-started-container {
+    max-width: 100%;
+    margin-left: 0;
+  }
+
+  .hp-student-icons { gap: 24px; }
+  .hp-boy-student-icon { width: 80px; height: 80px; }
+  .hp-girl-student-icon { width: 90px; height: 110px; }
+  .hp-welcome-text h1 { font-size: 18px; }
+  .hp-welcome-text p { font-size: 15px; padding: 0 20px; }
+
+  /* Sidebar stays as a row */
+  .hp-sidebar {
+    flex-direction: column;
+  }
+
+  .hp-card, .hp-leaderboard-card {
+    max-width: 100%;
+  }
+
+  .hp-explore-content-container {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .hp-explore-card, .hp-explore-button {
+    width: 100%;
+  }
+
+  .hp-explore-header { font-size: 16px; }
+  .cp-heading { font-size: 16px; }
+  .cp-card { width: calc(50% - 10px); }
+}
+
+/* --- Small phones (max 480px) --- */
+@media (max-width: 480px) {
+  .hp-main-layout {
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-top: 80px;
+  }
+
+  .hp-header {
+    height: auto;
+    flex-wrap: wrap;
+    margin-top: 0;
+    gap: 8px;
+  }
+
+  .hp-computer-icon { display: none; }
+
+  .hp-welcome-message {
+    font-size: 9px;
+    max-width: 100%;
+  }
+
+  .hp-welcome-text h1 { font-size: 14px; }
+  .hp-welcome-text p { font-size: 13px; padding: 0 12px; }
+  .hp-side-profile-name { font-size: 18px; }
+  .hp-side-profile-level { font-size: 15px; }
+  .hp-achievement-text { font-size: 17px; }
+
+  .cp-card { width: 100%; }
+
+  .hp-explore-text h3 { font-size: 12px; height: auto; }
+  .hp-explore-text p { font-size: 10px; }
+}
+
+@media (min-width: 480px) {
+  .hp-first, .hp-second, .hp-third {
+    width: 93%;
+    box-sizing: border-box;
+    padding-right: 30px;
+  }
 }

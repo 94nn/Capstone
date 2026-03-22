@@ -2,7 +2,7 @@ import LeaderboardLayout from "../components/LeaderboardLayout";
 
 function LeaderboardPage() {
     return (
-        <main className="leaderboard-page-container">
+        <main className="main-layout-full">
             <LeaderboardLayout />
         </main>
     );

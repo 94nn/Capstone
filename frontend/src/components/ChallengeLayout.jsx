@@ -1,7 +1,6 @@
-import { Link } from "react-router-dom";
 import {  useEffect, useState } from "react";
 import axios from "axios";
-import { NavLink,useParams } from 'react-router-dom'
+import { Link, NavLink , useParams } from 'react-router-dom'
 import "./ChallengeLayout.css";
 
 function ChallengeLayout() {
@@ -14,14 +13,27 @@ function ChallengeLayout() {
     async function loadModules() {
         try {
             const res = await axios.get("/api/modules"); // 你需要在后端建这个 API
-            setModules(Array.isArray(res.data) ? res.data : []);
-        } catch (err) {
+            setModules(Array.isArray(res.data) ? res.data: res.data? [res.data]: []
+        )} catch (err) {
             console.error("Failed to load modules", err);
             setModules([]);
         }
     }
     loadModules();
-}, []); // 空依赖数组，只执行一次
+    }, []); // 空依赖数组，只执行一次
+    
+    useEffect(() => {
+    async function loadChapters() {
+        try {
+            const res = await axios.get("/api/chapters"); // 你需要在后端建这个 API
+            setChapters(Array.isArray(res.data) ? res.data: res.data? [res.data]: []
+        )} catch (err) {
+            console.error("Failed to load chapters", err);
+            setChapters([]);
+        }
+    }
+    loadChapters();
+    }, []); // 空依赖数组，只执行一次
 
     useEffect(() => {    
         async function loadChallenge() {

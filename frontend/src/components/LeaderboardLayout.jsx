@@ -8,15 +8,12 @@ function Leaderboard() {
         <section className="leaderboard-section">
             <div className="leaderboard-header">
                 <div>
-                    <br />
                     <h1 className="leaderboard-title">Leaderboard</h1>
-                    <br />
                     <p className="leaderboard-description">
                         See who's dominating the coding arena! Earn XP, climb the ranks, and become a legend!!
                     </p>
                 </div>
             </div>
-            <br /><br />
             <div className="leaderboard-card">
                 <div className="leaderboard-list">
                     <div className="leaderboard-row leaderboard-row-header">

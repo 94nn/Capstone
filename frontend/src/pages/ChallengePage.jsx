@@ -2,7 +2,7 @@ import ChallengeLayout from "../components/ChallengeLayout";
 
 function ChallengePage() {
     return (
-        <main className="module-page-container">
+        <main className="main-layout-full">
             <ChallengeLayout />
         </main>
     );

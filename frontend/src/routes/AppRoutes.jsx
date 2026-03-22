@@ -32,19 +32,11 @@ function AppRoutes() {
 
 			<Route path="/challenge/:slug" element={<ChallengeQuestionPage />} />
 
-			<Route 
-				path="/leaderboard" element={<LeaderboardPage />}
-			/>
+			<Route path="/leaderboard" element={<LeaderboardPage />}/>
 
-			<Route 
-				path="/ProfilePage"
-				element={<ProfilePage />}
-			/>
+			<Route path="/ProfilePage" element={<ProfilePage />}/>
 
-			<Route 
-				path="/SettingsPage"
-				element={<SettingsPage />}
-			/>
+			<Route path="/SettingsPage" element={<SettingsPage />}/>
 
 			<Route 
 				path="/EditProfilePage"

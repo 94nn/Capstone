@@ -30,12 +30,13 @@ function BeforeLoginRoutes() {
 
 			<Route path="/modules/b4login/:slug/:chapter_id/:subchapter_id" element={<QuizPage />} />
 
-			<Route 
-				path="/challenge/module/:module_id" element={<ChallengePage />} />
+			<Route path="/challenge/b4login" element={<ChallengePage />} />
 
-			<Route path="/challenge/:slug" element={<ChallengeQuestionPage />} />
+			<Route path="/challenge/b4login/module/:module_id" element={<ChallengePage />} />
 
-			<Route path="/leaderboard" element={<LeaderboardPage />}/>
+			<Route path="/challenge/b4login/:slug" element={<ChallengeQuestionPage />} />
+
+			<Route path="/leaderboard/b4login" element={<LeaderboardPage />}/>
 
 			<Route path="/aboutus/b4login" element={<AboutUsPage />} />
 

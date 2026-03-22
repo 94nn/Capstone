@@ -3,6 +3,8 @@ import "./App.css";
 import "./index.css";
 import BeforeLoginRoutes from "./routes/BeforeLoginRoutes";
 import "./components/buttons.css";
+import "./components/cards.css";
+import "./components/popup.css";
 import AppRoutes from "./routes/AppRoutes";
 import NavBar from "./components/NavBar";
 import TopBar from "./components/TopBar";

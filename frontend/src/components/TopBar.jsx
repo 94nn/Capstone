@@ -4,9 +4,9 @@ import "./TopBar.css";
 
 function TopBar() {
 	return (
-		<header className="top-bar">
-			<div className="top-bar-left">
-				<NavLink to="/" end className="top-bar-logo-text">
+		<header className="nav-bar">
+			<div className="nav-bar-left">
+				<NavLink to="/" end className="logo-text">
 					MathDex
 				</NavLink>
 			</div>
@@ -21,7 +21,7 @@ function TopBar() {
 					Leaderboard
 				</NavLink>
 			</nav>
-			<div className="top-bar-right">
+			<div className="nav-bar-right">
 				<button className="primary-button">Log in</button>
 			</div>
 		</header>

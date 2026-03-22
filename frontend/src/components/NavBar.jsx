@@ -53,16 +53,16 @@ const NavBar = () => {
                 </NavLink>
             </nav>
             <div className="nav-bar-right">
-                <div>
+                <div className="bell-container">
                     <img src="images/bell.png" alt="Bell Icon" className='bell-icon' />
-                </div>
-                <div className="profile-container" onClick={toggleDropdown} ref={profileContainerRef}>
-                    <img src="/images/pixelated_profile_pic.png" alt="Profile" className="profile-pic" />
-                    <span className="profile-name">Hann</span>
                 </div>
                 <div className="coins-container">
                     <img src="/images/Coins.png" alt="Coins" className="coins-pic" />
                     <span className="coins">100</span>
+                </div>
+                <div className="profile-container" onClick={toggleDropdown} ref={profileContainerRef}>
+                    <img src="/images/pixelated_profile_pic.png" alt="Profile" className="profile-pic" />
+                    <span className="profile-name">Hann</span>
                 </div>
             </div>
 

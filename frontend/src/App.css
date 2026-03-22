@@ -5,6 +5,7 @@
     display: flex;
     flex-direction: column;
     font-family: "VT323", monospace;
+    padding-top: 60px;
 }
 
 #back-icon {
@@ -27,11 +28,35 @@
     gap: 1rem;
 }
 
-.main-layout, .module-page-container {
+.main-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 2.3fr) minmax(280px, 360px);
+    gap: 2rem;
+    align-items: start;
+    padding: 2rem 3.5rem 3rem;
+}
+
+.main-layout-full {
     display: flex;
     flex-direction: column;
     gap: 2rem;
     padding: 2rem 3.5rem 3rem;
+}
+
+.learning-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    position: sticky;
+    top: 92px;
+    align-self: start;
+}
+
+.home-content {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
 }
 
 .module-link-wrapper {
@@ -57,7 +82,7 @@
     width: 350px;
     box-shadow: 6px 6px 0px #020617;
     transition: transform 0.15s ease;
-    height: 100px;
+    height: 150px;
 }
 
 .module-card:hover {
@@ -188,7 +213,7 @@
 }
 
 .exercise-status {
-    text-align: right;
+    text-align: center;
     font-weight: 500;
 }
 
@@ -235,7 +260,7 @@
     background: radial-gradient(circle at 30% 0, #0f172a, #020617);
 }
 
-.sidebar {
+.learning-sidebar {
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
@@ -331,22 +356,6 @@
     margin-top: 1rem;
 }
 
-.challenge-card{
-    background: rgba(15, 23, 42, 0.92);
-    border-radius: 1.25rem;
-    padding: 1.5rem 1.75rem 1.75rem;
-    border: 1px solid rgba(148, 163, 184, 0.25);
-    box-shadow: 0 22px 40px rgba(15, 23, 42, 0.9);
-}
-
-.challenge-question-header{
-    align-items: center;
-    border-radius: 0.75rem;
-    color: #f8fafc;
-    font-size: 1.3rem;
-}
-
-
 @media (max-width: 960px) {
     .top-bar {
         padding-inline: 1.25rem;
@@ -359,5 +368,10 @@
     .main-layout {
         grid-template-columns: minmax(0, 1fr);
         padding-inline: 1.25rem;
+    }
+
+    .learning-sidebar {
+        position: static;
+        top: auto;
     }
 }

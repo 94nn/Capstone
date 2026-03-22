@@ -1,0 +1,150 @@
+.page-layout {
+  display: flex;
+  width: 100%;
+  gap: 24px;
+}
+
+.profile-header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.profile-avatar{
+  width:48px;
+  height:48px;
+}
+
+.profile-stats{
+  display:flex;
+  gap:30px;
+  margin-top:15px;
+}
+
+.stat-container{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.stat-pic{
+  width:26px;
+  height:26px;
+  image-rendering: pixelated;
+}
+
+.stat-number{
+  font-weight:bold;
+}
+
+.stat-text{
+  font-size:0.9rem;
+  color:#9ca3af;
+}
+
+.profile-left{
+  flex:1;
+}
+
+.banner-container{
+  position:relative;
+  padding: 60px;
+}
+
+.profile-banner{
+  width:100%;
+  max-width:1000px;
+  height:200px;
+  object-fit:cover;
+  border-radius:12px;
+}
+
+.profile-picture{
+  position:absolute;
+  bottom: 0;
+  left:90px;
+  
+
+  display:flex;
+  align-items:center;
+  gap:12px;
+
+  transform: translateY(0%);
+}
+
+.profilePicBanner {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 2px solid rgba(208, 214, 223, 0.447);
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.edit-profile-btn{
+  position:absolute;
+  right:100px;
+  bottom:-50px;
+
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-family: "Press Start 2P", monospace;
+
+  padding:8px 14px;
+
+  background:#0f172a;
+  color:white;
+
+  font-size:14px;
+  font-weight:600;
+
+  border:2px solid #4b5563;
+  border-radius:4px;
+
+  box-shadow:
+    inset 0 0 0 2px #1f2937,
+    0 3px 0 #1f2937;
+
+  cursor:pointer;
+}
+
+.edit-profile-btn:hover{
+  background:#1f2937;
+}
+
+.edit-profile-btn:active{
+  transform:translateY(2px);
+  box-shadow:
+    inset 0 0 0 2px #1f2937,
+    0 1px 0 #1f2937;
+}
+
+.sidebar{
+  width:300px;
+  margin-top:100px;
+}
+
+.profile-section{
+  position:absolute;
+  bottom:-100px;
+  left:90px;
+
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+}
+
+.profilePage-name{
+  margin-top:12px;
+  /* height: 100px; */
+  font-family:"Press Start 2P", monospace;
+  font-size:30px;
+  color:white;
+}
+
+.profile-username{
+  margin-top:6px;
+  color:#94a3b8;
+  font-size:20px;
+}

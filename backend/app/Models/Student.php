@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Student extends Model
+{
+    protected $table = 'student';
+
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'age',
+        'points_balance',
+        'coins_balance',
+    ];
+
+    public $timestamps = false;
+}

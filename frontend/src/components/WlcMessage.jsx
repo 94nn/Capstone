@@ -29,11 +29,11 @@ const WlcMessage = () => {
   return (
     <section className="hp-lesson-section">
       <div className="hp-header">
-        <div className="hp-profile-section">
+        <div className="hp-wlc-section">
           <img
             src="/images/pixelated_computer_right.png"
-            alt="Profile Icon"
-            className="hp-profile-icon"
+            alt="Computer Icon"
+            className="hp-computer-icon"
           />
         </div>
 

@@ -27,68 +27,68 @@ const SideProfile = () => {
     }, [])
 
     return (
-        <aside className="sidebar">
-			<div className="card">
-                <div className='side-profile-card'>
-                    <img src={student_image} alt="Profile" className="profile-pic" />
+        <aside className="hp-sidebar">
+			<div className="hp-card">
+                <div className='hp-side-profile-card'>
+                    <img src={student_image} alt="Profile" className="hp-profile-pic" />
                     <div>
-                        <p className="side-profile-name">{student_name}</p>
-				        <p className="side-profile-level">Level {level}</p>
+                        <p className="hp-side-profile-name">{student_name}</p>
+				        <p className="hp-side-profile-level">Level {level}</p>
                     </div>
                 </div>
-				<div className="achievements">
-                    <img src="/images/diamond.png" alt="Diamond" className="diamond-icon" />
-                    <div className='achievement-text-container'>
-                        <p className="achievement-text">{xp}</p>
-                        <p className="achievement-name">Total XP</p>
+				<div className="hp-achievements">
+                    <img src="/images/diamond.png" alt="Diamond" className="hp-diamond-icon" />
+                    <div className='hp-achievement-text-container'>
+                        <p className="hp-achievement-text">{xp}</p>
+                        <p className="hp-achievement-name">Total XP</p>
                     </div>
-                    <img src="/images/badge.png" alt="Badge" className="badge-icon" />
-                    <div className='achievement-text-container'>
-                        <p className="achievement-text">{badges}</p>
-                        <p className="achievement-name">Badges</p>
+                    <img src="/images/badge.png" alt="Badge" className="hp-badge-icon" />
+                    <div className='hp-achievement-text-container'>
+                        <p className="hp-achievement-text">{badges}</p>
+                        <p className="hp-achievement-name">Badges</p>
                     </div>
 				</div>
-                <div className="view-profile-button">
+                <div className="hp-view-profile-button">
                     <button>View Profile</button>
                 </div>
 			</div>
-            <div className='leaderboard-card'>
-                <div className='leaderboard-header'>
+            <div className='hp-leaderboard-card'>
+                <div className='hp-leaderboard-header'>
                     <h2>#Leaderboard</h2>
                 </div>
-                <div className='leaderboard-content'>
-                    <div className='first'>
-                        <div className='avatar-wrapper'>
-                            <span className='crown'>👑</span>
+                <div className='hp-leaderboard-content'>
+                    <div className='hp-first'>
+                        <div className='hp-avatar-wrapper'>
+                            <span className='hp-crown'>👑</span>
                             <img src={leaderboard[0]?.profile_pic} alt="1st place" />
                         </div>
-                        <div className='leaderboard-info'>
-                            <p className='leaderboard-name'>{leaderboard[0]?.name}</p>
-                            <p className='leaderboard-xp'>{leaderboard[0]?.xp_balance} XP</p>
+                        <div className='hp-leaderboard-info'>
+                            <p className='hp-leaderboard-name'>{leaderboard[0]?.name}</p>
+                            <p className='hp-leaderboard-xp'>{leaderboard[0]?.xp_balance} XP</p>
                         </div>
                     </div>
-                    <div className='second'>
-                        <div className='avatar-wrapper'>
-                            <span className='crown'>👑</span>
+                    <div className='hp-second'>
+                        <div className='hp-avatar-wrapper'>
+                            <span className='hp-crown'>👑</span>
                             <img src={leaderboard[1]?.profile_pic} alt="2nd place" />
                         </div>
-                        <div className='leaderboard-info'>
-                            <p className='leaderboard-name'>{leaderboard[1]?.name}</p>
-                            <p className='leaderboard-xp'>{leaderboard[1]?.xp_balance} XP</p>
+                        <div className='hp-leaderboard-info'>
+                            <p className='hp-leaderboard-name'>{leaderboard[1]?.name}</p>
+                            <p className='hp-leaderboard-xp'>{leaderboard[1]?.xp_balance} XP</p>
                         </div>
                     </div>
-                    <div className='third'>
-                        <div className='avatar-wrapper'>
-                            <span className='crown'>👑</span>
+                    <div className='hp-third'>
+                        <div className='hp-avatar-wrapper'>
+                            <span className='hp-crown'>👑</span>
                             <img src={leaderboard[2]?.profile_pic} alt="3rd place" />
                         </div>
-                        <div className='leaderboard-info'>
-                            <p className='leaderboard-name'>{leaderboard[2]?.name}</p>
-                            <p className='leaderboard-xp'>{leaderboard[2]?.xp_balance} XP</p>
+                        <div className='hp-leaderboard-info'>
+                            <p className='hp-leaderboard-name'>{leaderboard[2]?.name}</p>
+                            <p className='hp-leaderboard-xp'>{leaderboard[2]?.xp_balance} XP</p>
                         </div>
                     </div>
                 </div>
-                <div className='view-more-button'>
+                <div className='hp-view-more-button'>
                     <button>View more</button>
                 </div>
             </div>

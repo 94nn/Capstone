@@ -2,21 +2,77 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
-<<<<<<< HEAD
 use App\Http\Controllers\AuthController;
-=======
 use App\Http\Controllers\ModuleController;
->>>>>>> 4cefbc4 (Admin function developing)
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 use Illuminate\Http\Request;
 use App\Models\Student;
+use App\Models\EditModule;
+use Illuminate\Support\Str;
 
 //Modules
 Route::get('/modules', function () {
     return DB::table('modules')->get();
 });
+
+//add modules function
+Route::post('/modules', function (Request $request) {
+
+    $slug = Str::slug($request->name);
+
+    $id = DB::table('modules')->insertGetId([
+        'name' => $request->name,
+        'description' => $request->description,
+        'slug' => $slug
+    ]);
+
+    return response()->json([
+        'id' => $id,
+        'name' => $request->name,
+        'description' => $request->description,
+        'slug' => $slug,
+    ]);
+});
+
+//edit modules function
+Route::put('/modules/{id}', function (Request $request, $id) {
+    $slug = Str::slug($request->name); 
+
+    // 处理重复
+    $count = DB::table('modules')
+        ->where('slug', 'LIKE', "$slug%")
+        ->where('id', '!=', $id)
+        ->count();
+
+    if ($count > 0) {
+        $slug = $slug . '-' . ($count + 1);
+    }
+
+    DB::table('modules')
+        ->where('id', $id)
+        ->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'slug' => $slug,
+        ]);
+
+    return response()->json([
+        'message' => 'Updated successfully',
+        'slug' => $slug
+    ]);
+});
+
+//delete function
+Route::delete('/modules/{id}', function ($id) {
+    DB::table('modules')->where('id', $id)->delete();
+
+    return response()->json([
+        'message' => 'Deleted successfully'
+    ]);
+});
+
 
 //Chapters
 Route::get('/modules/{slug}', function ($slug) {
@@ -31,7 +87,106 @@ Route::get('/modules/{slug}', function ($slug) {
         ->get();
 });
 
+// add chapter 
+Route::post('/modules/{slug}', function (Request $request, $slug) {
+
+    // 用 slug 找 module_id
+    $module = DB::table('modules')->where('slug', $slug)->first();
+
+    if (!$module) {
+        return response()->json(['error' => 'Module not found'], 404);
+    }
+
+    // 只算这个 module 的 level
+    $maxLevel = DB::table('chapters')
+        ->where('module_id', $module->id)
+        ->max('level');
+
+    $newLevel = $maxLevel ? $maxLevel + 1 : 1;
+
+    $id = DB::table('chapters')->insertGetId([
+        'title' => $request->title,
+        'description' => $request->description,
+        'module_id' => $module->id,
+        'level' => $newLevel,   
+    ]);
+
+    return response()->json([
+        'id' => $id,
+        'title' => $request->title,
+        'description' => $request->description,
+        'level' => $newLevel,
+    ]);
+});
+
+//edit chapter
+Route::put('/modules/{slug}/{id}', function (Request $request, $slug, $id) {
+
+    $chapter = DB::table('chapters')->where('id', $id)->first();
+
+    if (!$chapter) {
+        return response()->json(['error' => 'Chapter not found'], 404);
+    }
+    //level auto +1 
+    $oldLevel = $chapter->level;
+    $newLevel = $request->level;
+    $moduleId = $chapter->module_id;
+
+
+    if ($newLevel < $oldLevel) {
+        DB::table('chapters')
+            ->where('module_id', $moduleId)
+            ->whereBetween('level', [$newLevel, $oldLevel - 1])
+            ->increment('level');
+    }
+
+    if ($newLevel > $oldLevel) {
+        DB::table('chapters')
+            ->where('module_id', $moduleId)
+            ->whereBetween('level', [$oldLevel + 1, $newLevel])
+            ->decrement('level');
+    }
+
+    // 更新自己
+    DB::table('chapters')
+        ->where('id', $id)
+        ->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'level' => $newLevel,
+        ]);
+
+    return response()->json([
+        'message' => 'Updated successfully',
+    ]);
+});
+
+
+
+//delete chapter
+Route::delete('/modules/{slug}/{id}', function ($slug, $id) {
+
+    // 删除
+    DB::table('chapters')->where('id', $id)->delete();
+    $moduleId = $chapter->module_id;
+    $deletedLevel = $chapter->level;
+
+    // 后面的往前补
+    DB::table('chapters')
+        ->where('module_id', $moduleId)
+        ->where('level', '>', $deletedLevel)
+        ->decrement('level');
+
+    return response()->json([
+        'message' => 'Deleted successfully'
+    ]);
+});
+
+
+
+
 //Subchapters
+
 Route::get('/modules/{slug}/{chapter_id}', function ($slug, $chapter_id) {
     return DB::table('subchapters')
         ->join('chapters', 'subchapters.chapter_id', '=', 'chapters.id')
@@ -44,6 +199,71 @@ Route::get('/modules/{slug}/{chapter_id}', function ($slug, $chapter_id) {
         )
         ->get();
 });
+
+//add Subchapters
+Route::post('/modules/{slug}/{chapter_id}', function (Request $request,$slug, $chapter_id){
+$maxOrder = DB::table('subchapters')
+    ->where('chapter_id', $chapter_id)
+    ->max('subchapter_order');
+    $nextOrder = $maxOrder + 1;
+
+    $id = DB::table('subchapters')->insertGetId([
+        'title' => $request->title,
+        'description' => $request->description,
+        'chapter_id' => $chapter_id,
+        'subchapter_order' => $nextOrder,   
+    ]);
+
+    return response()->json([
+        'id' => $id,
+        'title' => $request->title,
+        'description' => $request->description,  
+    ]);
+});
+
+//edit chapter
+Route::put('/modules/{slug}/{chapter_id}', function (Request $request,$slug, $chapter_id){
+
+    $subchapter = DB::table('subchapters')->where('id', $id)->first();
+
+    if (!$subchapter) {
+        return response()->json(['error' => 'SubChapter not found'], 404);
+    }
+    //level auto +1 
+    $oldOrder = $subchapter->subchapter_order;
+    $newOrder = $request->subchapter_order;
+    $chapterId = $subchapter->chapter_id;
+
+
+    if ($newOrder < $oldOrder) {
+        DB::table('subchapters')
+            ->where('chapter_id', $chapterId)
+            ->whereBetween('subchapter_order', [$newOrder, $oldOrder - 1])
+            ->increment('subchapter_order');
+    }
+
+    if ($newOrder > $oldOrder) {
+        DB::table('subchapters')
+            ->where('chapter_id', $chapterId)
+            ->whereBetween('subchapter_order', [$oldOrder + 1, $newOrder])
+            ->decrement('subchapter_order');
+    }
+
+    // 更新自己
+    DB::table('subchapters')
+        ->where('id', $id)
+        ->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'subchapter_order' => $newOrder,
+        ]);
+
+    return response()->json([
+        'message' => 'Updated successfully',
+    ]);
+});
+
+    
 
 //Quizzes
 Route::get('/modules/{slug}/{chapter_id}/{subchapter_id}', function ($slug, $chapter_id, $subchapter_id) {
@@ -114,6 +334,7 @@ Route::post('/quiz/check', function (Request $request) {
     ]);
 });
 
+<<<<<<< HEAD
 //Home Page Student
 Route::get('/student/{id}', function($id) {
     $student = DB::table('student')->where('id', $id)->first();
@@ -354,3 +575,5 @@ Route::put('/modules/{id}', [ModuleController::class, 'update']);
 Route::delete('/modules/{id}', [ModuleController::class, 'destroy']);
 Route::get('/modules/details', [ModuleController::class, 'indexWithDetails']);  
 >>>>>>> 4cefbc4 (Admin function developing)
+=======
+>>>>>>> 3e273be (Admin module management)

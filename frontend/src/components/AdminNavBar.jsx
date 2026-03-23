@@ -37,22 +37,25 @@ const NavBar = () => {
     return (
         <header className='nav-bar'>
             <div className="nav-bar-left">
+<<<<<<< HEAD:frontend/src/components/NavBar.jsx
                 <NavLink to="/homepage" end className="logo-text">
                     MathDex
+=======
+                <NavLink to="/admin" end className="logo-text">
+                    Admin
+>>>>>>> 3e273be (Admin module management):frontend/src/components/AdminNavBar.jsx
                 </NavLink>
             </div>
             <nav className="nav-bar-items">
-                <NavLink to="/modules" end className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
-                    Learn
+                <NavLink to="/feedback" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
+                    Feedback
                 </NavLink>
                 <NavLink to="/challenge" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
                     Challenge
                 </NavLink>
-                <NavLink to="/leaderboard" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
-                    Leaderboard
-                </NavLink>
             </nav>
             <div className="nav-bar-right">
+<<<<<<< HEAD:frontend/src/components/NavBar.jsx
                 <div className="bell-container">
                     <img src="images/bell.png" alt="Bell Icon" className='bell-icon' />
                 </div>
@@ -63,6 +66,11 @@ const NavBar = () => {
                 <div className="profile-container" onClick={toggleDropdown} ref={profileContainerRef}>
                     <img src="/images/pixelated_profile_pic.png" alt="Profile" className="profile-pic" />
                     <span className="profile-name">Hann</span>
+=======
+                <div className="profile-container" onClick={toggleDropdown}>
+                    <img src="/images/profilepicture.jpeg" alt="Profile" className="profile-pic" />
+                    <span className="profile-name">Kahock</span>
+>>>>>>> 3e273be (Admin module management):frontend/src/components/AdminNavBar.jsx
                 </div>
             </div>
 

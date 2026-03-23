@@ -31,6 +31,7 @@ function AppContent() {
         </div>
     )
 }
+import NavBar from "./components/AdminNavBar";
 
 function App() {
     return (

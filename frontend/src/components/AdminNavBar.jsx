@@ -4,7 +4,7 @@ import './NavBar.css'
 import NotificationPopup from './NotificationPopup'
 import axios from 'axios'
 
-const NavBar = () => {
+const AdminNavBar = () => {
     const [isDropdownVisible, setIsDropdownVisible] = useState(false)
     const [isNotifVisible, setIsNotifVisible] = useState(false)
     const [notifications, setNotifications] = useState([])
@@ -48,20 +48,11 @@ const NavBar = () => {
     return (
         <header className='nav-bar'>
             <div className="nav-bar-left">
-<<<<<<< HEAD
-<<<<<<< HEAD:frontend/src/components/NavBar.jsx
                 <NavLink to="/homepage" end className="logo-text">
                     MathDex
-=======
+                </NavLink>
                 <NavLink to="/admin" end className="logo-text">
                     Admin
->>>>>>> 3e273be (Admin module management):frontend/src/components/AdminNavBar.jsx
-=======
-
-                <NavLink to="/admin" end className="logo-text">
-                    Admin
-
->>>>>>> 15eafe5 (finish module management(admin))
                 </NavLink>
             </div>
             <nav className="nav-bar-items">
@@ -83,14 +74,9 @@ const NavBar = () => {
                     <img src="/images/Coins.png" alt="Coins" className="coins-pic" />
                     <span className="coins">100</span>
                 </div>
-                <div className="profile-container" onClick={toggleDropdown} ref={profileContainerRef}>
-                    <img src="/images/pixelated_profile_pic.png" alt="Profile" className="profile-pic" />
-                    <span className="profile-name">Hann</span>
-=======
                 <div className="profile-container" onClick={toggleDropdown}>
                     <img src="/images/profilepicture.jpeg" alt="Profile" className="profile-pic" />
                     <span className="profile-name">Kahock</span>
->>>>>>> 3e273be (Admin module management):frontend/src/components/AdminNavBar.jsx
                 </div>
             </div>
 
@@ -118,4 +104,4 @@ const NavBar = () => {
     )
 }
 
-export default NavBar
+export default AdminNavBar

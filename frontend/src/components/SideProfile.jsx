@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react'
 import axios from 'axios'
-// import { Crown } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 const SideProfile = () => {
+    const navigate = useNavigate()
     const [student_name, setStudentName] = useState('')
     const [level, setLevel] = useState('')
     const [xp, setXp] = useState('')
@@ -49,7 +50,7 @@ const SideProfile = () => {
                     </div>
 				</div>
                 <div className="hp-view-profile-button">
-                    <button>View Profile</button>
+                    <button onClick={() => navigate('/ProfilePage')}>View Profile</button>
                 </div>
 			</div>
             <div className='hp-leaderboard-card'>

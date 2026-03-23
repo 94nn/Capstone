@@ -10,10 +10,10 @@ import '../components/Footer.css'
 const HomePage = () => {
   return (
     <div>
-		<main className="main-layout">
+		<main className="hp-main-layout">
 			<WlcMessage />
 			<SideProfile />
-			<div className='left-column'>
+			<div className='hp-left-column'>
 				<Home_Page_Progress />
 				<Home_Page_Explore />
 			</div>

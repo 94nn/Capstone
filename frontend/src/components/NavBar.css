@@ -65,25 +65,28 @@
 }
 
 .nav-item-active {
-    color: #f8fafc;
-    background: rgba(56, 189, 248, 0.2);
-    box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.45);
+  color: #f8fafc;
+  background: rgba(56, 189, 248, 0.2);
+  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.45);
 }
 
 .nav-bar-right {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
   gap: 1rem;
   justify-content: flex-end;
 }
 
+.bell-container{
+  margin-right: -15px;
+}
+
 .bell-icon {
-    width: 50px;
-    height: 50px;
-    cursor: pointer;
-    transition: filter 0.15s ease;
-    margin-top: 5px;
-    margin-right: -5px;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+  margin-top: 0;
 }
 
 /* Profile container */
@@ -128,9 +131,9 @@
 /* Coin picture styles */
 .coins-pic {
   width: 37px;
-  height: 55px;
+  height: 35px;
   object-fit: cover;
-  margin-right: 10px;
+  margin-right: 3px;
 }
 
 /* Coins display styles */

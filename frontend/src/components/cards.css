@@ -1,0 +1,98 @@
+.card {
+    background: rgba(15, 23, 42, 0.92);
+    border-radius: 1.25rem;
+    padding: 1.25rem 1.35rem 1.4rem;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    box-shadow: 0 20px 38px rgba(15, 23, 42, 0.85);
+}
+
+.progress-card, .hint-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    width: 400px;
+}
+
+.progress-card {
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.card-header {
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 24px;
+    color: #ffffff;
+    text-shadow:
+        0 0 8px rgba(255,255,255,0.15),
+        3px 3px 0 #1d274f;
+}
+
+.card p {
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 12px;
+    background-color: #e5e5e5;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #66BB6A);
+    border-radius: 10px;
+    transition: width 0.4s ease;
+}
+
+.hint-card {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    text-align: center;
+    gap: 1.2rem;
+}
+
+.hint-header {
+    font-size: 1.8rem;
+    color: #ffffff;
+    text-shadow:
+        0 0 6px rgba(255,255,255,0.15),
+        2px 2px 0 #1d274f;
+}
+
+.hint-item {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.hint-card .free-badge,
+.hint-card .paid-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    align-self: center;
+}
+
+.hint-card .free-badge {
+    background: rgba(97, 255, 153, 0.18);
+    color: #7dffad;
+    border: 1px solid rgba(97, 255, 153, 0.35);
+    text-shadow: 2px 2px 0 #005a1b;
+}
+
+.hint-card .paid-badge {
+    background: rgba(255, 214, 102, 0.16);
+    color: #ffd666;
+    border: 1px solid rgba(255, 214, 102, 0.35);
+    text-shadow: 2px 2px 0 #5a4b00;
+}

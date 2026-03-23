@@ -1,11 +1,14 @@
+import { useState } from "react";
 import QuizLayout from "../components/QuizLayout";
+import Hint from "../components/hint";
 import { Link, useParams } from "react-router-dom";
 
 function QuizPage() {
     const { slug, chapter_id } = useParams();
+    const [currentQuizId, setCurrentQuizId] = useState(null);
 
     return (
-        <main className="main-layout-full">
+        <main className="main-layout">
             <div className="chapter-column">
                 <div className="page-actions">
                     <Link to={`/modules/${slug}/${chapter_id}`} className="back-link">
@@ -15,8 +18,11 @@ function QuizPage() {
                         </button>
                     </Link>
                 </div>
-                <QuizLayout />
+                <QuizLayout setCurrentQuizId={setCurrentQuizId} />
             </div>
+            <aside className="learning-sidebar">
+                <Hint quiz_id={currentQuizId} />
+            </aside>
         </main>
     );
 }

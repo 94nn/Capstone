@@ -150,7 +150,7 @@ Route::get('/progress/{student_id}', function($student_id) {
     return response()->json($progress);
 });
 
-Route::post('/progress/update', function (Request $request) {
+Route::post('/progress/update', function(Request $request) {
 
     $request->validate([
         'student_id' => 'required|integer',
@@ -215,7 +215,7 @@ Route::post('/progress/update', function (Request $request) {
     ]);
 });
 
-Route::get('/progress-summary/{student_id}/{slug}', function ($student_id, $slug) {
+Route::get('/progress-summary/{student_id}/{slug}', function($student_id, $slug) {
 
     $module = DB::table('modules')
         ->where('slug', $slug)
@@ -248,7 +248,7 @@ Route::get('/progress-summary/{student_id}/{slug}', function ($student_id, $slug
     ]);
 });
 
-Route::get('/subchapter_progress/{student_id}/{chapter_id}', function ($student_id, $chapter_id) { 
+Route::get('/subchapter_progress/{student_id}/{chapter_id}', function($student_id, $chapter_id) { 
     $chapter = DB::table('chapters') 
         ->where('id', $chapter_id) 
         ->first(); 
@@ -274,7 +274,7 @@ Route::get('/subchapter_progress/{student_id}/{chapter_id}', function ($student_
     ]); 
 });
 
-Route::get('/subchapter_progress/{student_id}/{chapter_id}/{subchapter_id}', function ($student_id, $chapter_id, $subchapter_id) { 
+Route::get('/subchapter_progress/{student_id}/{chapter_id}/{subchapter_id}', function($student_id, $chapter_id, $subchapter_id) { 
 
     $progress = DB::table('subchapter_progress')
         ->where('student_id', $student_id)
@@ -290,4 +290,54 @@ Route::get('/subchapter_progress/{student_id}/{chapter_id}/{subchapter_id}', fun
 // Admin Team Route
 Route::get('/team', function() {
     return DB::table('admin')->get();
+});
+
+Route::get('/hint/{quiz_id}', function($quiz_id) {
+    $hints = DB::table('hint')
+        ->where('quiz_id', $quiz_id)
+        ->get();
+
+    return response()->json($hints);
+});
+
+Route::post('/hint/unlock', function (Request $request) {
+    $student = DB::table('student')->where('id', $request->student_id)->first();
+    $hint = DB::table('hint')->where('id', $request->hint_id)->first();
+
+    if (!$student) {
+        return response()->json(['error' => 'Student not found'], 404);
+    }
+
+    if (!$hint) {
+        return response()->json(['error' => 'Hint not found'], 404);
+    }
+
+    if ($hint->type === 'free') {
+        return response()->json([
+            'content' => $hint->content,
+            'coins_balance' => $student->coins_balance
+        ]);
+    }
+
+    $price = $hint->price ?? 0;
+
+    if ($student->coins_balance < $price) {
+        return response()->json([
+            'error' => 'Not enough coins'
+        ], 400);
+    }
+
+    $newBalance = $student->coins_balance - $price;
+
+    DB::table('student')
+        ->where('id', $request->student_id)
+        ->update([
+            'coins_balance' => $newBalance
+        ]);
+
+    return response()->json([
+        'content' => $hint->content,
+        'coins_balance' => $newBalance,
+        'message' => 'Hint unlocked successfully'
+    ]);
 });

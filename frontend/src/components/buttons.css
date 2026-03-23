@@ -146,3 +146,39 @@
     transform: translate(2px,2px);
     box-shadow: 2px 2px 0 #020617;
 }
+
+.popup-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.unlock-btn {  
+    display: inline-block;
+    width: 80%;
+    padding: 12px 16px;
+    margin-top: 6px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #294fb6 0%, #1e3a95 100%);
+    color: #ffffff;
+    font-size: 1.25rem;
+    cursor: pointer;
+    box-shadow:
+        0 5px 0 #132f8a,
+        0 10px 18px rgba(0, 0, 0, 0.35),
+        0 0 12px rgba(56, 189, 248, 0.25);
+    transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+    text-align: center;
+}
+
+.unlock-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+    box-shadow:
+        0 6px 0 #1e40af,
+        0 12px 20px rgba(0, 0, 0, 0.4),
+        0 0 16px rgba(56, 189, 248, 0.4);
+}

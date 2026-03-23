@@ -2,7 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
+<<<<<<< HEAD
 use App\Http\Controllers\AuthController;
+=======
+use App\Http\Controllers\ModuleController;
+>>>>>>> 4cefbc4 (Admin function developing)
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -83,6 +87,7 @@ Route::post('/quiz/check', function (Request $request) {
         ->where('quiz_id', $request->quiz_id)
         ->first();
 
+<<<<<<< HEAD
     $quiz = DB::table('quizzes')
         ->where('id', $request->quiz_id)
         ->select('id', 'question', 'explanation')
@@ -341,3 +346,11 @@ Route::post('/hint/unlock', function (Request $request) {
         'message' => 'Hint unlocked successfully'
     ]);
 });
+=======
+});
+
+Route::post('/modules', [ModuleController::class, 'store']);
+Route::put('/modules/{id}', [ModuleController::class, 'update']);
+Route::delete('/modules/{id}', [ModuleController::class, 'destroy']);
+Route::get('/modules/details', [ModuleController::class, 'indexWithDetails']);  
+>>>>>>> 4cefbc4 (Admin function developing)

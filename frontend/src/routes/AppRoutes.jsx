@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
+import { Routes, Route } from "react-router-dom";
 import ModulePage from "../pages/ModulePage";
 import ChapterPage from "../pages/ChapterPage";
 import SubChapterPage from "../pages/SubChapterPage";
@@ -10,6 +11,7 @@ import SettingsPage from "../pages/SettingsPage";
 import EditProfilePage from "../pages/EditProfilePage";
 import QuizPage from "../pages/QuizPage";
 import AboutUsPage from "../pages/AboutUsPage";
+import AdminPage from "../pages/AdminPage";
 
 function AppRoutes() {
 	return (
@@ -53,6 +55,11 @@ function AppRoutes() {
 			<Route path="*" element={<Navigate to="/" replace />} />
 			
 			<Route path="/aboutus" element={<AboutUsPage />} />
+
+		<Route
+			path="/admin"
+			element={<AdminPage title="Admin" description="Admin Panel" />}
+		/>
 
 		</Routes>
 	);

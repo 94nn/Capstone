@@ -263,7 +263,7 @@ Route::put('/modules/{slug}/{chapter_id}/{id}', function (Request $request, $slu
     ]);
 });
 
-//delete chapter
+//delete subchapter
 Route::delete('/modules/{slug}/{chapter_id}/{id}', function ($slug, $chapter_id, $id) {
 
     $subchapter = DB::table('subchapters')->where('id', $id)->first();
@@ -328,7 +328,7 @@ Route::post('/quiz/check', function (Request $request) {
         ->where('quiz_id', $request->quiz_id)
         ->first();
 
-<<<<<<< HEAD
+
     $quiz = DB::table('quizzes')
         ->where('id', $request->quiz_id)
         ->select('id', 'question', 'explanation')
@@ -355,7 +355,78 @@ Route::post('/quiz/check', function (Request $request) {
     ]);
 });
 
-<<<<<<< HEAD
+// create Quiz
+Route::post('/modules/{slug}/{chapter_id}/{subchapter_id}/quiz', function (Request $request, $slug, $chapter_id, $subchapter_id) {
+
+    // 插入 quiz
+    $quizId = DB::table('quizzes')->insertGetId([
+        'question' => $request->question,
+        'explanation' => $request->explanation ?? '',
+        'subchapter_id' => $subchapter_id
+    ]);
+
+    // 插入 options
+    if ($request->options && is_array($request->options)) {
+        foreach ($request->options as $opt) {
+            DB::table('quiz_options')->insert([
+                'quiz_id' => $quizId,
+                'option_text' => $opt['option_text'] ?? '',
+                'is_correct' => $opt['is_correct'] ?? false
+            ]);
+        }
+    }
+
+    return response()->json([
+        'message' => 'Quiz created',
+        'quiz_id' => $quizId
+    ]);
+});
+
+//Edit quiz
+Route::put('/modules/{slug}/{chapter_id}/{subchapter_id}/quiz/{quiz_id}', function (Request $request, $slug, $chapter_id, $subchapter_id, $quiz_id) {
+
+    // 更新 quiz
+    DB::table('quizzes')
+        ->where('id', $quiz_id)
+        ->update([
+            'question' => $request->question,
+            'explanation' => $request->explanation ?? ''
+        ]);
+
+    // 更新 options：先删再加
+    DB::table('quiz_options')->where('quiz_id', $quiz_id)->delete();
+
+    if ($request->options && is_array($request->options)) {
+        foreach ($request->options as $opt) {
+            DB::table('quiz_options')->insert([
+                'quiz_id' => $quiz_id,
+                'option_text' => $opt['option_text'] ?? '',
+                'is_correct' => $opt['is_correct'] ?? false
+            ]);
+        }
+    }
+
+    return response()->json([
+        'message' => 'Quiz updated',
+        'quiz_id' => $quiz_id
+    ]);
+});
+
+//Delete Quiz
+Route::delete('/modules/{slug}/{chapter_id}/{subchapter_id}/quiz/{quiz_id}', function ($slug, $chapter_id, $subchapter_id, $quiz_id) {
+
+    // 先删 options
+    DB::table('quiz_options')->where('quiz_id', $quiz_id)->delete();
+
+    // 再删 quiz
+    DB::table('quizzes')->where('id', $quiz_id)->delete();
+
+    return response()->json([
+        'message' => 'Quiz deleted',
+        'quiz_id' => $quiz_id
+    ]);
+});
+
 //Home Page Student
 Route::get('/student/{id}', function($id) {
     $student = DB::table('student')->where('id', $id)->first();
@@ -588,13 +659,10 @@ Route::post('/hint/unlock', function (Request $request) {
         'message' => 'Hint unlocked successfully'
     ]);
 });
-=======
-});
+
 
 Route::post('/modules', [ModuleController::class, 'store']);
 Route::put('/modules/{id}', [ModuleController::class, 'update']);
 Route::delete('/modules/{id}', [ModuleController::class, 'destroy']);
 Route::get('/modules/details', [ModuleController::class, 'indexWithDetails']);  
->>>>>>> 4cefbc4 (Admin function developing)
-=======
->>>>>>> 3e273be (Admin module management)
+

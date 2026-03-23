@@ -18,6 +18,7 @@ import AdminSubChapterPage from "../pages/AdminSubChapterPage";
 import AdminQuizPage from "../pages/AdminQuizPage";
 import FeedbackPage from "../pages/FeedbackPage";
 import AdminChallengePage from "../pages/AdminChallengePage";
+import AboutUsPage from "../pages/AboutUsPage";
 
 function AppRoutes() {
 	return (
@@ -41,6 +42,19 @@ function AppRoutes() {
 			/>
 			<Route path="/admin" element={<AdminPage />} />
 
+			<Route path="/admin/:slug" element={<AdminChapterPage />} />
+
+			<Route path="/admin/:slug/:chapter_id" element={<AdminSubChapterPage />} />
+
+			<Route path="/admin/:slug/:chapter_id/:subchapter_id" element={<AdminQuizPage />} />
+
+			<Route path="/feedback"element={<FeedbackPage  />}/>
+			
+			<Route path="/challenge"element={<AdminChallengePage  />}/>
+
+
+
+		
 			<Route 
 				path="/ProfilePage"
 				element={<ProfilePage />}
@@ -80,6 +94,7 @@ function AppRoutes() {
 
 			</Routes>
 		);
+
 }
 
 export default AppRoutes;

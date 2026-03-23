@@ -28,7 +28,7 @@ function ProgressSummary() {
     return (
         <aside className="learning-sidebar">
             <div className="card progress-card">
-                <h1 className="progress-header">Progress Summary</h1>
+                <h1 className="card-header">Progress Summary</h1>
                 <p>
                     You have completed {progress.percentage}% of this module
                 </p>

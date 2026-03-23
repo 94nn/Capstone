@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import ModulePage from "../pages/ModulePage";
 import ChapterPage from "../pages/ChapterPage";
 import SubChapterPage from "../pages/SubChapterPage";
@@ -8,6 +9,14 @@ import ProfilePage from "../pages/ProfilePage";
 import SettingsPage from "../pages/SettingsPage";
 import EditProfilePage from "../pages/EditProfilePage";
 import QuizPage from "../pages/QuizPage";
+import AdminPage from "../pages/AdminPage";
+import AdminChapterPage from "../pages/AdminChapterPage";
+import AdminSubChapterPage from "../pages/AdminSubChapterPage";
+import AdminQuizPage from "../pages/AdminQuizPage";
+import FeedbackPage from "../pages/FeedbackPage";
+import AdminChallengePage from "../pages/AdminChallengePage";
+import AboutUsPage from "../pages/AboutUsPage";
+import AdminPage from "../pages/AdminPage";
 import AdminPage from "../pages/AdminPage";
 import AdminChapterPage from "../pages/AdminChapterPage";
 import AdminSubChapterPage from "../pages/AdminSubChapterPage";
@@ -70,8 +79,27 @@ function AppRoutes() {
 			
 			<Route path="/aboutus" element={<AboutUsPage />} />
 
-		</Routes>
-	);
+		<Route
+			path="/admin"
+			element={<AdminPage title="Admin" description="Admin Panel" />}
+		/>
+
+
+			<Route path="/admin/:slug" element={<AdminChapterPage />} />
+
+			<Route path="/admin/:slug/:chapter_id" element={<AdminSubChapterPage />} />
+
+			<Route path="/admin/:slug/:chapter_id/:subchapter_id" element={<AdminQuizPage />} />
+
+			<Route path="/feedback"element={<FeedbackPage  />}/>
+			
+			<Route path="/challenge"element={<AdminChallengePage  />}/>
+
+
+
+			</Routes>
+		);
+
 }
 
 export default AppRoutes;

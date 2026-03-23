@@ -37,10 +37,26 @@ const NavBar = () => {
     return (
         <header className='nav-bar'>
             <div className="nav-bar-left">
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD:frontend/src/components/NavBar.jsx
+                <NavLink to="/homepage" end className="logo-text">
+                    MathDex
+=======
+                <NavLink to="/admin" end className="logo-text">
+                    Admin
+>>>>>>> 3e273be (Admin module management):frontend/src/components/AdminNavBar.jsx
+=======
+>>>>>>> main
 
                 <NavLink to="/admin" end className="logo-text">
                     Admin
 
+<<<<<<< HEAD
+=======
+>>>>>>> 15eafe5 (finish module management(admin))
+>>>>>>> main
                 </NavLink>
             </div>
             <nav className="nav-bar-items">
@@ -52,6 +68,12 @@ const NavBar = () => {
                 </NavLink>
             </nav>
             <div className="nav-bar-right">
+<<<<<<< HEAD
+<<<<<<< HEAD:frontend/src/components/NavBar.jsx
+                <div className="bell-container">
+                    <img src="images/bell.png" alt="Bell Icon" className='bell-icon' />
+                </div>
+=======
                 <div>
                     <img src="images/bell.png" alt="Bell Icon" className='bell-icon' />
                 </div>
@@ -59,9 +81,19 @@ const NavBar = () => {
                     <img src="/images/pixelated_profile_pic.png" alt="Profile" className="profile-pic" />
                     <span className="profile-name">Hann</span>
                 </div>
+>>>>>>> 15eafe5 (finish module management(admin))
                 <div className="coins-container">
                     <img src="/images/Coins.png" alt="Coins" className="coins-pic" />
                     <span className="coins">100</span>
+                </div>
+                <div className="profile-container" onClick={toggleDropdown} ref={profileContainerRef}>
+                    <img src="/images/pixelated_profile_pic.png" alt="Profile" className="profile-pic" />
+                    <span className="profile-name">Hann</span>
+=======
+                <div className="profile-container" onClick={toggleDropdown}>
+                    <img src="/images/profilepicture.jpeg" alt="Profile" className="profile-pic" />
+                    <span className="profile-name">Kahock</span>
+>>>>>>> 3e273be (Admin module management):frontend/src/components/AdminNavBar.jsx
                 </div>
             </div>
 

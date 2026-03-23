@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 
-function QuizLayout() {
+function QuizLayout({setCurrentQuizId}) {
     const { slug, chapter_id, subchapter_id } = useParams();
     const navigate = useNavigate();
     const [subchapters, setSubchapters] = useState([]);
@@ -63,6 +63,12 @@ function QuizLayout() {
     const currentSubchapterIndex = subchapters.findIndex((s) => String(s.id) === String(subchapter_id));
     const nextSubchapter = subchapters[currentSubchapterIndex + 1];
     const isLastSubchapter = currentSubchapterIndex !== -1 && currentSubchapterIndex === subchapters.length - 1;
+
+    useEffect(() => {
+        if (currentQuiz?.id) {
+            setCurrentQuizId(currentQuiz.id);
+        }
+    }, [currentQuiz, setCurrentQuizId]);
 
     async function handleAnswer(optionId) {
         if (!currentQuiz || answered) return;

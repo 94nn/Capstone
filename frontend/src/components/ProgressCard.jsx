@@ -31,7 +31,7 @@ function ProgressCard() {
     return (
         <aside className="learning-sidebar">
             <div className="card progress-card">
-                <h1 className="progress-header">Progress of Level {progress.level}</h1>
+                <h1 className="card-header">Progress of Level {progress.level}</h1>
                 <p>
                     You have completed {progress.percentage}% of this level
                 </p>

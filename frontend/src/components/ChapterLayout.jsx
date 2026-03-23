@@ -19,7 +19,9 @@ function ChapterLayout() {
             }
         }
 
-        if (slug) loadData();
+        if (slug) {
+            loadData();
+        }
     }, [slug]);
 
     return (

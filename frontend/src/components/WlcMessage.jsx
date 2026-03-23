@@ -27,42 +27,42 @@ const WlcMessage = () => {
   const welcomeText = username ? messages(username)[visitCount] : { before: '', after: '' }
 
   return (
-    <section className="lesson-section">
-      <div className="header">
-        <div className="profile-section">
+    <section className="hp-lesson-section">
+      <div className="hp-header">
+        <div className="hp-wlc-section">
           <img
             src="/images/pixelated_computer_right.png"
-            alt="Profile Icon"
-            className="profile-icon"
+            alt="Computer Icon"
+            className="hp-computer-icon"
           />
         </div>
 
-        <div className="welcome-message">
+        <div className="hp-welcome-message">
           <p>
             {welcomeText.before}
-            <span className="username">@{username}</span>
+            <span className="hp-username">@{username}</span>
             {welcomeText.after}
         </p>
         </div>
       </div>
-      <div className="get-started-container">
-        <div className='student-icons'>
+      <div className="hp-get-started-container">
+        <div className='hp-student-icons'>
           <img
             src="/images/boy_student.png"
             alt="Boy Student"
-            className="boy-student-icon"
+            className="hp-boy-student-icon"
           />
           <img 
             src="/images/girl_student.png" 
             alt="Girl Student" 
-            className="girl-student-icon" 
+            className="hp-girl-student-icon" 
           />
         </div>
-        <div className="welcome-text">
+        <div className="hp-welcome-text">
           <h1>Welcome to Mathdex!</h1>
           <p>Discover a world of math learning with us. Explore interactive lessons and practice problems to boost your math skills. Let's embark on this exciting journey together!</p>
         </div>
-        <div className="get-started-button">
+        <div className="hp-get-started-button">
           <button onClick={() => navigate('/modules')}>Get Started</button>
         </div>
       </div>

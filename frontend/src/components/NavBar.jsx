@@ -72,7 +72,7 @@ const NavBar = () => {
                     <li><NavLink to="/ProfilePage" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
                         Profile
                     </NavLink></li>
-                    <li><NavLink to="/SettingsPage" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
+                    <li><NavLink to="/EditProfilePage" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
                         Settings
                     </NavLink></li>
                     <li>Logout</li>

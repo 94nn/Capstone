@@ -63,12 +63,9 @@
   position:absolute;
   bottom: 0;
   left:90px;
-  
-
   display:flex;
   align-items:center;
   gap:12px;
-
   transform: translateY(0%);
 }
 

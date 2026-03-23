@@ -1,5 +1,6 @@
 import React from 'react';
 import '../components/Profile.css';
+import { NavLink } from 'react-router-dom';
 
 function ProfilePage() {
   return (
@@ -16,7 +17,7 @@ function ProfilePage() {
           />
           
           <div className="profile-picture">
-            <img src="/images/profilepicture.jpeg" alt="Profile" className="profilePicBanner" />
+            <img src="/images/pixelated_profile_pic.png" alt="Profile" className="profilePicBanner" />
           </div>
           <div className="profile-section">
             <div className="profile-text">
@@ -30,6 +31,12 @@ function ProfilePage() {
                 Edit profile
             </button>
 
+            <NavLink to="/EditProfilePage">
+                <button className="edit-profile-btn">
+                    Edit profile
+                </button>
+            </NavLink>
+
         </div>
 
       </div>
@@ -42,7 +49,7 @@ function ProfilePage() {
             <img src="/images/tempCharacter.png" alt="character" className="character-pic" />
 
             <div className="character-info">
-              <h1><span className="character-name">Corigin</span></h1>
+              <h1><span className="character-name">Hann</span></h1>
               <span className="character-level">Level 1</span>
             </div>
           </div>

@@ -1,38 +1,49 @@
-import React, {useState, useRef, useEffect} from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import './NavBar.css'
+import NotificationPopup from './NotificationPopup'
+import axios from 'axios'
 
 const NavBar = () => {
-    const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+    const [isDropdownVisible, setIsDropdownVisible] = useState(false)
+    const [isNotifVisible, setIsNotifVisible] = useState(false)
+    const [notifications, setNotifications] = useState([])
 
-    // Reference for the dropdown and profile container
-    const dropdownRef = useRef(null);
-    const profileContainerRef = useRef(null);
+    const unreadCount = notifications.filter(n => !n.is_read).length
 
-    // Toggle the dropdown visibility
-    const toggleDropdown = () => {
-        setIsDropdownVisible(!isDropdownVisible);
-    };
+    const dropdownRef = useRef(null)
+    const profileContainerRef = useRef(null)
 
-      // Close the dropdown if clicked outside of it
+    // Fetch notifications from API
+    useEffect(() => {
+        axios.get('/api/notifications/1')
+            .then(res => setNotifications(res.data))
+            .catch(err => console.error('Error fetching notifications:', err))
+    }, [])
+
+    // Close dropdowns when clicking outside
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (
                 dropdownRef.current && !dropdownRef.current.contains(event.target) &&
                 profileContainerRef.current && !profileContainerRef.current.contains(event.target)
             ) {
-                setIsDropdownVisible(false);
+                setIsDropdownVisible(false)
             }
-        };
+        }
+        document.addEventListener('mousedown', handleClickOutside)
+        return () => document.removeEventListener('mousedown', handleClickOutside)
+    }, [])
 
-        // Add event listener to detect clicks outside
-        document.addEventListener('mousedown', handleClickOutside);
+    const toggleDropdown = () => {
+        setIsDropdownVisible(prev => !prev)
+        setIsNotifVisible(false)
+    }
 
-        // Clean up the event listener when the component unmounts
-        return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
+    const toggleNotif = () => {
+        setIsNotifVisible(prev => !prev)
+        setIsDropdownVisible(false)
+    }
 
     return (
         <header className='nav-bar'>
@@ -62,20 +73,12 @@ const NavBar = () => {
                 </NavLink>
             </nav>
             <div className="nav-bar-right">
-<<<<<<< HEAD
-<<<<<<< HEAD:frontend/src/components/NavBar.jsx
-                <div className="bell-container">
+                <div className="bell-container" onClick={toggleNotif}>
                     <img src="images/bell.png" alt="Bell Icon" className='bell-icon' />
+                    {unreadCount > 0 && (
+                        <span className="notif-badge">{unreadCount}</span>
+                    )}
                 </div>
-=======
-                <div>
-                    <img src="images/bell.png" alt="Bell Icon" className='bell-icon' />
-                </div>
-                <div className="profile-container" onClick={toggleDropdown} ref={profileContainerRef}>
-                    <img src="/images/pixelated_profile_pic.png" alt="Profile" className="profile-pic" />
-                    <span className="profile-name">Hann</span>
-                </div>
->>>>>>> 15eafe5 (finish module management(admin))
                 <div className="coins-container">
                     <img src="/images/Coins.png" alt="Coins" className="coins-pic" />
                     <span className="coins">100</span>
@@ -91,17 +94,24 @@ const NavBar = () => {
                 </div>
             </div>
 
+            <NotificationPopup
+                isVisible={isNotifVisible}
+                onClose={() => setIsNotifVisible(false)}
+                notifications={notifications}
+                setNotifications={setNotifications}
+            />
+
             {isDropdownVisible && (
                 <div className="dropdown" ref={dropdownRef}>
-                <ul>
-                    <li><NavLink to="/ProfilePage" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
-                        Profile
-                    </NavLink></li>
-                    <li><NavLink to="/SettingsPage" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
-                        Settings
-                    </NavLink></li>
-                    <li>Logout</li>
-                </ul>
+                    <ul>
+                        <li><NavLink to="/ProfilePage" className={({ isActive }) => `dropdown-item ${isActive ? "dropdown-item-active" : ""}`}>
+                            Profile
+                        </NavLink></li>
+                        <li><NavLink to="/SettingsPage" className={({ isActive }) => `dropdown-item ${isActive ? "dropdown-item-active" : ""}`}>
+                            Settings
+                        </NavLink></li>
+                        <li>Logout</li>
+                    </ul>
                 </div>
             )}
         </header>

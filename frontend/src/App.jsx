@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, useLocation, matchPath } from "react-router-dom";
 import "./App.css";
 import "./index.css";
 import BeforeLoginRoutes from "./routes/BeforeLoginRoutes";
@@ -8,12 +8,30 @@ import "./components/popup.css";
 import AppRoutes from "./routes/AppRoutes";
 import NavBar from "./components/AdminNavBar";
 import TopBar from "./components/TopBar";
+import AdminNavBar from "./components/AdminNavBar";
 
 function AppContent() {
-    const location = useLocation()
+    const location = useLocation();
+    const role = localStorage.getItem("role");
 
-    const beforeLoginPages = ['/', '/login', '/register', '/aboutus/b4login', '/modules/b4login', '/modules/b4login/:slug', '/modules/b4login/:slug/:chapter_id', '/modules/b4login/:slug/:chapter_id/:subchapter_id', '/challenge/b4login', '/leaderboard/b4login']
-    const isBeforeLogin = beforeLoginPages.includes(location.pathname)
+    const beforeLoginPages = [
+        "/",
+        "/login",
+        "/register",
+        "/aboutus/b4login",
+        "/modules/b4login",
+        "/modules/b4login/:slug",
+        "/modules/b4login/:slug/:chapter_id",
+        "/modules/b4login/:slug/:chapter_id/:subchapter_id",
+        "/challenge/b4login",
+        "/leaderboard/b4login",
+    ];
+
+    const isBeforeLogin = beforeLoginPages.some((path) =>
+        matchPath({ path, end: true }, location.pathname)
+    );
+
+    const isAdminPage = location.pathname.startsWith("/admin");
 
     return (
         <div className="App">
@@ -24,48 +42,20 @@ function AppContent() {
                 </>
             ) : (
                 <>
-                    <NavBar />
+                    {(role === "admin" || isAdminPage) ? <AdminNavBar /> : <NavBar />}
                     <AppRoutes />
                 </>
             )}
         </div>
-    )
-}
-import NavBar from "./components/AdminNavBar";
-import TopBar from "./components/TopBar";
-
-function AppContent() {
-    const location = useLocation()
-
-    const beforeLoginPages = ['/', '/login', '/register', '/aboutus/b4login', '/modules/b4login', '/modules/b4login/:slug', '/modules/b4login/:slug/:chapter_id', '/modules/b4login/:slug/:chapter_id/:subchapter_id', '/challenge/b4login', '/leaderboard/b4login']
-    const isBeforeLogin = beforeLoginPages.includes(location.pathname)
-
-    return (
-        <div className="App">
-            {isBeforeLogin ? (
-                <>
-                    <TopBar />
-                    <BeforeLoginRoutes />
-                </>
-            ) : (
-                <>
-                    <NavBar />
-                    <AppRoutes />
-                </>
-            )}
-        </div>
-    )
+    );
 }
 
 function App() {
     return (
         <BrowserRouter>
-             <div className="App">
-                <NavBar />
-                <AppContent />
-            </div>
+            <AppContent />
         </BrowserRouter>
     );
 }
 
-export default App;         
+export default App;

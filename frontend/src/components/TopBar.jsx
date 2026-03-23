@@ -21,6 +21,7 @@ function TopBar() {
 					Leaderboard
 				</NavLink>
 			</nav>
+			
 			<div className="nav-bar-right">
 				<button className="primary-button">Log in</button>
 			</div>

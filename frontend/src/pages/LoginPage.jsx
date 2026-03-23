@@ -1,4 +1,5 @@
 import React, { useState} from "react";
+import { Link } from "react-router-dom";
 
 function LoginPage() {
     const [formData, setFormData] = useState ({
@@ -41,29 +42,61 @@ function LoginPage() {
 
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input 
-                type="email" 
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Email"
-                className="text-black bg-white rounded px-2 py-1"
-            />
-            <br /><br />
+        <div className="min-h-screen bg-[#0a0f1f] text-white flex items-start justify-center px-4 pt-28 pb-12">
+            <div className="w-full max-w-4xl grid md:grid-cols-[420px_1fr] gap-12 items-center">
+                <form 
+                    onSubmit={handleSubmit}
+                    className="w-full bg-[#11182d] border border-cyan-400/20 rounded-2xl p-6 shadow-xl"
+                >
+                    <h1 className="text-3xl font-bold mb-2">Welcome Back</h1>
+                    <p className="text-gray-300 mb-6">Log in to continue your MathDex journey</p>
 
-            <input 
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Password"
-                className="text-black bg-white rounded px-2 py-1" 
-            />
-            <br /><br />
+                    <input 
+                        type="email" 
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        placeholder="Email"
+                        className="w-full mb-4 px-4 py-2.5 rounded-lg bg-white text-black"
+                    />
+                    <br /><br />
 
-            <button type="submit">Login</button>
-        </form>
+                    <input 
+                        type="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        placeholder="Password"
+                        className="w-full mb-6 px-4 py-2.5 rounded-lg bg-white text-black" 
+                    />
+                    <br /><br />
+
+                    <button 
+                        type="submit"
+                        className="w-full bg-cyan-400 text-black font-semibold py-2.5 rounded-lg hover:bg-cyan-300"
+                        >Login</button>
+
+                    <p className="mt-4 text-sm text-gray-300 text-center">
+                        No account?{" "}
+                        <Link to="/register" className="text-cyan-400 hover:underline">
+                            Register
+                        </Link>
+                    </p>
+                </form>
+
+                <div className="flex flex-col items-center justify-center text-center">
+                    <img 
+                        src="/images/mathdex-login.gif" 
+                        alt="MathDex login animation" 
+                        className="w-64 md:w-80 rounded-xl shadow-lg"
+                    />
+
+                    <p className="mt-4 text-gray-300 max-w-sm">
+                        Enter the world of challenges, rewards, and leaderboard glory.
+                    </p>
+                </div>
+            </div>
+        </div>
     );
 }
 

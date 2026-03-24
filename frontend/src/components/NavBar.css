@@ -65,25 +65,49 @@
 }
 
 .nav-item-active {
-    color: #f8fafc;
-    background: rgba(56, 189, 248, 0.2);
-    box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.45);
+  color: #f8fafc;
+  background: rgba(56, 189, 248, 0.2);
+  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.45);
 }
 
 .nav-bar-right {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
   gap: 1rem;
   justify-content: flex-end;
 }
 
+.bell-container {
+  position: relative;
+  margin-right: -15px;
+  cursor: pointer;
+}
+
 .bell-icon {
-    width: 50px;
-    height: 50px;
-    cursor: pointer;
-    transition: filter 0.15s ease;
-    margin-top: 5px;
-    margin-right: -5px;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+  margin-top: 0;
+}
+
+/* Unread red dot on bell */
+.notif-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: #ef4444;
+  color: #fff;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 8px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(15, 23, 42, 0.95);
+  pointer-events: none;
 }
 
 /* Profile container */
@@ -128,9 +152,9 @@
 /* Coin picture styles */
 .coins-pic {
   width: 37px;
-  height: 55px;
+  height: 35px;
   object-fit: cover;
-  margin-right: 10px;
+  margin-right: 3px;
 }
 
 /* Coins display styles */
@@ -183,6 +207,6 @@
 }
 
 .dropdown li:hover {
-  background-color: rgba(148, 163, 184, 0.2); /* Lighter hover effect */
-  border-radius: 5px; /* Rounded corners for hover state */
+  background-color: rgba(148, 163, 184, 0.2);
+  border-radius: 5px;
 }

@@ -81,9 +81,9 @@ const handleSubmit = async (e) => {
           <br /><br />
 
           <input
-            type="number"
-            name="age"
-            value={formData.age}
+            type="date"
+            name="date_of_birth"
+            value={formData.date_of_birth}
             onChange={handleChange}
             placeholder="Age"
             className="w-full mb-6 px-4 py-2.5 rounded-lg bg-white text-black"

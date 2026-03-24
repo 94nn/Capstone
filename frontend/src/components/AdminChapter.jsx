@@ -95,8 +95,7 @@ const closeModal = () => {
 };
 
   return (
-      <section className="lesson-section">
-        <br />
+      <section className="lesson-section"> &nbsp;
             <div className="lesson-header">
                 <div>
                     <h1 className="chapter-management-header">Chapter Management</h1>

@@ -132,16 +132,14 @@ const handleSubmitQuiz = async () => {
     return (
         <section className="admin-quiz-section">
             <div className="lesson-header">
-                <div>
-                    <h1 className="quiz-management-header">Quiz Management</h1>
-                </div>
+                <h1 className="quiz-management-header">Quiz Management</h1>
             </div>
-            <button className="quiz-create-button" onClick={() => setShowModal(true)}>Create Quiz</button>
+            <button className="create-button" onClick={() => setShowModal(true)} >Create Quiz</button>
 
             {quizzes.map((quiz, index) => (
                 <div key={quiz.id} className="quiz-card">
-                    <h3>Question {index + 1}</h3>
-
+                    <h3 className="quiz-question">Question {index + 1}</h3>
+                    <br />
                     <input
                         type="text"
                         value={quiz.question}
@@ -164,10 +162,12 @@ const handleSubmitQuiz = async () => {
                                         handleOptionChange(quiz.id, opt.id, "option_text", e.target.value)
                                     }
                                     placeholder="Option text"
+                                    className="option-text"
                                 />
                                 <label>
                                     <input
                                         type="checkbox"
+                                        className="checkbox"
                                         checked={opt.is_correct || false}
                                         onChange={(e) =>
                                             handleOptionChange(quiz.id, opt.id, "is_correct", e.target.checked)
@@ -177,31 +177,29 @@ const handleSubmitQuiz = async () => {
                                 </label>
                             </div>
                         ))}
-                        <button onClick={() => handleAddOption(quiz.id)}>Add Option</button>
+                        <button className="add-option-button" onClick={() => handleAddOption(quiz.id)}>Add Option</button>
                     </div>
 
                     <textarea
                         value={quiz.explanation || ""}
                         onChange={(e) => handleQuizChange(quiz.id, "explanation", e.target.value)}
                         placeholder="Explanation"
-                        style={{ width: "100%", marginTop: "0.5rem" }}
                     />
 
-                    <div style={{ marginTop: "0.5rem", display: "flex", gap: "0.5rem" }}>
-                        <button onClick={() => handleSaveQuiz(quiz)}>Save Question</button>
-                        <button onClick={() => handleDeleteQuiz(quiz.id)}>Delete Question</button>
+                    <div className="button-row" style={{ marginTop: "0.5rem", display: "flex", gap: "0.5rem" }}>
+                        <button className="save-quiz-button" onClick={() => handleSaveQuiz(quiz)}>Save Question</button>
+                        <button className="delete-quiz-button" onClick={() => handleDeleteQuiz(quiz.id)}>Delete Question</button>
                     </div>
 
-                    <hr style={{ margin: "1rem 0" }} />
+                    {/* <hr style={{ margin: "1rem 0" }} /> */}
 {/* Modal for Create Quiz */}
 {showModal && (
     <div className="modal-overlay">
-        <div className="chapter-box">
+        <div className="quiz-box">
             <div className="modal-box-header">
                 <h2 className="edit-module">Create Quiz</h2>
                 <button className="close-button" onClick={() => setShowModal(false)}>X</button>
             </div>
-            <br />
             <input
                 type="text"
                 className="module-name"
@@ -217,6 +215,7 @@ const handleSubmitQuiz = async () => {
                     <div key={opt.id} className="option-row" style={{ display: "flex", flexDirection: "column", marginBottom: "0.5rem" }}>
                         <input
                             type="text"
+                            className="create-quiz-option-text"
                             value={opt.option_text}
                             onChange={(e) => {
                                 const newOptions = [...newQuiz.options];
@@ -239,6 +238,7 @@ const handleSubmitQuiz = async () => {
                     </div>
                 ))}
                 <button
+                    className="create-quiz-add-option-button"
                     onClick={() =>
                         setNewQuiz({
                             ...newQuiz,
@@ -258,10 +258,9 @@ const handleSubmitQuiz = async () => {
                     setNewQuiz({ ...newQuiz, explanation: e.target.value })
                 }
                 rows={3}
-                style={{ width: "80%", resize: "vertical" }}
+                style={{ width: "90%", resize: "vertical" }}
             />
-
-            <br /><br />
+            <br />
             <div className="modal-box-bottom">
                 <button className="submit-button" onClick={handleSubmitQuiz}>Submit</button>
                 <button className="cancel-button" onClick={() => setShowModal(false)}>Cancel</button>

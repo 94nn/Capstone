@@ -6,7 +6,7 @@ import {  Link, useParams } from "react-router-dom";
 function AdminPage() {
    const {slug, chapter_id} = useParams();
   return (
-    <main className="module-page-container">
+    <main className="main-layout">
       <div className='Quiz Management'>
                 <div className="page-actions">
                 <Link to={`/admin/${slug}/${chapter_id}`} className="back-link">

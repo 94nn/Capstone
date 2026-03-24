@@ -69,12 +69,15 @@ function FeedbackManager() {
 
   return (
     <div style={{ padding: 20 }}>
-      <h2>{editingId ? "Edit Feedback" : "Add Feedback"}</h2>
+      <h2 className="feedback-header">{editingId ? "Edit Feedback" : "Add Feedback"}</h2>
+      <br />
       <form onSubmit={handleSubmit} style={{ marginBottom: 20 }}>
-        {!editingId && (
+        <div className="info">
+          {!editingId && (
           <>
             <input
               type="number"
+              className="feedback-studentid"
               placeholder="Student ID"
               value={studentId}
               onChange={(e) => setStudentId(e.target.value)}
@@ -82,6 +85,7 @@ function FeedbackManager() {
             />
             <input
               type="number"
+              className="feedback-moduleid"
               placeholder="Module ID"
               value={moduleId}
               onChange={(e) => setModuleId(e.target.value)}
@@ -89,16 +93,25 @@ function FeedbackManager() {
             />
           </>
         )}
+        </div>
+        <br />
         <textarea
           placeholder="Feedback"
+          className="feedback-message"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           required
         />
-        <button type="submit">{editingId ? "Update" : "Submit"}</button>
+        <br />
+        <div className="button-row">
+          <button className="submit-feedback-button" type="submit">
+            {editingId ? "Update" : "Submit"}
+          </button>
+        </div>
+        
       </form>
-
-      <h2>Feedback List</h2>
+      <h2 className="feedback-list-header">Feedback List</h2>
+      <br />
       <table border="1" cellPadding="5">
         <thead>
           <tr>

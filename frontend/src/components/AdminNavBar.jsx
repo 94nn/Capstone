@@ -48,11 +48,17 @@ const AdminNavBar = () => {
     return (
         <header className='nav-bar'>
             <div className="nav-bar-left">
+
+
+
                 <NavLink to="/homepage" end className="logo-text">
                     MathDex
                 </NavLink>
                 <NavLink to="/admin" end className="logo-text">
                     Admin
+
+
+
                 </NavLink>
             </div>
             <nav className="nav-bar-items">

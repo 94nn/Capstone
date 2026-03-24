@@ -152,3 +152,45 @@
   justify-content: flex-end;
   margin-top: 40px;
 }
+
+.EditProfile-avatar-wrapper {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.EditProfile-profilePicBanner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #00bfff;
+}
+
+
+.EditProfile-avatar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  opacity: 0;
+  cursor: pointer;
+  font-weight: 600;
+
+  transition: 0.3s;
+}
+
+
+.EditProfile-avatar-wrapper:hover .avatar-overlay {
+  opacity: 1;
+}

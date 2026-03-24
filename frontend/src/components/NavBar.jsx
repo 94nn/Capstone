@@ -65,7 +65,7 @@ const NavBar = () => {
             </nav>
             <div className="nav-bar-right">
                 <div className="bell-container" onClick={toggleNotif}>
-                    <img src="images/bell.png" alt="Bell Icon" className='bell-icon' />
+                    <img src="/images/bell.png" alt="Bell Icon" className='bell-icon' />
                     {unreadCount > 0 && (
                         <span className="notif-badge">{unreadCount}</span>
                     )}

@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ModuleController;
 
+use Illuminate\Support\Facades\Storage;
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 use Illuminate\Http\Request;
@@ -787,4 +789,48 @@ Route::delete('/feedback/{id}', function($id) {
     $deleted = DB::table('feedback')->where('id', $id)->delete();
     if (!$deleted) return response()->json(['error' => 'Feedback not found'], 404);
     return response()->json(['success' => true]);
+});
+
+Route::post('/update-profile/{id}', function(Request $request, $id) {
+    $student = DB::table('student')->where('id', $id)->first();
+
+    if (!$student) {
+        return response()->json(['error' => 'Student not found'], 404);
+    }
+
+    $updateData = [];
+
+    // Update name and bio
+    if ($request->filled('name')) $updateData['name'] = $request->input('name');
+    if ($request->filled('bio')) $updateData['Bio'] = $request->input('bio'); // note column is 'Bio'
+
+    // Handle image upload
+    if ($request->hasFile('profile_pic')) {
+        $file = $request->file('profile_pic');
+
+        // Optional: delete old image
+        if ($student->profile_pic) {
+            Storage::disk('public')->delete($student->profile_pic);
+        }
+
+        // Store in storage/app/public/profile_pics
+        $path = $file->store('profile_pics', 'public');
+        $updateData['profile_pic'] = $path; // store path in DB
+    }
+
+    // Update DB
+    DB::table('student')->where('id', $id)->update($updateData);
+
+    // Return updated data
+    $updatedStudent = DB::table('student')->where('id', $id)->first();
+    return response()->json([
+        'username' => $updatedStudent->name,
+        'bio' => $updatedStudent->Bio,
+        'updated_image_url' => $updatedStudent->profile_pic 
+            ? asset('storage/' . $updatedStudent->profile_pic) 
+            : null,
+        'level' => $updatedStudent->level,
+        'xp' => $updatedStudent->xp_balance,
+        'badges' => $updatedStudent->badges_balance,
+    ]);
 });

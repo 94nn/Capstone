@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import '../components/Profile.css';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function ProfilePage() {
   const [student, setStudent] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function loadData() {
@@ -42,7 +43,7 @@ function ProfilePage() {
             </div>
           </div>
 
-          <NavLink to="/EditProfilePage">
+          <NavLink to={`/student/1/edit`}>
             <button className="edit-profile-btn">
               Edit profile
             </button>

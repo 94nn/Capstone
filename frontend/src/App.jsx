@@ -6,7 +6,7 @@ import "./components/buttons.css";
 import "./components/cards.css";
 import "./components/popup.css";
 import AppRoutes from "./routes/AppRoutes";
-import NavBar from "./components/AdminNavBar";
+import NavBar from "./components/NavBar";
 import TopBar from "./components/TopBar";
 import AdminNavBar from "./components/AdminNavBar";
 
@@ -31,7 +31,7 @@ function AppContent() {
         matchPath({ path, end: true }, location.pathname)
     );
 
-    const isAdminPage = location.pathname.startsWith("/admin");
+    // const isAdminPage = location.pathname.startsWith("/admin");
 
     return (
         <div className="App">
@@ -42,7 +42,8 @@ function AppContent() {
                 </>
             ) : (
                 <>
-                    {(role === "admin" || isAdminPage) ? <AdminNavBar /> : <NavBar />}
+                    {/* {(role === "admin" || isAdminPage) ? <AdminNavBar /> : <NavBar />} */}
+                    <NavBar />
                     <AppRoutes />
                 </>
             )}

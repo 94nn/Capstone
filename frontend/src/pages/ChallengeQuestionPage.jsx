@@ -6,7 +6,7 @@ function ChallengeQuestionPage() {
     const { slug } = useParams();
 
     return (
-        <main className="module-page-container">
+        <main className="main-layout-full">
             <div className="chapter-column">
                 <div className="page-actions">
                     <Link to={`/challenge`} className="back-link">

@@ -391,7 +391,7 @@ Route::get('/challenge/{slug}', function ($slug) {
             'modules.name as module_name',
             'chapters.title as chapter_title'
         )
-        ->first(); 
+        ->get(); 
 
     if (!$challenge) {
         return response()->json(['message' => 'Challenge not found'], 404);

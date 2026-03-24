@@ -96,12 +96,11 @@ const closeModal = () => {
 
   return (
       <section className="lesson-section">
+        <br />
             <div className="lesson-header">
-               
                 <div>
-                    <h1>Chapter Management</h1>
-                    <h2 className="lesson-title">{chapter?.module_name}</h2> &nbsp;
-                    
+                    <h1 className="chapter-management-header">Chapter Management</h1>
+                    <h2 className="lesson-title">{chapter?.module_name}</h2>
                 </div>
             </div>
             <button className="create-button" onClick={() => setShowModal(true)}>Create Chapter</button>
@@ -166,7 +165,6 @@ const closeModal = () => {
                                     <h2 className="edit-module">{isEdit ? "Edit Chapter" : "Add Chapter"}</h2>
                                     <button className="close-button" onClick={closeModal}>X</button>
                                 </div>
-                                <br />
                                 <input
                                     type="text"
                                     className="module-name"
@@ -181,7 +179,7 @@ const closeModal = () => {
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                     rows={3}
-                                    style={{ width: "80%", resize: "vertical" }} // fills width, allows vertical resize
+                                    style={{ width: "90%", resize: "vertical" }} // fills width, allows vertical resize
                                 />
 
                                 {isEdit && (
@@ -193,7 +191,6 @@ const closeModal = () => {
                                     onChange={(e) => setLevel(e.target.value)}
                                 />
                                 )}
-                                <br /><br />
                                 <div className="modal-box-bottom">
                                     <button className="submit-button" onClick={handleSubmit}>Submit</button>
                                     <button className="cancel-button" onClick={() => setShowModal(false)}>Cancel</button>

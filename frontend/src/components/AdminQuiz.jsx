@@ -131,18 +131,12 @@ const handleSubmitQuiz = async () => {
 };
     return (
         <section className="admin-quiz-section">
-            <button onClick={() => {
-                setShowModal(true); // 打开 modal
-                setIsEdit(false);   // 新增模式
-                setNewQuiz({
-                    question: "",
-                    explanation: "",
-                    options: [{ id: Date.now(), option_text: "", is_correct: false }],
-                });
-            }}
-     style={{ marginBottom: "1rem" }}>
-                + Create Question
-            </button>
+            <div className="lesson-header">
+                <div>
+                    <h1 className="quiz-management-header">Quiz Management</h1>
+                </div>
+            </div>
+            <button className="quiz-create-button" onClick={() => setShowModal(true)}>Create Quiz</button>
 
             {quizzes.map((quiz, index) => (
                 <div key={quiz.id} className="quiz-card">

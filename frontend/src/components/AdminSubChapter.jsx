@@ -100,13 +100,14 @@ const closeModal = () => {
 
   return (
     <section>
-      <div className="lesson-header">
-                    <div>
-                  <h1>SubChapter Management</h1>
-                    <h3 className="lesson-title">{subchapter?.chapter_title}</h3>
-                </div>
+        <br />
+        <div className="lesson-header">
+            <div>
+                <h1 className="subchapter-management-header">SubChapter Management</h1>
+                <h3 className="lesson-title">{subchapter?.chapter_title}</h3>
             </div>
-            <br /> <br />
+        </div>
+            <br />
             <button className="create-button" onClick={() => setShowModal(true)} >Create SubChapter</button>
             <br />
             <div className="lesson-card">
@@ -166,7 +167,6 @@ const closeModal = () => {
                                     <h2 className="edit-module">{isEdit ? "Edit SubChapter" : "Add SubChapter"}</h2> 
                                     <button className="close-button" onClick={closeModal}>X</button>
                                 </div>
-                                <br />
                                 <input
                                     type="text"
                                     className="module-name"
@@ -174,14 +174,13 @@ const closeModal = () => {
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
                                 />
-
                                 <textarea
                                     className="description"
                                     placeholder="Description"
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                     rows={3}
-                                    style={{ width: "80%", resize: "vertical" }} // fills width, allows vertical resize
+                                    style={{ width: "90%", resize: "vertical" }} // fills width, allows vertical resize
                                 />
                                  {isEdit && (
                                 <input
@@ -192,7 +191,6 @@ const closeModal = () => {
                                     onChange={(e) => setsubchapter_order(e.target.value)}
                                 />
                                 )} 
-                                <br /><br />    
                                 <div className="modal-box-bottom">
                                     <button className="submit-button" onClick={handleSubmit}>Submit</button>
                                     <button className="cancel-button" onClick={() => setShowModal(false)}>Cancel</button>

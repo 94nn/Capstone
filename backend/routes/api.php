@@ -723,3 +723,67 @@ Route::put('/modules/{id}', [ModuleController::class, 'update']);
 Route::delete('/modules/{id}', [ModuleController::class, 'destroy']);
 Route::get('/modules/details', [ModuleController::class, 'indexWithDetails']);  
 
+// feedback
+Route::get('/feedback', function() {
+    $feedbacks = DB::table('feedback')->get();
+    return response()->json($feedbacks);
+});
+
+//check by id
+Route::get('/feedback/{id}', function($id) {
+    $feedback = DB::table('feedback')->where('id', $id)->first();
+    if (!$feedback) return response()->json(['error' => 'Feedback not found'], 404);
+    return response()->json($feedback);
+});
+
+//by student or module
+Route::get('/feedback/student/{student_id}', function($student_id) {
+    $feedbacks = DB::table('feedback')->where('student_id', $student_id)->get();
+    return response()->json($feedbacks);
+});
+
+Route::get('/feedback/module/{module_id}', function($module_id) {
+    $feedbacks = DB::table('feedback')->where('module_id', $module_id)->get();
+    return response()->json($feedbacks);
+});
+
+//create feedback
+Route::post('/feedback', function(Request $request) {
+    $request->validate([
+        'student_id' => 'required|integer',
+        'feedback' => 'required|string',
+        'module_id' => 'required|integer',
+    ]);
+
+    $id = DB::table('feedback')->insertGetId([
+        'student_id' => $request->student_id,
+        'feedback' => $request->feedback,
+        'module_id' => $request->module_id,
+        'created_at' => now(),
+        'updated_at' => now()
+    ]);
+
+    return response()->json(['success' => true, 'id' => $id]);
+});
+
+//edit feedback
+Route::put('/feedback/{id}', function(Request $request, $id) {
+    $request->validate([
+        'feedback' => 'required|string',
+    ]);
+
+    $updated = DB::table('feedback')->where('id', $id)->update([
+        'feedback' => $request->feedback,
+        'updated_at' => now()
+    ]);
+
+    if (!$updated) return response()->json(['error' => 'Feedback not found'], 404);
+    return response()->json(['success' => true]);
+});
+
+//delete feedback
+Route::delete('/feedback/{id}', function($id) {
+    $deleted = DB::table('feedback')->where('id', $id)->delete();
+    if (!$deleted) return response()->json(['error' => 'Feedback not found'], 404);
+    return response()->json(['success' => true]);
+});

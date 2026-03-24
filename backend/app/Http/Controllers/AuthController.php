@@ -14,16 +14,25 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:student,email',
             'password' => 'required|min:6',
-            'age' => 'required|integer',
+            'date_of_birth' => 'required|date',
         ]);
 
+        if (str_ends_with($request->email, '@admin.com')) {
+            return response()->json([
+                'message' => 'This email domain is reserved for admin accounts.'
+            ], 422);
+        }
+        
         $student = Student::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => $request->password,
-            'age' => $request->age,
-            'points_balance' => 0,
+            'age' => $request->date_of_birth,
+            'xp_balance' => 0,
             'coins_balance' => 0,
+            'badges_balance' => 0,
+            'level' => 1,
+            'profile_pic' => '/images/default_profile.png',
         ]);
 
         return response()->json([

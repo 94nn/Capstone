@@ -8,6 +8,9 @@ import ProfilePage from "../pages/ProfilePage";
 import SettingsPage from "../pages/SettingsPage";
 import EditProfilePage from "../pages/EditProfilePage";
 import QuizPage from "../pages/QuizPage";
+import ChallengePage from "../pages/ChallengePage";
+import ChallengeQuestionPage from "../pages/ChallengeQuestionPage";
+import LeaderboardPage from "../pages/LeaderboardPage";
 import AboutUsPage from "../pages/AboutUsPage";
 import AdminPage from "../pages/AdminPage";
 import AdminChapterPage from "../pages/AdminChapterPage";
@@ -30,6 +33,15 @@ function AppRoutes() {
 
 			<Route path="/modules/:slug/:chapter_id/:subchapter_id" element={<QuizPage />} />
 
+			<Route path="/challenge/module/:module_id" element={<ChallengePage />} />
+
+			<Route path="/challenge/:slug" element={<ChallengeQuestionPage />} />
+
+			<Route path="/leaderboard" element={<LeaderboardPage />}/>
+
+			<Route path="/ProfilePage" element={<ProfilePage />}/>
+
+			<Route path="/SettingsPage" element={<SettingsPage />}/>
             <Route
                 path="/leaderboard"
                 element={<SimplePage title="Leaderboard" description="Leaderboard" />}

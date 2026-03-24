@@ -37,7 +37,7 @@ function AppContent() {
         <div className="App">
             {isBeforeLogin ? (
                 <>
-                    <TopBar />
+                    <NavBar />
                     <BeforeLoginRoutes />
                 </>
             ) : (

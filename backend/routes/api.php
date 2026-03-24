@@ -724,8 +724,20 @@ Route::delete('/modules/{id}', [ModuleController::class, 'destroy']);
 Route::get('/modules/details', [ModuleController::class, 'indexWithDetails']);  
 
 // feedback
-Route::get('/feedback', function() {
-    $feedbacks = DB::table('feedback')->get();
+Route::get('/feedback', function () {
+    $feedbacks = DB::table('feedback')
+        ->join('student', 'feedback.student_id', '=', 'student.id')
+        ->join('modules', 'feedback.module_id', '=', 'modules.id')
+        ->select(
+            'feedback.id',
+            'feedback.feedback',
+            'feedback.student_id',
+            'feedback.module_id',
+            'student.name as student_name',
+            'modules.name as module_name'
+        )
+        ->get();
+
     return response()->json($feedbacks);
 });
 
@@ -759,8 +771,6 @@ Route::post('/feedback', function(Request $request) {
         'student_id' => $request->student_id,
         'feedback' => $request->feedback,
         'module_id' => $request->module_id,
-        'created_at' => now(),
-        'updated_at' => now()
     ]);
 
     return response()->json(['success' => true, 'id' => $id]);
@@ -774,8 +784,8 @@ Route::put('/feedback/{id}', function(Request $request, $id) {
 
     $updated = DB::table('feedback')->where('id', $id)->update([
         'feedback' => $request->feedback,
-        'updated_at' => now()
     ]);
+
 
     if (!$updated) return response()->json(['error' => 'Feedback not found'], 404);
     return response()->json(['success' => true]);

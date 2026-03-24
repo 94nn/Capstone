@@ -7,7 +7,13 @@ function FeedbackManager() {
   const [moduleId, setModuleId] = useState("");
   const [message, setMessage] = useState("");
   const [editingId, setEditingId] = useState(null);
+  const [studentFilter, setStudentFilter] = useState("");
+  const [moduleFilter, setModuleFilter] = useState("");
 
+  const filteredFeedbacks = feedbacks.filter((fb) =>
+  fb.student_name.toLowerCase().includes(studentFilter.toLowerCase()) &&
+  fb.module_name.toLowerCase().includes(moduleFilter.toLowerCase())
+);
   // Fetch all feedback
   const fetchFeedbacks = async () => {
     try {
@@ -110,24 +116,40 @@ function FeedbackManager() {
         </div>
         
       </form>
+      <div style={{ marginBottom: 10 }}>
+        <input
+            type="text"
+            placeholder="Filter by Student Name"
+            value={studentFilter}
+            onChange={(e) => setStudentFilter(e.target.value)}
+            style={{ marginRight: 10 }}
+        />
+
+        <input
+            type="text"
+            placeholder="Filter by Module Name"
+            value={moduleFilter}
+            onChange={(e) => setModuleFilter(e.target.value)}
+        />
+        </div>
       <h2 className="feedback-list-header">Feedback List</h2>
       <br />
       <table border="1" cellPadding="5">
         <thead>
           <tr>
             <th>ID</th>
-            <th>Student ID</th>
-            <th>Module ID</th>
+            <th>Student</th>
+            <th>Module</th>
             <th>Feedback</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {feedbacks.map((fb) => (
+          {filteredFeedbacks.map((fb) => (
             <tr key={fb.id}>
               <td>{fb.id}</td>
-              <td>{fb.student_id}</td>
-              <td>{fb.module_id}</td>
+              <td>{fb.student_name}</td>
+              <td>{fb.module_name}</td>
               <td>{fb.feedback}</td>
               <td>
                 <button onClick={() => handleEdit(fb)}>Edit</button>

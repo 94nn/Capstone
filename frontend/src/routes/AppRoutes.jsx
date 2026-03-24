@@ -28,6 +28,8 @@ function AppRoutes() {
 
 			<Route path="/modules/:slug" element={<ChapterPage />} />
 
+            <Route path="/student/:id" element={<ProfilePage />} />
+
 			<Route path="/modules/:slug/:chapter_id" element={<SubChapterPage />} />
 
 			<Route path="/modules/:slug/:chapter_id/:subchapter_id" element={<QuizPage />} />

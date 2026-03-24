@@ -29,7 +29,7 @@ function ProfilePage() {
 
           <div className="profile-picture">
             <img
-              src={student?.profile_pic || "/images/pixelated_profile_pic.png"}
+              src={student?.image_url}
               alt="Profile"
               className="profilePicBanner"
             />
@@ -37,8 +37,8 @@ function ProfilePage() {
 
           <div className="profile-section">
             <div className="profile-text">
-              <h1 className="profilePage-name">{student?.name}</h1>
-              <span className="profile-bio">@{student?.Bio}</span>
+              <h1 className="profilePage-name">{student?.username}</h1>
+              <span className="profile-bio">{student?.bio}</span>
             </div>
           </div>
 
@@ -58,21 +58,21 @@ function ProfilePage() {
             <img src="/images/tempCharacter.png" alt="character" className="character-pic" />
 
             <div className="character-info">
-              <h1><span className="character-name">{student?.name}</span></h1>
+              <h1><span className="character-name">{student?.username}</span></h1>
               <span className="character-level">Level {student?.level}</span>
             </div>
           </div>
 
           <div className="profile-stats">
             <div className="stat-container">
-              <img src="/images/tempPoints.png" alt="Points" className="stat-pic"/>
-              <span className="stat-number">{student?.xp_balance}/100</span>
+              <img src="/images/diamond.png" alt="Points" className="stat-pic"/>
+              <span className="stat-number">{student?.xp}/100</span>
               <span className="stat-text">XP</span>
             </div>
 
             <div className="stat-container">
-              <img src="/images/tempBadge.png" alt="Badges" className="stat-pic"/>
-              <span className="stat-number">{student?.badges_balance}</span>
+              <img src="/images/badge.png" alt="Badges" className="stat-pic"/>
+              <span className="stat-number">{student?.badges}</span>
               <span className="stat-text">Badges</span>
             </div>
           </div>

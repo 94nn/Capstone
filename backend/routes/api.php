@@ -435,7 +435,8 @@ Route::get('/student/{id}', function($id) {
         'level' => $student->level,
         'xp' => $student->xp_balance,
         'badges' => $student->badges_balance,
-        'image_url' => $student->profile_pic
+        'image_url' => $student->profile_pic,
+        'bio' => $student->Bio
     ]);
 });
 

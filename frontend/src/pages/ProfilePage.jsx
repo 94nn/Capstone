@@ -3,6 +3,21 @@ import '../components/Profile.css';
 import { NavLink } from 'react-router-dom';
 
 function ProfilePage() {
+
+      useEffect(() => {
+          async function loadData() {
+              try {
+          const res = await axios.get(`/api/modules/${slug}`);
+          setChapters(Array.isArray(res.data) ? res.data : []);
+              } catch (error) {
+                  console.log("Failed to load data", error);
+                  setChapters([]);
+              }
+          }
+  
+          if (slug) loadData();
+          }, [slug]);
+          
   return (
     <div className="main-layout main-layout-split">
 

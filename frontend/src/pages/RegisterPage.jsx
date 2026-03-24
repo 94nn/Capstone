@@ -104,14 +104,14 @@ const handleSubmit = async (e) => {
             </p>
         </form>
 
-        <div className="flex flex-col items-center justify-center text-center">
+        <div className="w-[550px] flex flex-col items-center justify-center text-center">
           <img 
-            src="/images/mathdex-register.gif" 
+            src="/images/registration_image.png" 
             alt="MathDex register animation" 
-            className="w-64 md:w-80 rounded-xl shadow-lg"
+            className="w-[500px] h-[400px] md:w-[400px] rounded-xl shadow-lg"
           />
 
-          <p className="mt-4 text-gray-300 max-w-sm">
+          <p className="mt-4 text-gray-300 max-w-[350px]">
             Start collecting rewards, badges, and progress through your adventure.
           </p>
         </div>

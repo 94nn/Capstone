@@ -74,7 +74,7 @@ function LoginPage() {
                     <button 
                         type="submit"
                         className="w-full bg-cyan-400 text-black font-semibold py-2.5 rounded-lg hover:bg-cyan-300"
-                        >Login</button>
+                    >Login</button>
 
                     <p className="mt-4 text-sm text-gray-300 text-center">
                         No account?{" "}

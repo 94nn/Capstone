@@ -23,7 +23,9 @@ function TopBar() {
 			</nav>
 			
 			<div className="nav-bar-right">
-				<button className="primary-button">Log in</button>
+				<NavLink to="/login" className="primary-button">
+					Login
+				</NavLink>
 			</div>
 		</header>
 	);

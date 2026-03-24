@@ -50,11 +50,6 @@ export default function EditProfilePage() {
                         </div>
 
                         <div className="EditProfile-form-group">
-                            <label>Username *</label>
-                            <input defaultValue="Hann" placeholder="Choose a Username" />
-                        </div>
-
-                        <div className="EditProfile-form-group">
                             <label>Bio</label>  
                             <textarea />
                         </div>

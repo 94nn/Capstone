@@ -133,14 +133,14 @@
 }
 
 .profilePage-name{
-  margin-top:12px;
+  /* margin-bottom:30px; */
   /* height: 100px; */
   font-family:"Press Start 2P", monospace;
   font-size:30px;
   color:white;
 }
 
-.profile-username{
+.profile-bio{
   margin-top:6px;
   color:#94a3b8;
   font-size:20px;

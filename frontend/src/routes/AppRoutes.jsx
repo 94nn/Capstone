@@ -40,15 +40,11 @@ function AppRoutes() {
 
 			<Route path="/EditProfilePage" element={<EditProfilePage />} />
 
-			<Route path="/ProfilePage" element={<ProfilePage />}/>
-
             <Route path="/leaderboard" element={<SimplePage title="Leaderboard" description="Leaderboard" />}/>
 
             <Route path="/aboutus" element={<AboutUsPage />} />
 
             <Route path="/profilepage" element={<ProfilePage />} />
-            <Route path="/settingspage" element={<SettingsPage />} />
-            <Route path="/editprofilepage" element={<EditProfilePage />} />
 
             <Route
                 path="/admin"

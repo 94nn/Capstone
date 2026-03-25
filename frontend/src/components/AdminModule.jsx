@@ -82,9 +82,10 @@ const closeModal = () => {
 
     return (
     <div className='adminmodule'>
-    <h1>Module Management</h1>
+    <h1 className='module-management-header'>Module Management</h1>
+    <br /> 
     <button className='join-module-button' onClick={() => setShowModal(true)}>Add Module</button>
-    <br /><br />
+    <br />
     {modules.length === 0 ? (
                     <div className="admin-module-card">
                         <div className="module-row">
@@ -143,7 +144,6 @@ const closeModal = () => {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                 />
-                <br /> 
                 <textarea
                     className="description"
                     placeholder="Description"
@@ -152,7 +152,6 @@ const closeModal = () => {
                     rows={3}
                     style={{ width: "85%", resize: "vertical" }} // fills width, allows vertical resize
                 />
-                <br />
                 <div className="modal-box-bottom">
                     <button className="submit-button" onClick={handleSubmit}>Submit</button> &nbsp;
                     <button className="cancel-button" onClick={() => setShowModal(false)}>Cancel</button>

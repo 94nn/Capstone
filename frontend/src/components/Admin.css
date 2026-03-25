@@ -9,6 +9,20 @@
     font-family: "Press Start 2P", cursive;
 }
 
+.module-management-header, .chapter-management-header, .subchapter-management-header, .quiz-management-header{
+    margin: 0;
+    font-size: 1.75rem;
+    letter-spacing: 0.03em;
+    font-family: "Press Start 2P", cursive;
+    color: white;
+}
+
+.lesson-title{
+    margin: 0;
+    font-size: 1.5rem;
+    letter-spacing: 0.03em;
+    font-family: "Press Start 2P", cursive;
+}
 
 .admin-module-card{
     background: #0f172a;
@@ -71,10 +85,10 @@
     box-shadow: 2px 2px 0 #020617;
 }
 
-.create-button{
+.create-button, .quiz-create-button{
     display: flex;
     width: 100%;
-    background: #0f172a;
+    background-color: #0f172a;
     padding: 1rem;
     font-size: 1rem;
     font-weight: 700;
@@ -188,7 +202,7 @@
 .modal-box {
     padding: 20px;
     border-radius: 10px;
-    width: 300px;
+    width: 400px;
     background: #0f172a;
     border: 1px solid #38bdf8;
     display: flex;

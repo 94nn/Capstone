@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ModuleController;
 
+use Illuminate\Support\Facades\Storage;
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 use Illuminate\Http\Request;
@@ -435,7 +437,8 @@ Route::get('/student/{id}', function($id) {
         'level' => $student->level,
         'xp' => $student->xp_balance,
         'badges' => $student->badges_balance,
-        'image_url' => $student->profile_pic
+        'image_url' => $student->profile_pic,
+        'bio' => $student->Bio
     ]);
 });
 
@@ -723,3 +726,164 @@ Route::put('/modules/{id}', [ModuleController::class, 'update']);
 Route::delete('/modules/{id}', [ModuleController::class, 'destroy']);
 Route::get('/modules/details', [ModuleController::class, 'indexWithDetails']);  
 
+// feedback
+Route::get('/feedback', function() {
+    $feedbacks = DB::table('feedback')->get();
+    return response()->json($feedbacks);
+});
+
+//check by id
+Route::get('/feedback/{id}', function($id) {
+    $feedback = DB::table('feedback')->where('id', $id)->first();
+    if (!$feedback) return response()->json(['error' => 'Feedback not found'], 404);
+    return response()->json($feedback);
+});
+
+//by student or module
+Route::get('/feedback/student/{student_id}', function($student_id) {
+    $feedbacks = DB::table('feedback')->where('student_id', $student_id)->get();
+    return response()->json($feedbacks);
+});
+
+Route::get('/feedback/module/{module_id}', function($module_id) {
+    $feedbacks = DB::table('feedback')->where('module_id', $module_id)->get();
+    return response()->json($feedbacks);
+});
+
+//create feedback
+Route::post('/feedback', function(Request $request) {
+    $request->validate([
+        'student_id' => 'required|integer',
+        'feedback' => 'required|string',
+        'module_id' => 'required|integer',
+    ]);
+
+    $id = DB::table('feedback')->insertGetId([
+        'student_id' => $request->student_id,
+        'feedback' => $request->feedback,
+        'module_id' => $request->module_id,
+        'created_at' => now(),
+        'updated_at' => now()
+    ]);
+
+    return response()->json(['success' => true, 'id' => $id]);
+});
+
+//edit feedback
+Route::put('/feedback/{id}', function(Request $request, $id) {
+    $request->validate([
+        'feedback' => 'required|string',
+    ]);
+
+    $updated = DB::table('feedback')->where('id', $id)->update([
+        'feedback' => $request->feedback,
+        'updated_at' => now()
+    ]);
+
+    if (!$updated) return response()->json(['error' => 'Feedback not found'], 404);
+    return response()->json(['success' => true]);
+});
+
+//delete feedback
+Route::delete('/feedback/{id}', function($id) {
+    $deleted = DB::table('feedback')->where('id', $id)->delete();
+    if (!$deleted) return response()->json(['error' => 'Feedback not found'], 404);
+    return response()->json(['success' => true]);
+});
+
+Route::post('/update-profile/{id}', function(Request $request, $id) {
+    $student = DB::table('student')->where('id', $id)->first();
+
+    if (!$student) {
+        return response()->json(['error' => 'Student not found'], 404);
+    }
+
+    $updateData = [];
+
+    // Update name and bio
+    if ($request->filled('name')) $updateData['name'] = $request->input('name');
+    if ($request->filled('bio')) $updateData['Bio'] = $request->input('bio');
+
+    // Handle profile image upload
+    if ($request->hasFile('profile_pic')) {
+        $file = $request->file('profile_pic');
+
+        // Delete old image if it exists
+        if ($student->profile_pic && file_exists(public_path($student->profile_pic))) {
+            unlink(public_path($student->profile_pic));
+        }
+
+        // Unique filename
+        $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) 
+                    . '.' . $file->getClientOriginalExtension();
+
+        // Move to public/profile_pics
+        $file->move(public_path('profile_pics'), $filename);
+
+        $updateData['profile_pic'] = 'profile_pics/' . $filename;
+    }
+
+    // Update DB
+    DB::table('student')->where('id', $id)->update($updateData);
+
+    $updatedStudent = DB::table('student')->where('id', $id)->first();
+
+    return response()->json([
+        'username' => $updatedStudent->name,
+        'bio' => $updatedStudent->Bio,
+        'image_url' => $updatedStudent->profile_pic
+            ? url($updatedStudent->profile_pic)  // full URL
+            : null,
+        'level' => $updatedStudent->level,
+        'xp' => $updatedStudent->xp_balance,
+        'badges' => $updatedStudent->badges_balance,
+    ]);
+});
+
+Route::post('/verify-password/{id}', function(Request $request, $id) {
+    $user = DB::table('student')->where('id', $id)->first();
+    if (!$user) return response()->json(['valid' => false]);
+
+    // Plain text password comparison
+    if ($request->current_password === $user->password) {
+        return response()->json(['valid' => true]);
+    } else {
+        return response()->json(['valid' => false]);
+    }
+});
+
+Route::post('/update-settings/{id}', function(Request $request, $id) {
+    $user = DB::table('student')->where('id', $id)->first();
+    if (!$user) return response()->json(['error' => 'User not found'], 404);
+
+    // Verify current password (plain-text)
+    if ($request->filled('current_password') && $request->current_password !== $user->password) {
+        return response()->json(['error' => 'Current password incorrect'], 400);
+    }
+
+    $updateData = [];
+
+    // Update email if provided
+    if ($request->filled('email')) {
+        $updateData['email'] = $request->email;
+    }
+
+    // Update password only if new_password provided
+    if ($request->filled('new_password')) {
+        $updateData['password'] = $request->new_password;
+    }
+
+    if (!empty($updateData)) {
+        DB::table('student')->where('id', $id)->update($updateData);
+    }
+
+    return response()->json(['success' => true, 'updated' => $updateData]);
+});
+
+Route::delete('/delete-account/{id}', function($id) {
+    $user = DB::table('student')->where('id', $id)->first();
+    if (!$user) return response()->json(['error' => 'User not found'], 404);
+
+    DB::table('student')->where('id', $id)->delete();
+    return response()->json(['success' => true]);
+});

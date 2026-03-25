@@ -47,7 +47,7 @@ function LoginPage() {
 
     return (
         <div className="min-h-screen bg-[#0a0f1f] text-white flex items-start justify-center px-4 pt-28 pb-12">
-            <div className="w-full max-w-4xl grid md:grid-cols-[420px_1fr] gap-12 items-center">
+            <div className="w-full max-w-4xl grid md:grid-cols-[420px_1fr] gap-12 items-center" padding-top="10px">
                 <form 
                     onSubmit={handleSubmit}
                     className="w-full bg-[#11182d] border border-cyan-400/20 rounded-2xl p-6 shadow-xl"
@@ -88,14 +88,14 @@ function LoginPage() {
                     </p>
                 </form>
 
-                <div className="flex flex-col items-center justify-center text-center">
+                <div className="w-[480px] flex flex-col items-center justify-center text-center">
                     <img 
-                        src="/images/mathdex-login.gif" 
+                        src="/images/login_image.png" 
                         alt="MathDex login animation" 
-                        className="w-64 md:w-80 rounded-xl shadow-lg"
+                        className="w-[400px] h-[380px] md:w-[380px] rounded-xl shadow-lg"
                     />
 
-                    <p className="mt-4 text-gray-300 max-w-sm">
+                    <p className="mt-4 text-gray-300 max-w-[350px]">
                         Enter the world of challenges, rewards, and leaderboard glory.
                     </p>
                 </div>

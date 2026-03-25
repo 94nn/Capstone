@@ -65,7 +65,7 @@ const NavBar = () => {
             </nav>
             <div className="nav-bar-right">
                 <div className="bell-container" onClick={toggleNotif}>
-                    <img src="images/bell.png" alt="Bell Icon" className='bell-icon' />
+                    <img src="/images/bell.png" alt="Bell Icon" className='bell-icon' />
                     {unreadCount > 0 && (
                         <span className="notif-badge">{unreadCount}</span>
                     )}
@@ -90,10 +90,10 @@ const NavBar = () => {
             {isDropdownVisible && (
                 <div className="dropdown" ref={dropdownRef}>
                     <ul>
-                        <li><NavLink to="/ProfilePage" className={({ isActive }) => `dropdown-item ${isActive ? "dropdown-item-active" : ""}`}>
+                        <li><NavLink to="/ProfilePage" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
                             Profile
                         </NavLink></li>
-                        <li><NavLink to="/SettingsPage" className={({ isActive }) => `dropdown-item ${isActive ? "dropdown-item-active" : ""}`}>
+                        <li><NavLink to="/EditProfilePage" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
                             Settings
                         </NavLink></li>
                         <li>Logout</li>

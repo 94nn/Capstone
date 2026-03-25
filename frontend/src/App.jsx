@@ -31,18 +31,19 @@ function AppContent() {
         matchPath({ path, end: true }, location.pathname)
     );
 
-    const isAdminPage = location.pathname.startsWith("/admin");
+    // const isAdminPage = location.pathname.startsWith("/admin");
 
     return (
         <div className="App">
             {isBeforeLogin ? (
                 <>
-                    <TopBar />
+                    <NavBar />
                     <BeforeLoginRoutes />
                 </>
             ) : (
                 <>
-                    {(role === "admin" || isAdminPage) ? <AdminNavBar /> : <NavBar />}
+                    {/* {(role === "admin" || isAdminPage) ? <AdminNavBar /> : <NavBar />} */}
+                    <NavBar />
                     <AppRoutes />
                 </>
             )}

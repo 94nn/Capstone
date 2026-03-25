@@ -63,12 +63,9 @@
   position:absolute;
   bottom: 0;
   left:90px;
-  
-
   display:flex;
   align-items:center;
   gap:12px;
-
   transform: translateY(0%);
 }
 
@@ -89,17 +86,21 @@
   display:flex;
   align-items:center;
   gap:8px;
-  font-family: "Press Start 2P", monospace;
+  font-family: "Press Start 2P", cursive;
 
-  padding:8px 14px;
+  padding: 6px 20px;
 
-  background:#0f172a;
+  background:transparent;
   color:white;
 
   font-size:14px;
   font-weight:600;
 
   border:2px solid #4b5563;
+  border-bottom: 5px solid #fafafa;
+  border-left: 2px solid #fafafa;
+  border-right: 1px solid #fafafa;
+  border-top: 1px solid #fafafa58;
   border-radius:4px;
 
   box-shadow:
@@ -136,14 +137,14 @@
 }
 
 .profilePage-name{
-  margin-top:12px;
+  /* margin-bottom:30px; */
   /* height: 100px; */
   font-family:"Press Start 2P", monospace;
   font-size:30px;
   color:white;
 }
 
-.profile-username{
+.profile-bio{
   margin-top:6px;
   color:#94a3b8;
   font-size:20px;

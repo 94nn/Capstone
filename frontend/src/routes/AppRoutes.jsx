@@ -5,7 +5,6 @@ import SubChapterPage from "../pages/SubChapterPage";
 import SimplePage from "../pages/SimplePage";
 import HomePage from "../pages/HomePage";
 import ProfilePage from "../pages/ProfilePage";
-import SettingsPage from "../pages/SettingsPage";
 import EditProfilePage from "../pages/EditProfilePage";
 import QuizPage from "../pages/QuizPage";
 import ChallengePage from "../pages/ChallengePage";
@@ -29,6 +28,10 @@ function AppRoutes() {
 
 			<Route path="/modules/:slug" element={<ChapterPage />} />
 
+            <Route path="/student/:id" element={<ProfilePage />} />
+
+            <Route path="/student/:id/edit" element={<EditProfilePage />} />
+
 			<Route path="/modules/:slug/:chapter_id" element={<SubChapterPage />} />
 
 			<Route path="/modules/:slug/:chapter_id/:subchapter_id" element={<QuizPage />} />
@@ -39,19 +42,13 @@ function AppRoutes() {
 
 			<Route path="/leaderboard" element={<LeaderboardPage />}/>
 
-			<Route path="/ProfilePage" element={<ProfilePage />}/>
+			<Route path="/EditProfilePage" element={<EditProfilePage />} />
 
-			<Route path="/SettingsPage" element={<SettingsPage />}/>
-            <Route
-                path="/leaderboard"
-                element={<SimplePage title="Leaderboard" description="Leaderboard" />}
-            />
+            <Route path="/leaderboard" element={<SimplePage title="Leaderboard" description="Leaderboard" />}/>
 
             <Route path="/aboutus" element={<AboutUsPage />} />
 
             <Route path="/profilepage" element={<ProfilePage />} />
-            <Route path="/settingspage" element={<SettingsPage />} />
-            <Route path="/editprofilepage" element={<EditProfilePage />} />
 
             <Route
                 path="/admin"

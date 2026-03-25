@@ -481,32 +481,77 @@ Route::post('/progress/update', function(Request $request) {
         'passed' => 'required|boolean'
     ]);
 
-    $status = $request->passed ? 'completed' : 'in_progress';
+    $studentId = $request->student_id;
+    $subchapterId = $request->subchapter_id;
+    $newCorrectAnswers = $request->correct_answers;
+    $totalQuestions = $request->total_questions;
+    $passed = $request->passed;
 
-    DB::table('subchapter_progress')->updateOrInsert(
-        [
-            'student_id' => $request->student_id,
-            'subchapter_id' => $request->subchapter_id
-        ],
-        [
+    $existingProgress = DB::table('subchapter_progress')
+        ->where('student_id', $studentId)
+        ->where('subchapter_id', $subchapterId)
+        ->first();
+
+    if ($existingProgress) {
+        $bestCorrectAnswers = max($existingProgress->correct_answers, $newCorrectAnswers);
+
+        // Once completed, always completed
+        $finalStatus = ($existingProgress->status === 'completed' || $passed)
+            ? 'completed'
+            : 'not_started';
+
+        DB::table('subchapter_progress')
+            ->where('id', $existingProgress->id)
+            ->update([
+                'status' => $finalStatus,
+                'correct_answers' => $bestCorrectAnswers,
+                'total_questions' => $totalQuestions
+            ]);
+
+        // Reward only first time completed
+        if ($existingProgress->status !== 'completed' && $passed) {
+            DB::table('student')
+                ->where('id', $studentId)
+                ->increment('xp_balance', 50);
+
+            DB::table('student')
+                ->where('id', $studentId)
+                ->increment('coins_balance', 10);
+        }
+
+    } else {
+        $status = $passed ? 'completed' : 'not_started';
+
+        DB::table('subchapter_progress')->insert([
+            'student_id' => $studentId,
+            'subchapter_id' => $subchapterId,
             'status' => $status,
-            'correct_answers' => $request->correct_answers,
-            'total_questions' => $request->total_questions
-        ]
-    );
+            'correct_answers' => $newCorrectAnswers,
+            'total_questions' => $totalQuestions
+        ]);
+
+        if ($passed) {
+            DB::table('student')
+                ->where('id', $studentId)
+                ->increment('xp_balance', 50);
+
+            DB::table('student')
+                ->where('id', $studentId)
+                ->increment('coins_balance', 10);
+        }
+    }
 
     $module = DB::table('subchapters')
         ->join('chapters', 'subchapters.chapter_id', '=', 'chapters.id')
-        ->where('subchapters.id', $request->subchapter_id)
+        ->where('subchapters.id', $subchapterId)
         ->select('chapters.module_id')
         ->first();
 
     if (!$module) {
-        return response()->json(['message' => 'Module not found']);
+        return response()->json(['message' => 'Module not found'], 404);
     }
 
-    $total = DB::table('quizzes')
-        ->join('subchapters', 'quizzes.subchapter_id', '=', 'subchapters.id')
+    $total = DB::table('subchapters')
         ->join('chapters', 'subchapters.chapter_id', '=', 'chapters.id')
         ->where('chapters.module_id', $module->module_id)
         ->count();
@@ -514,15 +559,16 @@ Route::post('/progress/update', function(Request $request) {
     $completed = DB::table('subchapter_progress')
         ->join('subchapters', 'subchapter_progress.subchapter_id', '=', 'subchapters.id')
         ->join('chapters', 'subchapters.chapter_id', '=', 'chapters.id')
-        ->where('subchapter_progress.student_id', $request->student_id)
+        ->where('subchapter_progress.student_id', $studentId)
         ->where('chapters.module_id', $module->module_id)
-        ->sum('correct_answers');
+        ->where('subchapter_progress.status', 'completed')
+        ->count();
 
     $percentage = $total > 0 ? round(($completed / $total) * 100, 2) : 0;
 
     DB::table('progress')->updateOrInsert(
         [
-            'student_id' => $request->student_id,
+            'student_id' => $studentId,
             'module_id' => $module->module_id
         ],
         [
@@ -532,7 +578,14 @@ Route::post('/progress/update', function(Request $request) {
     );
 
     return response()->json([
-        'message' => 'Progress updated'
+        'message' => 'Progress updated',
+        'student_id' => $studentId,
+        'subchapter_id' => $subchapterId,
+        'passed' => $passed,
+        'module_id' => $module->module_id,
+        'completed' => $completed,
+        'total' => $total,
+        'percentage' => $percentage
     ]);
 });
 
@@ -548,8 +601,7 @@ Route::get('/progress-summary/{student_id}/{slug}', function($student_id, $slug)
         ], 404);
     }
 
-    $total = DB::table('quizzes')
-        ->join('subchapters', 'quizzes.subchapter_id', '=', 'subchapters.id')
+    $total = DB::table('subchapters')
         ->join('chapters', 'subchapters.chapter_id', '=', 'chapters.id')
         ->where('chapters.module_id', $module->id)
         ->count();

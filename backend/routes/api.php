@@ -802,35 +802,88 @@ Route::post('/update-profile/{id}', function(Request $request, $id) {
 
     // Update name and bio
     if ($request->filled('name')) $updateData['name'] = $request->input('name');
-    if ($request->filled('bio')) $updateData['Bio'] = $request->input('bio'); // note column is 'Bio'
+    if ($request->filled('bio')) $updateData['Bio'] = $request->input('bio');
 
-    // Handle image upload
+    // Handle profile image upload
     if ($request->hasFile('profile_pic')) {
         $file = $request->file('profile_pic');
 
-        // Optional: delete old image
-        if ($student->profile_pic) {
-            Storage::disk('public')->delete($student->profile_pic);
+        // Delete old image if it exists
+        if ($student->profile_pic && file_exists(public_path($student->profile_pic))) {
+            unlink(public_path($student->profile_pic));
         }
 
-        // Store in storage/app/public/profile_pics
-        $path = $file->store('profile_pics', 'public');
-        $updateData['profile_pic'] = $path; // store path in DB
+        // Unique filename
+        $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) 
+                    . '.' . $file->getClientOriginalExtension();
+
+        // Move to public/profile_pics
+        $file->move(public_path('profile_pics'), $filename);
+
+        $updateData['profile_pic'] = 'profile_pics/' . $filename;
     }
 
     // Update DB
     DB::table('student')->where('id', $id)->update($updateData);
 
-    // Return updated data
     $updatedStudent = DB::table('student')->where('id', $id)->first();
+
     return response()->json([
         'username' => $updatedStudent->name,
         'bio' => $updatedStudent->Bio,
-        'updated_image_url' => $updatedStudent->profile_pic 
-            ? asset('storage/' . $updatedStudent->profile_pic) 
+        'image_url' => $updatedStudent->profile_pic
+            ? url($updatedStudent->profile_pic)  // full URL
             : null,
         'level' => $updatedStudent->level,
         'xp' => $updatedStudent->xp_balance,
         'badges' => $updatedStudent->badges_balance,
     ]);
+});
+
+Route::post('/verify-password/{id}', function(Request $request, $id) {
+    $user = DB::table('student')->where('id', $id)->first();
+    if (!$user) return response()->json(['valid' => false]);
+
+    // Plain text password comparison
+    if ($request->current_password === $user->password) {
+        return response()->json(['valid' => true]);
+    } else {
+        return response()->json(['valid' => false]);
+    }
+});
+
+Route::post('/update-settings/{id}', function(Request $request, $id) {
+    $user = DB::table('student')->where('id', $id)->first();
+    if (!$user) return response()->json(['error' => 'User not found'], 404);
+
+    // Verify current password (plain-text)
+    if ($request->filled('current_password') && $request->current_password !== $user->password) {
+        return response()->json(['error' => 'Current password incorrect'], 400);
+    }
+
+    $updateData = [];
+
+    // Update email if provided
+    if ($request->filled('email')) {
+        $updateData['email'] = $request->email;
+    }
+
+    // Update password only if new_password provided
+    if ($request->filled('new_password')) {
+        $updateData['password'] = $request->new_password;
+    }
+
+    if (!empty($updateData)) {
+        DB::table('student')->where('id', $id)->update($updateData);
+    }
+
+    return response()->json(['success' => true, 'updated' => $updateData]);
+});
+
+Route::delete('/delete-account/{id}', function($id) {
+    $user = DB::table('student')->where('id', $id)->first();
+    if (!$user) return response()->json(['error' => 'User not found'], 404);
+
+    DB::table('student')->where('id', $id)->delete();
+    return response()->json(['success' => true]);
 });

@@ -9,6 +9,7 @@ function FeedbackManager() {
   const [editingId, setEditingId] = useState(null);
   const [studentFilter, setStudentFilter] = useState("");
   const [moduleFilter, setModuleFilter] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   const filteredFeedbacks = feedbacks.filter((fb) =>
   fb.student_name.toLowerCase().includes(studentFilter.toLowerCase()) &&
@@ -74,48 +75,73 @@ function FeedbackManager() {
   };
 
   return (
+    
     <div style={{ padding: 20 }}>
-      <h2 className="feedback-header">{editingId ? "Edit Feedback" : "Add Feedback"}</h2>
+      {/* <div className="Add Feedback button">
+      <button onClick={() => setShowModal(true)}>
+        Add Feedback
+      </button>
+      </div> */}
       <br />
-      <form onSubmit={handleSubmit} style={{ marginBottom: 20 }}>
+      {showModal && (
+  <div className="modal-overlay">
+    <div className="modal-content">
+
+      <h2 className="feedback-header">
+        {editingId ? "Edit Feedback" : "Add Feedback"}
+      </h2>
+
+      <form onSubmit={(e) => {
+        handleSubmit(e);
+        setShowModal(false);
+      }}>
+
         <div className="info">
           {!editingId && (
-          <>
-            <input
-              type="number"
-              className="feedback-studentid"
-              placeholder="Student ID"
-              value={studentId}
-              onChange={(e) => setStudentId(e.target.value)}
-              required
-            />
-            <input
-              type="number"
-              className="feedback-moduleid"
-              placeholder="Module ID"
-              value={moduleId}
-              onChange={(e) => setModuleId(e.target.value)}
-              required
-            />
-          </>
-        )}
+            <>
+              <input
+                type="number"
+                placeholder="Student ID"
+                value={studentId}
+                onChange={(e) => setStudentId(e.target.value)}
+                required
+              />
+
+              <input
+                type="number"
+                placeholder="Module ID"
+                value={moduleId}
+                onChange={(e) => setModuleId(e.target.value)}
+                required
+              />
+            </>
+          )}
         </div>
-        <br />
+
         <textarea
           placeholder="Feedback"
-          className="feedback-message"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           required
         />
-        <br />
+
         <div className="button-row">
-          <button className="submit-feedback-button" type="submit">
+          <button type="submit">
             {editingId ? "Update" : "Submit"}
           </button>
+
+          <button
+            type="button"
+            onClick={() => setShowModal(false)}
+          >
+            Cancel
+          </button>
         </div>
-        
+
       </form>
+    </div>
+  </div>
+)}
       <div style={{ marginBottom: 10 }}>
         <input
             type="text"
@@ -137,7 +163,7 @@ function FeedbackManager() {
       <table border="1" cellPadding="5">
         <thead>
           <tr>
-            <th>ID</th>
+            <th>No.</th>
             <th>Student</th>
             <th>Module</th>
             <th>Feedback</th>
@@ -145,9 +171,9 @@ function FeedbackManager() {
           </tr>
         </thead>
         <tbody>
-          {filteredFeedbacks.map((fb) => (
+          {filteredFeedbacks.map((fb, index) => (
             <tr key={fb.id}>
-              <td>{fb.id}</td>
+              <td>{index + 1}</td>
               <td>{fb.student_name}</td>
               <td>{fb.module_name}</td>
               <td>{fb.feedback}</td>

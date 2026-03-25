@@ -519,3 +519,53 @@ hr {
     align-items: center;
     gap: 1rem;
 }
+
+/* AdminChallenge.css */
+
+.challenge-form {
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+.challenge-form input,
+.challenge-form textarea {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 6px;
+  box-sizing: border-box;
+}
+
+.challenge-form label {
+  font-weight: bold;
+  display: block;
+  margin-top: 10px;
+}
+
+.question-card {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.option-row {
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.option-row input[type="text"] {
+  width: 70%;
+  display: inline-block;
+}
+
+.option-row label {
+  display: inline-block;
+  margin-left: 5px;
+}
+
+button {
+  margin-top: 5px;
+  padding: 4px 10px;
+  cursor: pointer;
+}

@@ -15,6 +15,43 @@ function QuizLayout({setCurrentQuizId}) {
     const [answered, setAnswered] = useState(false);
     const [correctCount, setCorrectCount] = useState(0);
     const [finished, setFinished] = useState(false);
+    const [feedback, setFeedback] = useState("");
+    const [showFeedback, setShowFeedback] = useState(false);
+
+        // create feedback
+const handleSubmitFeedback = async () => {
+  try {
+    const studentId = localStorage.getItem("student_id");
+
+    if (!studentId) {
+      alert("User not logged in");
+      return;
+    }
+
+    if (!currentQuiz?.subchapter_id) {
+      alert("Subchapter not found");
+      return;
+    }
+
+    if (!feedback.trim()) {
+      alert("Feedback cannot be empty");
+      return;
+    }
+
+    await axios.post("/api/feedback", {
+        student_id: Number(studentId),
+      feedback: feedback.trim(),
+      subchapter_id: currentQuiz.subchapter_id, 
+    });
+
+    alert("Feedback submitted");
+    setFeedback("");
+    setShowFeedback(false);
+  } catch (err) {
+    console.error(err.response?.data);
+    alert("Failed to submit feedback");
+  }
+};
 
     useEffect(() => {
         async function loadSubChapters() {
@@ -173,9 +210,9 @@ function QuizLayout({setCurrentQuizId}) {
             </section>
         );
     }
-
     return (
         <section className="lesson-section">
+            
             <div className="lesson-header">
                 <div className="step-indicator">{currentQuiz.subchapter_order}</div>
                 <div>
@@ -199,8 +236,9 @@ function QuizLayout({setCurrentQuizId}) {
                                 {option.option_text}
                             </button>
                         ))}
+                        
                     </div>
-
+                                
                     {answered && (
                         <div className="quiz-explanation">
                             <h2>{isCorrect ? "Correct!" : "Wrong answer"}</h2>
@@ -244,6 +282,11 @@ function QuizLayout({setCurrentQuizId}) {
                             <button className="retry-button" onClick={handleFinishNow}>
                                 Finish Now
                             </button>
+                            <button onClick={() =>{
+                                setFinished(false);  
+                                setShowFeedback(true)}}>
+                                Give Feedback
+                            </button>
                             {!isLastSubchapter && (
                                 <button className="next-button" onClick={handleNextQuiz}>
                                     Next Quiz
@@ -253,7 +296,32 @@ function QuizLayout({setCurrentQuizId}) {
                     </div>
                 </div>
             )}
+                {showFeedback && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+
+                    <h3>Feedback</h3>
+
+                    <textarea
+                        value={feedback}
+                        onChange={(e) => setFeedback(e.target.value)}
+                        placeholder="Write your feedback..."
+                    />
+
+                    <button onClick={handleSubmitFeedback}>
+                        Submit
+                    </button>
+
+                    <button onClick={() => setShowFeedback(false)}>
+                        Cancel
+                    </button>
+
+                    </div>
+                </div>
+                )}
+                
         </section>
+        
     );
 }
 

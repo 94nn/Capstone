@@ -31,6 +31,7 @@ function LoginPage() {
 
             if (response.ok) {
                 alert("Login successful");
+                localStorage.setItem("student_id", data.user.id);
                 console.log(data);
             } else {
                 alert(data.message || "Login failed");

@@ -1008,6 +1008,8 @@ Route::delete('/challenge/{id}', function($id) {
         DB::rollback();
         return response()->json(['error' => $e->getMessage()], 500);
     }
+
+});
 Route::post('/update-profile/{id}', function(Request $request, $id) {
     $student = DB::table('student')->where('id', $id)->first();
 

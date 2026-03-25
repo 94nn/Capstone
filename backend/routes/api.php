@@ -439,6 +439,13 @@ Route::get('/student/{id}', function($id) {
     ]);
 });
 
+// Leaderboard Page Leaderboard
+Route::get('/leaderboard/all', function() {
+    $students = DB::table('student')
+        ->orderBy('xp_balance', 'desc')
+        ->get();
+    return response()->json($students);
+});
 
 //Home Page Leaderboard
 Route::get('/leaderboard', function() {

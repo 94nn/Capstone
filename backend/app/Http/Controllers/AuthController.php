@@ -27,12 +27,13 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => $request->password,
-            'age' => $request->date_of_birth,
+            'date_of_birth' => $request->date_of_birth,
             'xp_balance' => 0,
             'coins_balance' => 0,
             'badges_balance' => 0,
             'level' => 1,
             'profile_pic' => '/images/default_profile.png',
+            'Bio' => '',
         ]);
 
         return response()->json([

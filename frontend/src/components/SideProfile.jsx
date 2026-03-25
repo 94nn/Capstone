@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, NavLink } from 'react-router-dom'
 
 const SideProfile = () => {
     const navigate = useNavigate()
@@ -10,9 +10,10 @@ const SideProfile = () => {
     const [badges, setBadges] = useState('')
     const [student_image, setStudentImage] = useState('')
     const [leaderboard, setLeaderboard] = useState([])
+    const student_id = localStorage.getItem("student_id");
 
     useEffect(() => {
-        axios.get('/api/student/1')
+        axios.get(`/api/student/${student_id}`)
             .then(res => {
                 setStudentName(res.data.username)
                 setLevel(res.data.level)
@@ -25,7 +26,7 @@ const SideProfile = () => {
         axios.get('/api/leaderboard')
             .then(res => setLeaderboard(res.data))
             .catch(err => console.error('Error fetching leaderboard:', err))
-    }, [])
+    }, [student_id])
 
     return (
         <aside className="hp-sidebar">
@@ -90,7 +91,9 @@ const SideProfile = () => {
                     </div>
                 </div>
                 <div className='hp-view-more-button'>
-                    <button>View more</button>
+                    <NavLink to="/leaderboard">
+                        <button>View more</button>
+                    </NavLink>
                 </div>
             </div>
 		</aside>

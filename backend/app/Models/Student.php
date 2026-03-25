@@ -12,12 +12,13 @@ class Student extends Model
         'name',
         'email',
         'password',
-        'age',
+        'date_of_birth',
         'xp_balance',
         'coins_balance',
         'badges_balance',
         'level',
         'profile_pic',
+        'Bio',
     ];
 
     public $timestamps = false;

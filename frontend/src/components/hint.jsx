@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 function Hint({ quiz_id }) {
-    const student_id = 1;
+    const student_id = localStorage.getItem("student_id");
 
     const [hint, setHint] = useState([]);
     const [unlockedHints, setUnlockedHints] = useState({});

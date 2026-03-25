@@ -1,0 +1,235 @@
+.EditProfile-container {
+  margin-top: 100px;
+  display: flex;  
+  gap: 40px;              
+  padding: 0 80px; 
+}
+
+.EditProfile-sidebar {
+  width: 250px;
+  padding: 20px;
+  background: #020617;
+  border-radius: 12px;
+  border: 1px solid #1f2937;
+  height: fit-content;
+}
+.EditProfile-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.EditProfile-menu-item {
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #cbd5f5;
+}
+
+.EditProfile-menu-item:hover {
+  background: #1f2937;
+}
+
+.EditProfile-menu-item.active {
+  background: rgba(30, 64, 175, 0.4);
+  color: white;
+}
+
+.EditProfile-main {
+  flex: 1;
+  background: #020617;
+  padding: 30px;
+  border-radius: 12px;
+  border: 1px solid #1f2937;
+}
+
+.EditProfile-title {
+  font-size: 24px;
+  margin-bottom: 30px;
+}
+
+.EditProfile-content {
+  display: flex;
+  gap: 40px;
+}
+
+.EditProfile-avatar-section {
+  text-align: center;
+}
+
+.EditProfile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: #374151;
+  margin-bottom: 10px;
+}
+
+.EditProfile-avatar-text {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.EditProfile-form {
+  flex: 1;
+}
+
+.EditProfile-form-group {
+  margin-bottom: 20px;
+}
+
+.EditProfile-form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.EditProfile-form-group input,
+.EditProfile-form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #374151;
+  background: #0f172a;
+  color: white;
+}
+
+.EditProfile-form-group textarea {
+  height: 100px;
+  resize: none;
+}
+
+.EditProfile-input-success {
+  border: 1px solid #22c55e !important;
+}
+
+.EditProfile-success-text {
+  color: #22c55e;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.EditProfilePage-save-changes-btn {
+  position: relative; 
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-family: "Press Start 2P", monospace;
+  font-size: 12px;
+
+  padding: 10px 18px;
+
+  background: #1e3a5f; 
+  color: #cbd5f5;
+
+  border: 2px solid #3b82f6;
+  border-radius: 6px;
+
+  box-shadow:
+    inset 0 0 0 2px #0f172a,
+    0 4px 0 #0f172a;
+
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.EditProfilePage-save-changes-btn:hover {
+  background: #2563eb;
+  color: white;
+}
+
+.EditProfilePage-save-changes-btn:active {
+  transform: translateY(3px);
+  box-shadow:
+    inset 0 0 0 2px #0f172a,
+    0 1px 0 #0f172a;
+}
+
+.EditProfile-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 40px;
+}
+
+.EditProfile-avatar-wrapper {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.EditProfile-profilePicBanner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #00bfff;
+}
+
+.EditProfile-avatar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  opacity: 0;
+  cursor: pointer;
+  font-weight: 600;
+
+  transition: 0.3s;
+}
+
+
+.EditProfile-avatar-wrapper:hover .EditProfile-avatar-overlay {
+  opacity: 1;
+}
+
+.EditProfile-delete-section {
+  margin-top: 40px;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #ff4d4f;
+  background-color: #1f0f0f;
+}
+
+.EditProfile-delete-section h2 {
+  margin-bottom: 10px;
+  color: #ff4d4f;
+}
+
+.EditProfile-delete-warning {
+  font-size: 20px;
+  color: #ffcccc;
+  margin-bottom: 15px;
+}
+
+.EditProfile-delete-title {
+  font-size: 30px;
+  color: #ffcccc;
+  margin-top: -15px;
+}
+
+.EditProfile-delete-btn {
+  background-color: #ff4d4f;
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.EditProfile-delete-btn:hover {
+  background-color: #e04343;
+}

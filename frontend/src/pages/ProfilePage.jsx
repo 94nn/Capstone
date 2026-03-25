@@ -1,37 +1,66 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../components/Profile.css';
+import { NavLink, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function ProfilePage() {
-  return (
+  const [student, setStudent] = useState(null);
+
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+  const student_id = localStorage.getItem("student_id");
+  const admin_id = user?.id;
+  const role = localStorage.getItem("role");
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        let res;
+
+        if (role === "student" && student_id) {
+          res = await axios.get(`/api/student/${student_id}`);
+        } else if (role === "admin" && admin_id) {
+          res = await axios.get(`/api/admin/${admin_id}`);
+        }
+
+        if (!res) return;
+        setStudent(res.data);
+      } catch (error) {
+        console.log("Failed to load data", error);
+      }
+    }
+
+    loadData();
+  }, [student_id, admin_id, role]);
+
+    return (
     <div className="main-layout main-layout-split">
 
       {/* LEFT SIDE */}
       <div className="profile-left">
-
         <div className="banner-container">
-          <img
-            src="/images/banner.png"
-            alt="banner"
-            className="profile-banner"
-          />
-          
+          <img src="/images/banner.png" alt="banner" className="profile-banner" />
+
           <div className="profile-picture">
-            <img src="/images/profilepicture.jpeg" alt="Profile" className="profilePicBanner" />
+            <img
+              src={student?.image_url}
+              alt="Profile"
+              className="profilePicBanner"
+            />
           </div>
+
           <div className="profile-section">
             <div className="profile-text">
-              <h1 className="profilePage-name">Hann</h1>
-              <span className="profile-username">@Hann</span>
+              <h1 className="profilePage-name">{student?.username}</h1>
+              <span className="profile-bio">{student?.bio}</span>
             </div>
           </div>
-          
-          
+
+          <NavLink to={`/student/${student_id || admin_id}/edit`}>
             <button className="edit-profile-btn">
-                Edit profile
+              Edit profile
             </button>
-
+          </NavLink>
         </div>
-
       </div>
 
       {/* RIGHT SIDE */}
@@ -42,25 +71,23 @@ function ProfilePage() {
             <img src="/images/tempCharacter.png" alt="character" className="character-pic" />
 
             <div className="character-info">
-              <h1><span className="character-name">Corigin</span></h1>
-              <span className="character-level">Level 1</span>
+              <h1><span className="character-name">{student?.username}</span></h1>
+              <span className="character-level">Level {student?.level}</span>
             </div>
           </div>
 
           <div className="profile-stats">
-
             <div className="stat-container">
-              <img src="/images/tempPoints.png" alt="Points" className="stat-pic"/>
-              <span className="stat-number">0/100</span>
+              <img src="/images/diamond.png" alt="Points" className="stat-pic"/>
+              <span className="stat-number">{student?.xp}/100</span>
               <span className="stat-text">XP</span>
             </div>
 
             <div className="stat-container">
-              <img src="/images/tempBadge.png" alt="Badges" className="stat-pic"/>
-              <span className="stat-number">0</span>
+              <img src="/images/badge.png" alt="Badges" className="stat-pic"/>
+              <span className="stat-number">{student?.badges}</span>
               <span className="stat-text">Badges</span>
             </div>
-
           </div>
 
         </div>

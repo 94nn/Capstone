@@ -15,6 +15,7 @@ function QuizLayout({setCurrentQuizId}) {
     const [answered, setAnswered] = useState(false);
     const [correctCount, setCorrectCount] = useState(0);
     const [finished, setFinished] = useState(false);
+<<<<<<< HEAD
     const [feedback, setFeedback] = useState("");
     const [showFeedback, setShowFeedback] = useState(false);
 
@@ -52,6 +53,9 @@ const handleSubmitFeedback = async () => {
     alert("Failed to submit feedback");
   }
 };
+=======
+    const student_id = localStorage.getItem("student_id");
+>>>>>>> d724aa52f0cd712a8610695ab097cc3c83f7de89
 
     useEffect(() => {
         async function loadSubChapters() {
@@ -143,7 +147,7 @@ const handleSubmitFeedback = async () => {
     async function updateProgress() {
         try {
             await axios.post("/api/progress/update", {
-                student_id: 1,
+                student_id: student_id,
                 subchapter_id: subchapter_id,
                 correct_answers: correctCount,
                 total_questions: quizzes.length,

@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 
 function ProgressSummary() {
     const { slug } = useParams();
-    const studentId = 1;
+    const student_id = localStorage.getItem("student_id");
 
     const [progress, setProgress] = useState({
         percentage: 0,
@@ -13,7 +13,7 @@ function ProgressSummary() {
     useEffect(() => {
         async function loadProgressSummary() {
             try {
-                const res = await axios.get(`/api/progress-summary/${studentId}/${slug}`);
+                const res = await axios.get(`/api/progress-summary/${student_id}/${slug}`);
                 setProgress(res.data);
             } catch (error) {
                 console.error("Failed to fetch progress summary", error);
@@ -23,7 +23,7 @@ function ProgressSummary() {
         if (slug) {
             loadProgressSummary();
         }
-    }, [slug]);
+    }, [slug, student_id]);
 
     return (
         <aside className="learning-sidebar">

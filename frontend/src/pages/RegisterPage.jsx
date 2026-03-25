@@ -6,7 +6,7 @@ function RegisterPage() {
     name: "",
     email: "",
     password: "",
-    age: "",
+    date_of_birth: "",
   });
 
   const handleChange = (e) => {
@@ -85,7 +85,7 @@ const handleSubmit = async (e) => {
             name="date_of_birth"
             value={formData.date_of_birth}
             onChange={handleChange}
-            placeholder="Age"
+            placeholder="Date of birth"
             className="w-full mb-6 px-4 py-2.5 rounded-lg bg-white text-black"
           />
           <br /><br />

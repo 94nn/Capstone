@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ModuleController;
 
+use Illuminate\Support\Facades\Storage;
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 use Illuminate\Http\Request;
@@ -435,10 +437,18 @@ Route::get('/student/{id}', function($id) {
         'level' => $student->level,
         'xp' => $student->xp_balance,
         'badges' => $student->badges_balance,
-        'image_url' => $student->profile_pic
+        'image_url' => $student->profile_pic,
+        'bio' => $student->Bio
     ]);
 });
 
+// Leaderboard Page Leaderboard
+Route::get('/leaderboard/all', function() {
+    $students = DB::table('student')
+        ->orderBy('xp_balance', 'desc')
+        ->get();
+    return response()->json($students);
+});
 
 //Home Page Leaderboard
 Route::get('/leaderboard', function() {
@@ -478,32 +488,77 @@ Route::post('/progress/update', function(Request $request) {
         'passed' => 'required|boolean'
     ]);
 
-    $status = $request->passed ? 'completed' : 'in_progress';
+    $studentId = $request->student_id;
+    $subchapterId = $request->subchapter_id;
+    $newCorrectAnswers = $request->correct_answers;
+    $totalQuestions = $request->total_questions;
+    $passed = $request->passed;
 
-    DB::table('subchapter_progress')->updateOrInsert(
-        [
-            'student_id' => $request->student_id,
-            'subchapter_id' => $request->subchapter_id
-        ],
-        [
+    $existingProgress = DB::table('subchapter_progress')
+        ->where('student_id', $studentId)
+        ->where('subchapter_id', $subchapterId)
+        ->first();
+
+    if ($existingProgress) {
+        $bestCorrectAnswers = max($existingProgress->correct_answers, $newCorrectAnswers);
+
+        // Once completed, always completed
+        $finalStatus = ($existingProgress->status === 'completed' || $passed)
+            ? 'completed'
+            : 'not_started';
+
+        DB::table('subchapter_progress')
+            ->where('id', $existingProgress->id)
+            ->update([
+                'status' => $finalStatus,
+                'correct_answers' => $bestCorrectAnswers,
+                'total_questions' => $totalQuestions
+            ]);
+
+        // Reward only first time completed
+        if ($existingProgress->status !== 'completed' && $passed) {
+            DB::table('student')
+                ->where('id', $studentId)
+                ->increment('xp_balance', 50);
+
+            DB::table('student')
+                ->where('id', $studentId)
+                ->increment('coins_balance', 10);
+        }
+
+    } else {
+        $status = $passed ? 'completed' : 'not_started';
+
+        DB::table('subchapter_progress')->insert([
+            'student_id' => $studentId,
+            'subchapter_id' => $subchapterId,
             'status' => $status,
-            'correct_answers' => $request->correct_answers,
-            'total_questions' => $request->total_questions
-        ]
-    );
+            'correct_answers' => $newCorrectAnswers,
+            'total_questions' => $totalQuestions
+        ]);
+
+        if ($passed) {
+            DB::table('student')
+                ->where('id', $studentId)
+                ->increment('xp_balance', 50);
+
+            DB::table('student')
+                ->where('id', $studentId)
+                ->increment('coins_balance', 10);
+        }
+    }
 
     $module = DB::table('subchapters')
         ->join('chapters', 'subchapters.chapter_id', '=', 'chapters.id')
-        ->where('subchapters.id', $request->subchapter_id)
+        ->where('subchapters.id', $subchapterId)
         ->select('chapters.module_id')
         ->first();
 
     if (!$module) {
-        return response()->json(['message' => 'Module not found']);
+        return response()->json(['message' => 'Module not found'], 404);
     }
 
-    $total = DB::table('quizzes')
-        ->join('subchapters', 'quizzes.subchapter_id', '=', 'subchapters.id')
+    $total = DB::table('subchapters')
         ->join('chapters', 'subchapters.chapter_id', '=', 'chapters.id')
         ->where('chapters.module_id', $module->module_id)
         ->count();
@@ -511,15 +566,16 @@ Route::post('/progress/update', function(Request $request) {
     $completed = DB::table('subchapter_progress')
         ->join('subchapters', 'subchapter_progress.subchapter_id', '=', 'subchapters.id')
         ->join('chapters', 'subchapters.chapter_id', '=', 'chapters.id')
-        ->where('subchapter_progress.student_id', $request->student_id)
+        ->where('subchapter_progress.student_id', $studentId)
         ->where('chapters.module_id', $module->module_id)
-        ->sum('correct_answers');
+        ->where('subchapter_progress.status', 'completed')
+        ->count();
 
     $percentage = $total > 0 ? round(($completed / $total) * 100, 2) : 0;
 
     DB::table('progress')->updateOrInsert(
         [
-            'student_id' => $request->student_id,
+            'student_id' => $studentId,
             'module_id' => $module->module_id
         ],
         [
@@ -529,7 +585,14 @@ Route::post('/progress/update', function(Request $request) {
     );
 
     return response()->json([
-        'message' => 'Progress updated'
+        'message' => 'Progress updated',
+        'student_id' => $studentId,
+        'subchapter_id' => $subchapterId,
+        'passed' => $passed,
+        'module_id' => $module->module_id,
+        'completed' => $completed,
+        'total' => $total,
+        'percentage' => $percentage
     ]);
 });
 
@@ -545,8 +608,7 @@ Route::get('/progress-summary/{student_id}/{slug}', function($student_id, $slug)
         ], 404);
     }
 
-    $total = DB::table('quizzes')
-        ->join('subchapters', 'quizzes.subchapter_id', '=', 'subchapters.id')
+    $total = DB::table('subchapters')
         ->join('chapters', 'subchapters.chapter_id', '=', 'chapters.id')
         ->where('chapters.module_id', $module->id)
         ->count();
@@ -946,4 +1008,99 @@ Route::delete('/challenge/{id}', function($id) {
         DB::rollback();
         return response()->json(['error' => $e->getMessage()], 500);
     }
+Route::post('/update-profile/{id}', function(Request $request, $id) {
+    $student = DB::table('student')->where('id', $id)->first();
+
+    if (!$student) {
+        return response()->json(['error' => 'Student not found'], 404);
+    }
+
+    $updateData = [];
+
+    // Update name and bio
+    if ($request->filled('name')) $updateData['name'] = $request->input('name');
+    if ($request->filled('bio')) $updateData['Bio'] = $request->input('bio');
+
+    // Handle profile image upload
+    if ($request->hasFile('profile_pic')) {
+        $file = $request->file('profile_pic');
+
+        // Delete old image if it exists
+        if ($student->profile_pic && file_exists(public_path($student->profile_pic))) {
+            unlink(public_path($student->profile_pic));
+        }
+
+        // Unique filename
+        $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) 
+                    . '.' . $file->getClientOriginalExtension();
+
+        // Move to public/profile_pics
+        $file->move(public_path('profile_pics'), $filename);
+
+        $updateData['profile_pic'] = 'profile_pics/' . $filename;
+    }
+
+    // Update DB
+    DB::table('student')->where('id', $id)->update($updateData);
+
+    $updatedStudent = DB::table('student')->where('id', $id)->first();
+
+    return response()->json([
+        'username' => $updatedStudent->name,
+        'bio' => $updatedStudent->Bio,
+        'image_url' => $updatedStudent->profile_pic
+            ? url($updatedStudent->profile_pic)  // full URL
+            : null,
+        'level' => $updatedStudent->level,
+        'xp' => $updatedStudent->xp_balance,
+        'badges' => $updatedStudent->badges_balance,
+    ]);
+});
+
+Route::post('/verify-password/{id}', function(Request $request, $id) {
+    $user = DB::table('student')->where('id', $id)->first();
+    if (!$user) return response()->json(['valid' => false]);
+
+    // Plain text password comparison
+    if ($request->current_password === $user->password) {
+        return response()->json(['valid' => true]);
+    } else {
+        return response()->json(['valid' => false]);
+    }
+});
+
+Route::post('/update-settings/{id}', function(Request $request, $id) {
+    $user = DB::table('student')->where('id', $id)->first();
+    if (!$user) return response()->json(['error' => 'User not found'], 404);
+
+    // Verify current password (plain-text)
+    if ($request->filled('current_password') && $request->current_password !== $user->password) {
+        return response()->json(['error' => 'Current password incorrect'], 400);
+    }
+
+    $updateData = [];
+
+    // Update email if provided
+    if ($request->filled('email')) {
+        $updateData['email'] = $request->email;
+    }
+
+    // Update password only if new_password provided
+    if ($request->filled('new_password')) {
+        $updateData['password'] = $request->new_password;
+    }
+
+    if (!empty($updateData)) {
+        DB::table('student')->where('id', $id)->update($updateData);
+    }
+
+    return response()->json(['success' => true, 'updated' => $updateData]);
+});
+
+Route::delete('/delete-account/{id}', function($id) {
+    $user = DB::table('student')->where('id', $id)->first();
+    if (!$user) return response()->json(['error' => 'User not found'], 404);
+
+    DB::table('student')->where('id', $id)->delete();
+    return response()->json(['success' => true]);
 });

@@ -8,6 +8,7 @@ function SubChapterLayout() {
     const [subchapters, setSubchapters] = useState([]);
     const [completed, setCompleted] = useState(false);
     const [selectedSubchapter, setSelectedSubchapter] = useState(null);
+    const student_id = localStorage.getItem("student_id");
 
     useEffect(() => {
         async function loadSubChapter() {
@@ -17,7 +18,7 @@ function SubChapterLayout() {
                 const subchaptersStatus = await Promise.all(
                     subchapterList.map(async (s) => {
                         try {
-                            const { data: progressData } = await axios.get(`/api/subchapter_progress/1/${chapter_id}/${s.id}`);
+                            const { data: progressData } = await axios.get(`/api/subchapter_progress/${student_id}/${chapter_id}/${s.id}`);
                             return { 
                                 ...s,
                                 status: progressData.status 
@@ -39,7 +40,7 @@ function SubChapterLayout() {
         if (chapter_id && slug) {
             loadSubChapter();
         }
-    }, [chapter_id, slug]);
+    }, [chapter_id, slug, student_id]);
 
     function handleOpenPopup(subchapter) {
         setSelectedSubchapter(subchapter);

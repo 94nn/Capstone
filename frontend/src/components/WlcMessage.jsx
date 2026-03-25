@@ -13,15 +13,16 @@ const messages = (username) => [
 const WlcMessage = () => {
   const [username, setUsername] = useState('')
   const navigate = useNavigate()
+  const student_id = localStorage.getItem("student_id");
 
   useEffect(() => {
-    axios.get('/api/student/1')
+    axios.get(`/api/student/${student_id}`)
       .then(res => setUsername(res.data.username))
       .catch(err => console.error('Error fetching user data:', err))
 
       const count = parseInt(localStorage.getItem('visitCount') || '0')
       localStorage.setItem('visitCount', (count + 1)%5)
-  }, [])
+  }, [student_id])
 
   const visitCount = parseInt(localStorage.getItem('visitCount') || '0')
   const welcomeText = username ? messages(username)[visitCount] : { before: '', after: '' }

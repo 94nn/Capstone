@@ -5,12 +5,13 @@ import { useNavigate } from 'react-router-dom'
 const HomePageProgress = () => {
     const [progress, setProgress] = useState([])
     const navigate = useNavigate()
+    const student_id = localStorage.getItem("student_id");
 
     useEffect(() => {
-        axios.get('/api/progress/1')
+        axios.get(`/api/progress/${student_id}`)
             .then(res => setProgress(res.data))
             .catch(err => console.error('Error fetching progress:', err))
-    }, []);
+    }, [student_id]);
 
     if (progress.length === 0) return null
 

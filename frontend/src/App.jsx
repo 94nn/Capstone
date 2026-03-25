@@ -13,6 +13,8 @@ import AdminNavBar from "./components/AdminNavBar";
 function AppContent() {
     const location = useLocation();
     const role = localStorage.getItem("role");
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+    const isLoggedIn = !!user;
 
     const beforeLoginPages = [
         "/",
@@ -31,8 +33,6 @@ function AppContent() {
         matchPath({ path, end: true }, location.pathname)
     );
 
-    // const isAdminPage = location.pathname.startsWith("/admin");
-
     return (
         <div className="App">
             {isBeforeLogin ? (
@@ -42,8 +42,7 @@ function AppContent() {
                 </>
             ) : (
                 <>
-                    {/* {(role === "admin" || isAdminPage) ? <AdminNavBar /> : <NavBar />} */}
-                    <NavBar />
+                    {role === "admin" ? <AdminNavBar /> : <NavBar />}
                     <AppRoutes />
                 </>
             )}

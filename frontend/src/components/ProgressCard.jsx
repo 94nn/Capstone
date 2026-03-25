@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 
 function ProgressCard() {
     const { chapter_id } = useParams();
-    const studentId = 1;
+    const student_id = localStorage.getItem("student_id");
 
     const [progress, setProgress] = useState({
         level: 0,
@@ -16,7 +16,7 @@ function ProgressCard() {
     useEffect(() => {
         async function loadProgress() {
             try {
-                const res = await axios.get(`/api/subchapter_progress/${studentId}/${chapter_id}`);
+                const res = await axios.get(`/api/subchapter_progress/${student_id}/${chapter_id}`);
                 setProgress(res.data);
             } catch (error) {
                 console.error("Failed to fetch progress", error);
@@ -26,7 +26,7 @@ function ProgressCard() {
         if (chapter_id) {
             loadProgress();
         }
-    }, [chapter_id]);
+    }, [chapter_id, student_id]);
 
     return (
         <aside className="learning-sidebar">

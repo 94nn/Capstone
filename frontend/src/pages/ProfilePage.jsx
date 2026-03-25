@@ -5,20 +5,32 @@ import axios from 'axios';
 
 function ProfilePage() {
   const [student, setStudent] = useState(null);
-  const navigate = useNavigate();
+
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+  const student_id = localStorage.getItem("student_id");
+  const admin_id = user?.id;
+  const role = localStorage.getItem("role");
 
   useEffect(() => {
     async function loadData() {
       try {
-        const res = await axios.get(`/api/student/1`);
+        let res;
+
+        if (role === "student" && student_id) {
+          res = await axios.get(`/api/student/${student_id}`);
+        } else if (role === "admin" && admin_id) {
+          res = await axios.get(`/api/admin/${admin_id}`);
+        }
+
+        if (!res) return;
         setStudent(res.data);
       } catch (error) {
         console.log("Failed to load data", error);
       }
     }
-  
+
     loadData();
-  }, []);
+  }, [student_id, admin_id, role]);
 
     return (
     <div className="main-layout main-layout-split">
@@ -43,7 +55,7 @@ function ProfilePage() {
             </div>
           </div>
 
-          <NavLink to={`/student/1/edit`}>
+          <NavLink to={`/student/${student_id || admin_id}/edit`}>
             <button className="edit-profile-btn">
               Edit profile
             </button>

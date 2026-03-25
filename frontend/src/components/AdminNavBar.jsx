@@ -1,25 +1,29 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import './NavBar.css'
 import NotificationPopup from './NotificationPopup'
 import axios from 'axios'
 
 const AdminNavBar = () => {
-    const [isDropdownVisible, setIsDropdownVisible] = useState(false)
-    const [isNotifVisible, setIsNotifVisible] = useState(false)
-    const [notifications, setNotifications] = useState([])
+    const navigate = useNavigate();
+    const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+    const [isNotifVisible, setIsNotifVisible] = useState(false);
+    const [notifications, setNotifications] = useState([]);
 
-    const unreadCount = notifications.filter(n => !n.is_read).length
+    const dropdownRef = useRef(null);
+    const profileContainerRef = useRef(null);
 
-    const dropdownRef = useRef(null)
-    const profileContainerRef = useRef(null)
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+    const admin_id = user?.id;
+
+    const unreadCount = notifications.filter((n) => !n.is_read).length;
 
     // Fetch notifications from API
     useEffect(() => {
-        axios.get('/api/notifications/1')
+        axios.get(`/api/notifications/${admin_id}`)
             .then(res => setNotifications(res.data))
             .catch(err => console.error('Error fetching notifications:', err))
-    }, [])
+    }, [admin_id])
 
     // Close dropdowns when clicking outside
     useEffect(() => {
@@ -45,20 +49,18 @@ const AdminNavBar = () => {
         setIsDropdownVisible(false)
     }
 
+    const handleLogout = () => {
+        localStorage.removeItem("role");
+        localStorage.removeItem("user");
+        localStorage.removeItem("admin_id");
+        navigate("/login");
+    };
+
     return (
         <header className='nav-bar'>
             <div className="nav-bar-left">
-
-
-
-                <NavLink to="/homepage" end className="logo-text">
-                    MathDex
-                </NavLink>
                 <NavLink to="/admin" end className="logo-text">
-                    Admin
-
-
-
+                    MathDex Admin
                 </NavLink>
             </div>
             <nav className="nav-bar-items">
@@ -71,18 +73,14 @@ const AdminNavBar = () => {
             </nav>
             <div className="nav-bar-right">
                 <div className="bell-container" onClick={toggleNotif}>
-                    <img src="images/bell.png" alt="Bell Icon" className='bell-icon' />
+                    <img src="/images/bell.png" alt="Bell Icon" className='bell-icon' />
                     {unreadCount > 0 && (
                         <span className="notif-badge">{unreadCount}</span>
                     )}
                 </div>
-                <div className="coins-container">
-                    <img src="/images/Coins.png" alt="Coins" className="coins-pic" />
-                    <span className="coins">100</span>
-                </div>
                 <div className="profile-container" onClick={toggleDropdown}>
-                    <img src="/images/profilepicture.jpeg" alt="Profile" className="profile-pic" />
-                    <span className="profile-name">Kahock</span>
+                    <img src={user?.profile_pic} alt="Profile" className="profile-pic" />
+                    <span className="profile-name">{user?.name}</span>
                 </div>
             </div>
 
@@ -99,10 +97,10 @@ const AdminNavBar = () => {
                         <li><NavLink to="/ProfilePage" className={({ isActive }) => `dropdown-item ${isActive ? "dropdown-item-active" : ""}`}>
                             Profile
                         </NavLink></li>
-                        <li><NavLink to="/SettingsPage" className={({ isActive }) => `dropdown-item ${isActive ? "dropdown-item-active" : ""}`}>
+                        <li><NavLink to="/EditProfilePage" className={({ isActive }) => `dropdown-item ${isActive ? "dropdown-item-active" : ""}`}>
                             Settings
                         </NavLink></li>
-                        <li>Logout</li>
+                        <li onClick={handleLogout}>Logout</li>
                     </ul>
                 </div>
             )}

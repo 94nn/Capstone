@@ -15,6 +15,7 @@ function QuizLayout({setCurrentQuizId}) {
     const [answered, setAnswered] = useState(false);
     const [correctCount, setCorrectCount] = useState(0);
     const [finished, setFinished] = useState(false);
+    const student_id = localStorage.getItem("student_id");
 
     useEffect(() => {
         async function loadSubChapters() {
@@ -106,7 +107,7 @@ function QuizLayout({setCurrentQuizId}) {
     async function updateProgress() {
         try {
             await axios.post("/api/progress/update", {
-                student_id: 1,
+                student_id: student_id,
                 subchapter_id: subchapter_id,
                 correct_answers: correctCount,
                 total_questions: quizzes.length,

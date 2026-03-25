@@ -3,10 +3,12 @@ import Footer from "../components/Footer";
 
 function LeaderboardPage() {
     return (
-        <main className="main-layout-full">
-            <LeaderboardLayout />
+        <div>
+            <main className="main-layout-full">
+                <LeaderboardLayout />
+            </main>
             <Footer />
-        </main>
+        </div>
     );
 }
 export default LeaderboardPage;

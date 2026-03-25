@@ -807,173 +807,143 @@ Route::delete('/feedback/{id}', function($id) {
     return response()->json(['success' => true]);
 });
 
-//challenge
+
+
+// 获取所有 challenge
 Route::get('/challenge', function() {
     return DB::table('challenge')->get();
 });
 
-// create challenge, question and options 
-Route::post('/challenge', function (Request $request) {
-DB::beginTransaction();
+// 获取单个 challenge + questions + options
+Route::get('/challenge/{id}', function($id) {
+    $challenge = DB::table('challenge')->where('id', $id)->first();
+    if (!$challenge) return response()->json(['error'=>'Challenge not found'], 404);
 
-try {
-    // 1. insert challenge
-    $challengeId = DB::table('challenge')->insertGetId([
-        'title' => $request->title,
-        'content' => $request->content,
-        'badges' => $request->badges,
-        'module_id' => $request->module_id,
-        'chapter_id' => $request->chapter_id,
-        'slug' => $request->slug,
-    ]);
-
-    // 2. insert questions
-    foreach ($request->questions as $q) {
-        // 找 correct option
-                $correctAnswer = null;
-
-                foreach ($q['options'] as $opt) {
-                    if ($opt['is_correct']) {
-                        $correctAnswer = $opt['text'];
-                        break;
-                    }
-                }
-        $questionId = DB::table('challenge_question')->insertGetId([
-            'challenge_id' => $challengeId,
-            'question' => $q['question'],
-            'answer' => $correctAnswer,
-            'explanation' => $q['explanation'],
-        ]);
-
-        // 3. insert options
-        foreach ($q['options'] as $opt) {
-            DB::table('challenge_options')->insert([
-                'c_question_id' => $questionId,
-                'option_text' => $opt['text'],
-                'is_correct' => $opt['is_correct'],
-            ]);
-        }
-    }
-
-    DB::commit();
-    return response()->json(['message' => 'Created']);
-
-} catch (\Exception $e) {
-    DB::rollback();
-    return response()->json(['error' => $e->getMessage()], 500);
-}
-
-});
-
-
-// read challenge 
-Route::get('/challenge/{slug}', function ($slug) {
-$challenge = DB::table('challenge')
-    ->where('slug', $slug)
-    ->first();
-
-$questions = DB::table('challenge_question')
-    ->where('challenge_id', $challenge->id)
-    ->get();
-
-foreach ($questions as $q) {
-    $q->options = DB::table('challenge_options')
-        ->where('c_question_id', $q->id)
-        ->get();
-}
-
-$challenge->questions = $questions;
-
-return response()->json($challenge);
-
-});
-
-// update challenge
-Route::put('/challenge/{id}', function (Request $request, $id) {
-DB::beginTransaction();
-
-try {
-    // 1. update challenge
-    DB::table('challenge')->where('id', $id)->update([
-        'title' => $request->title,
-        'content' => $request->content,
-        'badges' => $request->badges,
-    ]);
-
-    // 2. delete old
     $questions = DB::table('challenge_question')
         ->where('challenge_id', $id)
-        ->pluck('id');
+        ->get()
+        ->map(function($q){
+            $q->options = DB::table('challenge_option')
+                ->where('c_question_id', $q->id)
+                ->get();
+            return $q;
+        });
 
-    DB::table('challenge_options')
-        ->whereIn('c_question_id', $questions)
-        ->delete();
+    $challenge->questions = $questions;
 
-    DB::table('challenge_question')
-        ->where('challenge_id', $id)
-        ->delete();
+    return response()->json($challenge);
+});
 
-    // 3. re-insert
-    foreach ($request->questions as $q) {
-        $correctAnswer = null;
-        foreach ($q['options'] as $opt) {
-            if ($opt['is_correct']) {
-                $correctAnswer = $opt['text'];
-                break;
+// 创建 challenge + 内部 questions + options
+Route::post('/challenge', function(Request $request) {
+    DB::beginTransaction();
+    try {
+        // 插入 challenge
+        $challengeId = DB::table('challenge')->insertGetId([
+            'title' => $request->title,
+            'content' => $request->content,
+            'badges' => $request->badges,
+            'module_id' => $request->module_id,
+            'chapter_id' => $request->chapter_id,
+            'slug' => $request->slug,
+        ]);
+
+        // 插入 questions + options
+        foreach ($request->questions ?? [] as $q) {
+            $correctAnswer = null;
+            foreach ($q['options'] ?? [] as $opt) {
+                if ($opt['is_correct'] ?? false) {
+                    $correctAnswer = $opt['text'];
+                    break;
+                }
+            }
+
+            $questionId = DB::table('challenge_question')->insertGetId([
+                'challenge_id' => $challengeId,
+                'question' => $q['question'],
+                'answer' => $correctAnswer,
+                'explanation' => $q['explanation'] ?? null,
+            ]);
+
+            foreach ($q['options'] ?? [] as $opt) {
+                DB::table('challenge_option')->insert([
+                    'c_question_id' => $questionId,
+                    'option_text' => $opt['text'],
+                    'is_correct' => $opt['is_correct'] ?? false,
+                ]);
             }
         }
-        $questionId = DB::table('challenge_question')->insertGetId([
-            'challenge_id' => $id,
-            'question' => $q['question'],
-            'answer' => $correctAnswer, 
-            'explanation' => $q['explanation'],
-        ]);
 
-        foreach ($q['options'] as $opt) {
-            DB::table('challenge_options')->insert([
-                'c_question_id' => $questionId,
-                'option_text' => $opt['text'],
-                'is_correct' => $opt['is_correct'],
-            ]);
-        }
+        DB::commit();
+        return response()->json(['message' => 'Created']);
+    } catch (\Exception $e) {
+        DB::rollback();
+        return response()->json(['error' => $e->getMessage()], 500);
     }
-
-    DB::commit();
-    return response()->json(['message' => 'Updated']);
-
-} catch (\Exception $e) {
-    DB::rollback();
-    return response()->json(['error' => $e->getMessage()], 500);
-}
-
 });
 
-Route::delete('/challenge/{id}', function ($id) {
-DB::beginTransaction();
+// 更新 challenge + 内部 questions + options
+Route::put('/challenge/{id}', function(Request $request, $id) {
+    DB::beginTransaction();
+    try {
+        // 更新 challenge
+        DB::table('challenge')->where('id', $id)->update([
+            'title' => $request->title,
+            'content' => $request->content,
+            'badges' => $request->badges,
+            'module_id' => $request->module_id,
+            'chapter_id' => $request->chapter_id,
+            'slug' => $request->slug,
+        ]);
 
-try {
-    $questions = DB::table('challenge_question')
-        ->where('challenge_id', $id)
-        ->pluck('id');
+        // 删除旧 questions + options
+        $questionIds = DB::table('challenge_question')->where('challenge_id', $id)->pluck('id');
+        DB::table('challenge_option')->whereIn('c_question_id', $questionIds)->delete();
+        DB::table('challenge_question')->where('challenge_id', $id)->delete();
 
-    DB::table('challenge_options')
-        ->whereIn('c_question_id', $questions)
-        ->delete();
+        // 插入新的 questions + options
+        foreach ($request->questions ?? [] as $q) {
+            $correctAnswer = null;
+            foreach ($q['options'] ?? [] as $opt) {
+                if ($opt['is_correct'] ?? false) $correctAnswer = $opt['text'];
+            }
 
-    DB::table('challenge_question')
-        ->where('challenge_id', $id)
-        ->delete();
+            $questionId = DB::table('challenge_question')->insertGetId([
+                'challenge_id' => $id,
+                'question' => $q['question'],
+                'answer' => $correctAnswer,
+                'explanation' => $q['explanation'] ?? null,
+            ]);
 
-    DB::table('challenge')
-        ->where('id', $id)
-        ->delete();
+            foreach ($q['options'] ?? [] as $opt) {
+                DB::table('challenge_option')->insert([
+                    'c_question_id' => $questionId,
+                    'option_text' => $opt['text'],
+                    'is_correct' => $opt['is_correct'] ?? false,
+                ]);
+            }
+        }
 
-    DB::commit();
-    return response()->json(['message' => 'Deleted']);
+        DB::commit();
+        return response()->json(['message' => 'Updated']);
+    } catch (\Exception $e) {
+        DB::rollback();
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+});
 
-} catch (\Exception $e) {
-    DB::rollback();
-    return response()->json(['error' => $e->getMessage()], 500);
-}
-
+// 删除 challenge + 内部 questions + options
+Route::delete('/challenge/{id}', function($id) {
+    DB::beginTransaction();
+    try {
+        $questionIds = DB::table('challenge_question')->where('challenge_id', $id)->pluck('id');
+        DB::table('challenge_option')->whereIn('c_question_id', $questionIds)->delete();
+        DB::table('challenge_question')->where('challenge_id', $id)->delete();
+        DB::table('challenge')->where('id', $id)->delete();
+        DB::commit();
+        return response()->json(['message' => 'Deleted']);
+    } catch (\Exception $e) {
+        DB::rollback();
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
 });

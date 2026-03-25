@@ -18,6 +18,7 @@ import AdminSubChapterPage from "../pages/AdminSubChapterPage";
 import AdminQuizPage from "../pages/AdminQuizPage";
 import FeedbackPage from "../pages/FeedbackPage";
 import AdminChallengePage from "../pages/AdminChallengePage";
+import AdminChallengeQuesPage from "../pages/AdminChallengeQuesPage";
 
 function AppRoutes() {
 	return (
@@ -64,6 +65,8 @@ function AppRoutes() {
             <Route path="/feedback" element={<FeedbackPage />} />
 			
             <Route path="/challenge" element={<AdminChallengePage />} />
+            <Route path="/challenge/:challenge_id" element={<AdminChallengePage />} />
+
 
             <Route path="*" element={<Navigate to="/homepage" replace />} />
         </Routes>

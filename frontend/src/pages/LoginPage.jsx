@@ -1,7 +1,9 @@
 import React, { useState} from "react";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+
 
 function LoginPage() {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState ({
         email:"",
         password:"",
@@ -16,7 +18,6 @@ function LoginPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         try {
             const response = await fetch("/api/login", {
                 method: "POST",
@@ -30,8 +31,11 @@ function LoginPage() {
             const data = await response.json();
 
             if (response.ok) {
-                alert("Login successful");
-                console.log(data);
+                if (data.role === "admin") {
+                    navigate("/admin");
+                } else if (data.role === "student") {
+                    navigate("/homepage");
+                }
             } else {
                 alert(data.message || "Login failed");
             }

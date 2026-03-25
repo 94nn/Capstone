@@ -58,7 +58,7 @@ function Starfield() {
 function Avatar({ name, src, size }) {
     const initials = name.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
     return (
-        <div className="avatar" style={{ width: size, height: size, fontSize: size * 0.3 }}>
+        <div className="leaderboard-avatar" style={{ width: size, height: size, fontSize: size * 0.3 }}>
             {src
                 ? <img src={src} alt={name} onError={e => { e.target.style.display = "none"; }} />
                 : initials}
@@ -69,8 +69,8 @@ function Avatar({ name, src, size }) {
 function PointsBar({ xp, max }) {
     const pct = Math.round((xp / max) * 100);
     return (
-        <div className="points-bar-track">
-            <div className="points-bar-fill" style={{ width: `${pct}%` }} />
+        <div className="leaderboard-points-bar-track">
+            <div className="leaderboard-points-bar-fill" style={{ width: `${pct}%` }} />
         </div>
     );
 }
@@ -80,25 +80,25 @@ function PodiumCard({ student, rank }) {
     const isFirst = rank === 1;
 
     return (
-        <div className={`podium-card${isFirst ? " first" : ""}`}>
+        <div className={`leaderboard-podium-card${isFirst ? " first" : ""}`}>
             <div
-                className="podium-rank-badge"
+                className="leaderboard-podium-rank-badge"
                 style={{ border: `2px solid ${color}`, color, boxShadow: `0 0 12px ${glow}` }}
             >
                 {rank}
             </div>
 
             {isFirst && (
-                <div className="podium-gold-star" style={{ filter: `drop-shadow(0 0 10px ${glow})` }}>
+                <div className="leaderboard-podium-gold-star" style={{ filter: `drop-shadow(0 0 10px ${glow})` }}>
                     ★
                 </div>
             )}
 
             <Avatar name={student.name} src={student.profile_pic} size={isFirst ? 92 : 76} />
 
-            <div className="podium-player-info">
-                <p className="podium-player-name">{student.name}</p>
-                <p className="podium-points" style={{ color, textShadow: `0 0 18px ${glow}` }}>
+            <div className="leaderboard-podium-player-info">
+                <p className="leaderboard-podium-player-name">{student.name}</p>
+                <p className="leaderboard-podium-points" style={{ color, textShadow: `0 0 18px ${glow}` }}>
                     {student.xp_balance.toLocaleString()} XP
                 </p>
             </div>
@@ -154,7 +154,7 @@ function Leaderboard() {
                 {error   && <p className="leaderboard-status leaderboard-error">{error}</p>}
 
                 {!loading && !error && students.length >= 3 && (
-                    <div className="podium-wrapper">
+                    <div className="leaderboard-podium-wrapper">
                         <PodiumCard student={top3[0]} rank={2} />
                         <PodiumCard student={top3[1]} rank={1} />
                         <PodiumCard student={top3[2]} rank={3} />

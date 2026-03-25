@@ -49,7 +49,7 @@
 }
 
 /* ── Podium ───────────────────────────────────────────────────── */
-.podium-wrapper {
+.leaderboard-podium-wrapper {
     display: flex;
     justify-content: center;
     align-items: flex-end;
@@ -57,7 +57,7 @@
     margin-bottom: 36px;
 }
 
-.podium-card {
+.leaderboard-podium-card {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -73,11 +73,11 @@
     cursor: default;
 }
 
-.podium-card:hover {
+.leaderboard-podium-card:hover {
     transform: translateY(-6px);
 }
 
-.podium-card.first {
+.leaderboard-podium-card.first {
     background: linear-gradient(170deg, #1e2340 0%, #161929 100%);
     border-color: rgba(108, 142, 255, 0.3);
     box-shadow: 0 8px 48px rgba(108, 142, 255, 0.15), 0 2px 16px rgba(0, 0, 0, 0.6);
@@ -86,7 +86,7 @@
     margin-top: 0;
 }
 
-.podium-rank-badge {
+.leaderboard-podium-rank-badge {
     position: absolute;
     top: -16px;
     width: 32px;
@@ -100,17 +100,17 @@
     font-weight: 800;
 }
 
-.podium-gold-star {
+.leaderboard-podium-gold-star {
     font-size: 32px;
     margin-bottom: 8px;
 }
 
-.podium-player-info {
+.leaderboard-podium-player-info {
     margin-top: 16px;
     text-align: center;
 }
 
-.podium-player-name {
+.leaderboard-podium-player-name {
     font-weight: 700;
     font-size: 15px;
     color: #e8ecff;
@@ -118,29 +118,29 @@
     margin: 0;
 }
 
-.podium-card.first .podium-player-name {
+.leaderboard-podium-card.first .leaderboard-podium-player-name {
     font-size: 17px;
 }
 
-.podium-username {
+.leaderboard-podium-username {
     font-size: 12px;
     color: #565c7a;
     margin: 4px 0 0;
 }
 
-.podium-points {
+.leaderboard-podium-points {
     margin: 12px 0 0;
     font-size: 24px;
     font-weight: 800;
     letter-spacing: -0.5px;
 }
 
-.podium-card.first .podium-points {
+.leaderboard-podium-card.first .leaderboard-podium-points {
     font-size: 28px;
 }
 
 /* ── Avatar ───────────────────────────────────────────────────── */
-.avatar {
+.leaderboard-avatar {
     border-radius: 50%;
     background: linear-gradient(135deg, #2a2f4a, #1a1d2e);
     border: 2px solid rgba(255, 255, 255, 0.12);
@@ -153,7 +153,7 @@
     overflow: hidden;
 }
 
-.avatar img {
+.leaderboard-avatar img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -236,7 +236,7 @@
 }
 
 /* ── Points bar ───────────────────────────────────────────────── */
-.points-bar-track {
+.leaderboard-points-bar-track {
     height: 4px;
     width: 160px;
     border-radius: 9999px;
@@ -244,7 +244,7 @@
     overflow: hidden;
 }
 
-.points-bar-fill {
+.leaderboard-points-bar-fill {
     height: 100%;
     border-radius: 9999px;
     background: linear-gradient(90deg, #4a6cf7, #9b59f5);

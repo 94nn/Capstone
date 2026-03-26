@@ -23,6 +23,7 @@ function AdminChallenge() {
       setChallenges(res.data);
     } catch (err) {
       console.error('Error fetching challenges:', err);
+      
     }
   };
 

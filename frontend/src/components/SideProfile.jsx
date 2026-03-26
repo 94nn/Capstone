@@ -90,7 +90,7 @@ const SideProfile = () => {
                     </div>
                 </div>
                 <div className='hp-view-more-button'>
-                    <button>View more</button>
+                    <button onClick={() => navigate('/leaderboard')}>View more</button>
                 </div>
             </div>
 		</aside>

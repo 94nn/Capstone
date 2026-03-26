@@ -946,3 +946,27 @@ Route::delete('/delete-account/{id}', function($id) {
     DB::table('student')->where('id', $id)->delete();
     return response()->json(['success' => true]);
 });
+
+// Notifications
+Route::get('/notifications/{user_id}', function($user_id) {
+    $notifications = DB::table('notification')
+        ->where('student_id', $user_id)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    return response()->json($notifications);
+});
+
+Route::patch('/notifications/{id}/read', function($id) {
+    $updated = DB::table('notification')->where('id', $id)->update(['is_read' => 1]);
+
+    if (!$updated) return response()->json(['error' => 'Notification not found'], 404);
+
+    return response()->json(['success' => true]);
+});
+
+Route::patch('/notifications/read-all/{user_id}', function($user_id) {
+    DB::table('notification')->where('student_id', $user_id)->update(['is_read' => 1]);
+
+    return response()->json(['success' => true]);
+});

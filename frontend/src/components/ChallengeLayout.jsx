@@ -1,119 +1,169 @@
-import {  useEffect, useState } from "react";
-import axios from "axios";
-import { Link, NavLink , useParams } from 'react-router-dom'
-import "./ChallengeLayout.css";
+import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import './ChallengeLayout.css'
 
-function ChallengeLayout() {
-    const [challenge, setChallenge] = useState([]);
-    const [modules, setModules] = useState([]);
-    const [chapters, setChapters] = useState([]);
-    const { module_id } = useParams();
+const mockChallenges = [
+    {
+        id: 1,
+        title: 'Control Flow',
+        topic: 'Algebra',
+        num_challenges: 5,
+        duration_min: 40,
+        xp: 50,
+        slug: 'control-flow',
+        bg_color: '#1a6fc4',
+    },
+    {
+        id: 2,
+        title: 'Functions',
+        topic: 'Calculus',
+        num_challenges: 6,
+        duration_min: 50,
+        xp: 60,
+        slug: 'functions',
+        bg_color: '#1a6fc4',
+    },
+    {
+        id: 3,
+        title: 'Probability Basics',
+        topic: 'Probability',
+        num_challenges: 4,
+        duration_min: 30,
+        xp: 40,
+        slug: 'probability-basics',
+        bg_color: '#7c3aed',
+    },
+    {
+        id: 4,
+        title: 'Limits & Derivatives',
+        topic: 'Calculus',
+        num_challenges: 7,
+        duration_min: 60,
+        xp: 70,
+        slug: 'limits-derivatives',
+        bg_color: '#7c3aed',
+    },
+    {
+        id: 5,
+        title: 'Sequences & Series',
+        topic: 'Algebra',
+        num_challenges: 5,
+        duration_min: 45,
+        xp: 55,
+        slug: 'sequences-series',
+        bg_color: '#1a6fc4',
+    },
+    {
+        id: 6,
+        title: 'Bayes Theorem',
+        topic: 'Probability',
+        num_challenges: 4,
+        duration_min: 35,
+        xp: 45,
+        slug: 'bayes-theorem',
+        bg_color: '#7c3aed',
+    },
+]
 
-    useEffect(() => {
-    async function loadModules() {
-        try {
-            const res = await axios.get("/api/modules"); // 你需要在后端建这个 API
-            setModules(Array.isArray(res.data) ? res.data: res.data? [res.data]: []
-        )} catch (err) {
-            console.error("Failed to load modules", err);
-            setModules([]);
-        }
-    }
-    loadModules();
-    }, []); // 空依赖数组，只执行一次
-    
-    useEffect(() => {
-    async function loadChapters() {
-        try {
-            const res = await axios.get("/api/chapters"); // 你需要在后端建这个 API
-            setChapters(Array.isArray(res.data) ? res.data: res.data? [res.data]: []
-        )} catch (err) {
-            console.error("Failed to load chapters", err);
-            setChapters([]);
-        }
-    }
-    loadChapters();
-    }, []); // 空依赖数组，只执行一次
+const FILTERS = ['All', 'Algebra', 'Calculus', 'Probability']
 
-    useEffect(() => {    
-        async function loadChallenge() {
-            try {
-            const url = module_id
-                ? `/api/challenge/module/${module_id}`
-                : `/api/challenge`;
-            const res = await axios.get(url);
-            setChallenge(Array.isArray(res.data) ? res.data : []);
-            } catch (error) {
-                console.log("Failed to load challenge data", error);
-                setChallenge([]);
-            }
-        }
-
-        loadChallenge();
-    }, [module_id]);
+const ChallengeCard = ({ challenge, onClick }) => {
+    const [hovered, setHovered] = useState(false)
 
     return (
-        <section className="module-section">
-            <div className="module-header">
-                <div>
-                    <h1 className="module-title">Challenge</h1>
-                    <p className="module-description">
-                        Explore our learning challenges to master different math topics. Each challenge contains lessons and exercises to help you learn and practice effectively.
-                    </p>
+        <div
+            className={`ch-card ${hovered ? 'ch-card--hovered' : ''}`}
+            style={{ '--card-bg': challenge.bg_color }}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+            onClick={() => onClick(challenge.slug)}
+        >
+            {/* Front face */}
+            <div className={`ch-card-front ${hovered ? 'ch-card-front--hidden' : ''}`}>
+                <span className="ch-card-topic">{challenge.topic}</span>
+                <div className="ch-card-icon">
+                    <div className="ch-card-icon-pixel" />
                 </div>
+                <span className="ch-card-title">{challenge.title}</span>
             </div>
 
-            <div className="challenge-nav-bar">
-                <nav className="challenge-nav-bar-items">
-                    <NavLink
-                        to="/challenge"
-                        end
-                        className={({ isActive }) =>
-                            `challenge-nav-item ${isActive ? "challenge-nav-item-active" : ""}`
-                        }
-                    >
-                        All
-                    </NavLink>
-                    {modules.map((module) => (
-                        <NavLink
-                            to={`/challenge/module/${module.id}`}
-                            key={module.id}
-                            className={({ isActive }) =>
-                                `challenge-nav-item ${isActive ? "challenge-nav-item-active" : ""}`
-                            }
-                        >                       
-                            {module.name}
-                        </NavLink>
-                    ))}
-                </nav>
+            {/* Hover face */}
+            <div className={`ch-card-back ${hovered ? 'ch-card-back--visible' : ''}`}>
+                <p className="ch-card-desc">
+                    Practice {challenge.title} and sharpen your problem-solving skills.
+                </p>
+                <div className="ch-card-divider" />
+                <div className="ch-card-meta">
+                    <span className="ch-meta-item">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                        {challenge.num_challenges} Challenges
+                    </span>
+                    <span className="ch-meta-item">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                        {challenge.duration_min} min
+                    </span>
+                </div>
+                <div className="ch-card-xp">{challenge.xp} XP</div>
             </div>
-            <br />
-            <br />
-            <div className="module-grid">
-                {challenge.length === 0 ? (
-                    <div className="module-card">
-                        <div className="module-row">
-                            <h1 className="module-row-header">No challenge found</h1>
-                            <p className="module-row-description">
-                                Your table returned an empty list.
-                            </p>
-                        </div>
-                    </div>
-                ) : (
-                    challenge.map((c) => (
-                        <Link to={`/challenge/${c.slug}`} key={c.id} className="module-link-wrapper">
-                            <div className="module-card">
-                                <div className="module-row">
-                                    <h1 className="module-row-header">{c.module_name}</h1>
-                                    <p className="module-row-description">{c.chapter_title}</p>
-                                </div>
-                            </div>
-                        </Link>
-                    ))
-                )}
-            </div>
-        </section>
-    );
+        </div>
+    )
 }
 
-export default ChallengeLayout;
+const ChallengePage = () => {
+    const [challenges, setChallenges] = useState(mockChallenges)
+    const [activeFilter, setActiveFilter] = useState('All')
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        axios.get('/api/challenges')
+            .then(res => setChallenges(res.data))
+            .catch(() => {/* keep mock data */})
+    }, [])
+
+    const filtered = activeFilter === 'All'
+        ? challenges
+        : challenges.filter(c => c.topic === activeFilter)
+
+    return (
+        <div className="ch-page">
+            {/* Hero */}
+            <div className="ch-hero">
+                <h1 className="ch-hero-title">Challenge Packs</h1>
+                <p className="ch-hero-subtitle">
+                    Practice your math reps while earning XP! Complete a pack of challenges
+                    to test your knowledge as you learn on Mathdex.
+                </p>
+            </div>
+
+            {/* Filter pills */}
+            <div className="ch-filters">
+                {FILTERS.map(f => (
+                    <button
+                        key={f}
+                        className={`ch-filter-pill ${activeFilter === f ? 'ch-filter-pill--active' : ''}`}
+                        onClick={() => setActiveFilter(f)}
+                    >
+                        {f}
+                    </button>
+                ))}
+            </div>
+
+            {/* Cards grid */}
+            <div className="ch-grid">
+                {filtered.map(challenge => (
+                    <ChallengeCard
+                        key={challenge.id}
+                        challenge={challenge}
+                        onClick={(slug) => navigate(`/challenges/${slug}`)}
+                    />
+                ))}
+                {filtered.length === 0 && (
+                    <p className="ch-empty">No challenges found for this topic.</p>
+                )}
+            </div>
+        </div>
+    )
+}
+
+export default ChallengePage

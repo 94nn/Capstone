@@ -726,37 +726,78 @@ Route::post('/hint/unlock', function (Request $request) {
 Route::get('/challenge', function () {
     $challenges = DB::table('challenge')
         ->join('modules', 'challenge.module_id', '=', 'modules.id')
+        ->join('chapters', 'challenge.chapter_id', '=', 'chapters.id')
         ->select(
             'challenge.id',
-            'challenge.title',
+            'chapters.title as title',
             'challenge.slug',
-            'challenge.badges as xp',
+            'challenge.xp_quantity',
+            'challenge.badge_id',
+            'challenge.coins_quantity',
             'modules.name as topic',
-            DB::raw('(SELECT COUNT(*) FROM challenge_question WHERE challenge_question.module_id = challenge.module_id) as num_challenges')
+            DB::raw('(SELECT COUNT(*) FROM challenge_question WHERE challenge_question.challenge_id = challenge.id) as num_challenges'),
+            DB::raw('challenge.xp_quantity * (SELECT COUNT(*) FROM challenge_question WHERE challenge_question.challenge_id = challenge.id) as total_xp'),
+            DB::raw('challenge.coins_quantity * (SELECT COUNT(*) FROM challenge_question WHERE challenge_question.challenge_id = challenge.id) as total_coins')
         )
         ->get();
     return response()->json($challenges);
 });
- 
+
 // GET challenges by module — MUST be before /challenge/{slug}
 Route::get('/challenge/module/{module_id}', function ($module_id) {
     return response()->json(
         DB::table('challenge')
             ->join('modules', 'challenge.module_id', '=', 'modules.id')
+            ->join('chapters', 'challenge.chapter_id', '=', 'chapters.id')
             ->where('challenge.module_id', $module_id)
-            ->select('challenge.id', 'challenge.title', 'challenge.content', 'challenge.badges', 'modules.id as module_id', 'modules.name as module_name')
+            ->select(
+                'challenge.id',
+                'chapters.title as title',
+                'challenge.description',
+                'challenge.slug',
+                'challenge.xp_quantity',
+                'challenge.badge_id',
+                'challenge.coins_quantity',
+                'modules.id as module_id',
+                'modules.name as module_name'
+            )
             ->get()
     );
 });
- 
-// GET single challenge by module slug — wildcard, must be LAST
+
+// GET single challenge by slug — wildcard, must be LAST
 Route::get('/challenge/{slug}', function ($slug) {
     $challenge = DB::table('challenge')
         ->join('modules', 'challenge.module_id', '=', 'modules.id')
-        ->where('modules.slug', $slug)
-        ->select('challenge.id', 'challenge.title', 'challenge.content', 'challenge.badges', 'modules.id as module_id', 'modules.name as module_name', 'modules.slug as slug')
+        ->join('chapters', 'challenge.chapter_id', '=', 'chapters.id')
+        ->where('challenge.slug', $slug)
+        ->select(
+            'challenge.id',
+            'chapters.title as title',
+            'challenge.description',
+            'challenge.content',
+            'challenge.slug',
+            'challenge.xp_quantity',
+            'challenge.badge_id',
+            'challenge.coins_quantity',
+            'modules.name as topic'
+        )
+        ->first();
+
+    if (!$challenge) return response()->json(['message' => 'Challenge not found'], 404);
+
+    $questions = DB::table('challenge_question')
+        ->where('challenge_id', $challenge->id)
         ->get();
-    if ($challenge->isEmpty()) return response()->json(['message' => 'Challenge not found'], 404);
+
+    foreach ($questions as $question) {
+        $question->options = DB::table('challenge_options')
+            ->where('challenge_question_id', $question->id)
+            ->get();
+    }
+
+    $challenge->questions = $questions;
+
     return response()->json($challenge);
 });
 

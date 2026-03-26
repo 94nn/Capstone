@@ -36,7 +36,7 @@ function AppRoutes() {
 
 			<Route path="/modules/:slug/:chapter_id/:subchapter_id" element={<QuizPage />} />
 
-			<Route path="/challenge/module/:module_id" element={<ChallengePage />} />
+			<Route path="/challenge" element={<ChallengePage />} />
 
 			<Route path="/challenge/:slug" element={<ChallengeQuestionPage />} />
 

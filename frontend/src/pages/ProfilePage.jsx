@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import '../components/Profile.css';
 import { NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { getImageUrl } from '../utils/imageUrl';
 
 function ProfilePage() {
   const [student, setStudent] = useState(null);
@@ -42,7 +43,7 @@ function ProfilePage() {
 
           <div className="profile-picture">
             <img
-              src={student?.image_url}
+              src={getImageUrl(student?.image_url)}
               alt="Profile"
               className="profilePicBanner"
             />
@@ -79,7 +80,7 @@ function ProfilePage() {
           <div className="profile-stats">
             <div className="stat-container">
               <img src="/images/diamond.png" alt="Points" className="stat-pic"/>
-              <span className="stat-number">{student?.xp}/100</span>
+              <span className="stat-number">{student?.xp}</span>
               <span className="stat-text">XP</span>
             </div>
 

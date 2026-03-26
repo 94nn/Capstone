@@ -852,12 +852,12 @@ Route::delete('/feedback/{id}', function($id) {
 
 
 // 获取所有 challenge
-Route::get('/challenge', function() {
+Route::get('/admin/challenge', function() {
     return DB::table('challenge')->get();
 });
 
 // 获取单个 challenge + questions + options
-Route::get('/challenge/{id}', function($id) {
+Route::get('/admin/challenge/{id}', function($id) {
     $challenge = DB::table('challenge')->where('id', $id)->first();
     if (!$challenge) return response()->json(['error'=>'Challenge not found'], 404);
 
@@ -865,7 +865,7 @@ Route::get('/challenge/{id}', function($id) {
         ->where('challenge_id', $id)
         ->get()
         ->map(function($q){
-            $q->options = DB::table('challenge_option')
+            $q->options = DB::table('challenge_options')
                 ->where('c_question_id', $q->id)
                 ->get();
             return $q;
@@ -877,27 +877,24 @@ Route::get('/challenge/{id}', function($id) {
 });
 
 // 创建 challenge + 内部 questions + options
-Route::post('/challenge', function(Request $request) {
+Route::post('/admin/challenge', function(Request $request) {
     DB::beginTransaction();
     try {
-        // 插入 challenge
+        // 插入 challenge（module_id & chapter_id 由前端传入）
         $challengeId = DB::table('challenge')->insertGetId([
             'title' => $request->title,
             'content' => $request->content,
-            'badges' => $request->badges,
+            'badges' => $request->title,
             'module_id' => $request->module_id,
             'chapter_id' => $request->chapter_id,
-            'slug' => $request->slug,
+            'slug' => Str::slug($request->title),
         ]);
 
         // 插入 questions + options
         foreach ($request->questions ?? [] as $q) {
             $correctAnswer = null;
             foreach ($q['options'] ?? [] as $opt) {
-                if ($opt['is_correct'] ?? false) {
-                    $correctAnswer = $opt['text'];
-                    break;
-                }
+                if ($opt['is_correct'] ?? false) $correctAnswer = $opt['option_text'];
             }
 
             $questionId = DB::table('challenge_question')->insertGetId([
@@ -908,9 +905,9 @@ Route::post('/challenge', function(Request $request) {
             ]);
 
             foreach ($q['options'] ?? [] as $opt) {
-                DB::table('challenge_option')->insert([
+                DB::table('challenge_options')->insert([
                     'c_question_id' => $questionId,
-                    'option_text' => $opt['text'],
+                    'option_text' => $opt['option_text'] ?? '',
                     'is_correct' => $opt['is_correct'] ?? false,
                 ]);
             }
@@ -925,29 +922,29 @@ Route::post('/challenge', function(Request $request) {
 });
 
 // 更新 challenge + 内部 questions + options
-Route::put('/challenge/{id}', function(Request $request, $id) {
+Route::put('/admin/challenge/{id}', function(Request $request, $id) {
     DB::beginTransaction();
     try {
         // 更新 challenge
         DB::table('challenge')->where('id', $id)->update([
             'title' => $request->title,
             'content' => $request->content,
-            'badges' => $request->badges,
+            'badges' => $request->title,
             'module_id' => $request->module_id,
             'chapter_id' => $request->chapter_id,
-            'slug' => $request->slug,
+            'slug' => Str::slug($request->title),
         ]);
 
         // 删除旧 questions + options
         $questionIds = DB::table('challenge_question')->where('challenge_id', $id)->pluck('id');
-        DB::table('challenge_option')->whereIn('c_question_id', $questionIds)->delete();
+        DB::table('challenge_options')->whereIn('c_question_id', $questionIds)->delete();
         DB::table('challenge_question')->where('challenge_id', $id)->delete();
 
         // 插入新的 questions + options
         foreach ($request->questions ?? [] as $q) {
             $correctAnswer = null;
             foreach ($q['options'] ?? [] as $opt) {
-                if ($opt['is_correct'] ?? false) $correctAnswer = $opt['text'];
+                if ($opt['is_correct'] ?? false) $correctAnswer = $opt['option_text'];
             }
 
             $questionId = DB::table('challenge_question')->insertGetId([
@@ -958,9 +955,9 @@ Route::put('/challenge/{id}', function(Request $request, $id) {
             ]);
 
             foreach ($q['options'] ?? [] as $opt) {
-                DB::table('challenge_option')->insert([
+                DB::table('challenge_options')->insert([
                     'c_question_id' => $questionId,
-                    'option_text' => $opt['text'],
+                    'option_text' => $opt['option_text'] ?? '',
                     'is_correct' => $opt['is_correct'] ?? false,
                 ]);
             }
@@ -975,11 +972,11 @@ Route::put('/challenge/{id}', function(Request $request, $id) {
 });
 
 // 删除 challenge + 内部 questions + options
-Route::delete('/challenge/{id}', function($id) {
+Route::delete('/admin/challenge/{id}', function($id) {
     DB::beginTransaction();
     try {
         $questionIds = DB::table('challenge_question')->where('challenge_id', $id)->pluck('id');
-        DB::table('challenge_option')->whereIn('c_question_id', $questionIds)->delete();
+        DB::table('challenge_options')->whereIn('c_question_id', $questionIds)->delete();
         DB::table('challenge_question')->where('challenge_id', $id)->delete();
         DB::table('challenge')->where('id', $id)->delete();
         DB::commit();
@@ -988,8 +985,21 @@ Route::delete('/challenge/{id}', function($id) {
         DB::rollback();
         return response()->json(['error' => $e->getMessage()], 500);
     }
-
 });
+
+
+
+// 获取指定 module 下的 chapters
+Route::get('api/modules/{module_id}/chapters', function($module_id) {
+    $chapters = DB::table('chapters')
+        ->where('module_id', $module_id)
+        ->select('id', 'title') 
+        ->get();
+    
+    return response()->json($chapters);
+});
+
+
 Route::post('/update-profile/{id}', function(Request $request, $id) {
     $student = DB::table('student')->where('id', $id)->first();
 

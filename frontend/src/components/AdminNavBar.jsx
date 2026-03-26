@@ -67,7 +67,7 @@ const AdminNavBar = () => {
                 <NavLink to="/feedback" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
                     Feedback
                 </NavLink>
-                <NavLink to="/challenge" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
+                <NavLink to="/admin/challenge" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
                     Challenge
                 </NavLink>
             </nav>

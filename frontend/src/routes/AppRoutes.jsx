@@ -61,8 +61,8 @@ function AppRoutes() {
 
             <Route path="/feedback" element={<FeedbackPage />} />
 			
-            <Route path="/challenge" element={<AdminChallengePage />} />
-            <Route path="/challenge/:challenge_id" element={<AdminChallengePage />} />
+            <Route path="/admin/challenge" element={<AdminChallengePage />} />
+            <Route path="/admin/challenge/:id" element={<AdminChallengeQuesPage />} />
 
 
             <Route path="*" element={<Navigate to="/homepage" replace />} />

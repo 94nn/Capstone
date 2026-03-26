@@ -3,7 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 
 function ChallengeQuestion() {
-  const { challenge_id } = useParams();
+  const { id } = useParams();
 
   const [challenge, setChallenge] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -12,15 +12,15 @@ function ChallengeQuestion() {
   const [form, setForm] = useState({
     question: "",
     explanation: "",
-    options: [{ text: "", is_correct: false }]
+    options: [{ option_text: "", is_correct: false }]
   });
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [id]);
 
   const fetchData = async () => {
-    const res = await axios.get(`/api/challenge/${challenge_id}`);
+    const res = await axios.get(`/api/admin/challenge/${id}`);
     setChallenge(res.data);
   };
 
@@ -29,7 +29,7 @@ function ChallengeQuestion() {
     setForm({
       question: "",
       explanation: "",
-      options: [{ text: "", is_correct: false }]
+      options: [{ option_text: "", is_correct: false }]
     });
     setShowForm(true);
   };
@@ -44,32 +44,7 @@ function ChallengeQuestion() {
     setShowForm(true);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    let updatedQuestions = [...(challenge.questions || [])];
-
-    if (editingIndex !== null) {
-      // 编辑现有 question
-      updatedQuestions[editingIndex] = { ...form };
-    } else {
-      // 新增 question
-      updatedQuestions.push({ ...form });
-    }
-
-    try {
-      await axios.put(`/api/challenge/${challenge_id}`, {
-        ...challenge,
-        questions: updatedQuestions
-      });
-
-      setShowForm(false);
-      fetchData();
-    } catch (err) {
-      console.error(err);
-      alert("Error");
-    }
-  };
+  
 
   const handleDelete = (index) => {
     if (!window.confirm("Delete this question?")) return;
@@ -77,7 +52,7 @@ function ChallengeQuestion() {
     const updatedQuestions = [...(challenge.questions || [])];
     updatedQuestions.splice(index, 1);
 
-    axios.put(`/api/challenge/${challenge_id}`, {
+    axios.put(`/api/admin/challenge/${id}`, {
       ...challenge,
       questions: updatedQuestions
     }).then(fetchData)
@@ -86,11 +61,37 @@ function ChallengeQuestion() {
         alert("Error deleting question");
       });
   };
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  let updatedQuestions = [...(challenge.questions || [])];
+
+  if (editingIndex !== null) {
+    // 编辑
+    updatedQuestions[editingIndex] = { ...form };
+  } else {
+    // 新增
+    updatedQuestions.push({ ...form });
+  }
+
+  try {
+    await axios.put(`/api/admin/challenge/${id}`, {
+      ...challenge,
+      questions: updatedQuestions
+    });
+
+    setShowForm(false);
+    fetchData();
+  } catch (err) {
+    console.error(err);
+    alert("Error");
+  }
+};
 
   const addOption = () => {
     setForm(prev => ({
       ...prev,
-      options: [...prev.options, { text: "", is_correct: false }]
+      options: [...prev.options, { option_text: "", is_correct: false }]
     }));
   };
 
@@ -115,7 +116,7 @@ function ChallengeQuestion() {
           <ul>
             {q.options?.map((opt, oi) => (
               <li key={oi}>
-                {opt.text} {opt.is_correct ? "(✔)" : ""}
+                {opt.option_text} {opt.is_correct ? "(✔)" : ""}
               </li>
             ))}
           </ul>
@@ -141,8 +142,8 @@ function ChallengeQuestion() {
           {form.options.map((opt, i) => (
             <div key={i}>
               <input
-                value={opt.text}
-                onChange={e => updateOption(i, "text", e.target.value)}
+                value={opt.option_text}
+                onChange={e => updateOption(i, "option_text", e.target.value)}
               />
               <input
                 type="checkbox"

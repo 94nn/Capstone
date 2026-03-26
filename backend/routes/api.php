@@ -722,61 +722,41 @@ Route::post('/hint/unlock', function (Request $request) {
     ]);
 });
 
+// GET all challenges
 Route::get('/challenge', function () {
-    return DB::table('challenge')
-        ->join('chapters', 'challenge.chapter_id', '=', 'chapters.id')
+    $challenges = DB::table('challenge')
         ->join('modules', 'challenge.module_id', '=', 'modules.id')
         ->select(
             'challenge.id',
             'challenge.title',
-            'challenge.content',
             'challenge.slug',
-            'challenge.badges',
-            'modules.id as module_id',
-            'modules.name as module_name',
-            'chapters.title as chapter_title'
+            'challenge.badges as xp',
+            'modules.name as topic',
+            DB::raw('(SELECT COUNT(*) FROM challenge_question WHERE challenge_question.module_id = challenge.module_id) as num_challenges')
         )
         ->get();
+    return response()->json($challenges);
 });
-
+ 
+// GET challenges by module — MUST be before /challenge/{slug}
 Route::get('/challenge/module/{module_id}', function ($module_id) {
-    return DB::table('challenge')
-        ->join('chapters', 'challenge.chapter_id', '=', 'chapters.id')
-        ->join('modules', 'challenge.module_id', '=', 'modules.id')
-        ->where('modules.id', $module_id)
-        ->select(
-            'challenge.id',
-            'challenge.title',
-            'challenge.content',
-            'challenge.badges',
-            'modules.id as module_id',
-            'modules.name as module_name',
-            'chapters.title as chapter_title'
-        )
-        ->get();
+    return response()->json(
+        DB::table('challenge')
+            ->join('modules', 'challenge.module_id', '=', 'modules.id')
+            ->where('challenge.module_id', $module_id)
+            ->select('challenge.id', 'challenge.title', 'challenge.content', 'challenge.badges', 'modules.id as module_id', 'modules.name as module_name')
+            ->get()
+    );
 });
-
+ 
+// GET single challenge by module slug — wildcard, must be LAST
 Route::get('/challenge/{slug}', function ($slug) {
     $challenge = DB::table('challenge')
-        ->join('chapters', 'challenge.chapter_id', '=', 'chapters.id')
         ->join('modules', 'challenge.module_id', '=', 'modules.id')
-        ->where('challenge.slug', $slug)
-        ->select(
-            'challenge.id',
-            'challenge.title',
-            'challenge.content',
-            'challenge.badges',
-            'challenge.slug',
-            'modules.id as module_id',
-            'modules.name as module_name',
-            'chapters.title as chapter_title'
-        )
-        ->get(); 
-
-    if (!$challenge) {
-        return response()->json(['message' => 'Challenge not found'], 404);
-    }
-
+        ->where('modules.slug', $slug)
+        ->select('challenge.id', 'challenge.title', 'challenge.content', 'challenge.badges', 'modules.id as module_id', 'modules.name as module_name', 'modules.slug as slug')
+        ->get();
+    if ($challenge->isEmpty()) return response()->json(['message' => 'Challenge not found'], 404);
     return response()->json($challenge);
 });
 

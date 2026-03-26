@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../components/EditProfilePage.css";
 import axios from "axios";
+import { getImageUrl } from "../utils/imageUrl";
 
 export default function EditProfilePage() {
   const [activeTab, setActiveTab] = useState("profile");
@@ -30,7 +31,8 @@ export default function EditProfilePage() {
         setName(res.data.username || "");
         setBio(res.data.bio || "");
         setEmail(res.data.email || "");
-        setProfileImage(res.data.image_url || "");
+        // Use getImageUrl so relative paths are prefixed with backend URL
+        setProfileImage(getImageUrl(res.data.image_url));
       } catch (error) {
         console.error("Failed to load data:", error);
       }
@@ -38,7 +40,7 @@ export default function EditProfilePage() {
     loadData();
   }, [userId]);
 
-  // Image preview
+  // Image preview — uses local blob URL while editing, no need for getImageUrl
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -64,7 +66,8 @@ export default function EditProfilePage() {
       });
       if (!res.ok) throw new Error(await res.text());
       const data = await res.json();
-      setProfileImage(data.image_url);
+      // update-profile returns a full URL already, so use it directly
+      setProfileImage(getImageUrl(data.image_url));
       setSelectedFile(null);
       alert("Profile updated!");
     } catch (err) {
@@ -75,80 +78,76 @@ export default function EditProfilePage() {
 
   // Save settings (email/password)
   const handleSaveSettings = async () => {
-  if (newPassword && newPassword !== confirmPassword) {
-    alert("New password and confirm password do not match");
-    return;
-  }
-
-  try {
-    const res = await axios.post(`/api/update-settings/${userId}`, {
-      email,
-      current_password: currentPassword,
-      new_password: newPassword,
-    });
-
-    if (res.status !== 200) throw new Error(res.data?.error || "Failed");
-
-    alert("Settings updated!");
-
-    // Clear local state
-    setCurrentPassword("");
-    setNewPassword("");
-    setConfirmPassword("");
-    setCurrentPasswordVerified(false);
-
-    // Refresh the page
-    window.location.reload();
-
-  } catch (err) {
-    console.error(err);
-    alert("Failed to update settings");
-  }
-};
-
-const handleDeleteAccount = async () => {
-  const confirmDelete = window.confirm(
-    "Are you sure you want to delete your account? This action cannot be undone."
-  );
-
-  if (!confirmDelete) return;
-
-  try {
-    const res = await axios.delete(`/api/delete-account/${userId}`);
-    if (res.status === 200) {
-      alert("Account deleted successfully.");
-      // Redirect to homepage or login page
-      window.location.href = "/homepage"; 
-    } else {
-      alert("Failed to delete account.");
+    if (newPassword && newPassword !== confirmPassword) {
+      alert("New password and confirm password do not match");
+      return;
     }
-  } catch (err) {
-    console.error(err);
-    alert("Error deleting account.");
-  }
-};
+
+    try {
+      const res = await axios.post(`/api/update-settings/${userId}`, {
+        email,
+        current_password: currentPassword,
+        new_password: newPassword,
+      });
+
+      if (res.status !== 200) throw new Error(res.data?.error || "Failed");
+
+      alert("Settings updated!");
+
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setCurrentPasswordVerified(false);
+
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update settings");
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete your account? This action cannot be undone."
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      const res = await axios.delete(`/api/delete-account/${userId}`);
+      if (res.status === 200) {
+        alert("Account deleted successfully.");
+        window.location.href = "/homepage";
+      } else {
+        alert("Failed to delete account.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error deleting account.");
+    }
+  };
 
   const verifyCurrentPassword = async () => {
-  if (!currentPassword) {
-    alert("Please enter your current password");
-    return;
-  }
-
-  try {
-    const res = await axios.post(`/api/verify-password/${userId}`, {
-      current_password: currentPassword,
-    });
-
-    if (res.data.valid) {
-      setCurrentPasswordVerified(true);
-    } else {
-      alert("Current password is incorrect");
+    if (!currentPassword) {
+      alert("Please enter your current password");
+      return;
     }
-  } catch (err) {
-    console.error(err);
-    alert("Failed to verify password");
-  }
-};
+
+    try {
+      const res = await axios.post(`/api/verify-password/${userId}`, {
+        current_password: currentPassword,
+      });
+
+      if (res.data.valid) {
+        setCurrentPasswordVerified(true);
+      } else {
+        alert("Current password is incorrect");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Failed to verify password");
+    }
+  };
 
   return (
     <div className="EditProfile-container">
@@ -235,7 +234,6 @@ const handleDeleteAccount = async () => {
             <h1 className="EditProfile-title">Settings</h1>
             <div className="EditProfile-content">
               <div className="EditProfile-form" style={{ flex: 1 }}>
-                {/* Email field */}
                 <div className="EditProfile-form-group">
                   <label>Email</label>
                   <input
@@ -246,7 +244,6 @@ const handleDeleteAccount = async () => {
                   />
                 </div>
 
-                {/* Current password */}
                 <div className="EditProfile-form-group">
                   <label>Current Password</label>
                   <input
@@ -257,7 +254,6 @@ const handleDeleteAccount = async () => {
                   />
                 </div>
 
-                {/* Only show new password if current password is correct */}
                 {currentPasswordVerified && (
                   <>
                     <div className="EditProfile-form-group">
@@ -312,7 +308,7 @@ const handleDeleteAccount = async () => {
               >
                 Delete Account
               </button>
-          </div>
+            </div>
           </>
         )}
       </div>

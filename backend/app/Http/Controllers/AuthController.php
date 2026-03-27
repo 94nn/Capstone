@@ -32,8 +32,8 @@ class AuthController extends Controller
             'coins_balance' => 0,
             'badges_balance' => 0,
             'level' => 1,
-            'profile_pic' => '/images/default_profile.png',
-            'Bio' => '',
+            'profile_pic' => 'profile_pics/xm_pfp.png',
+            'Bio' => 'This person is lazy and has not added a bio T^T.',
         ]);
 
         return response()->json([

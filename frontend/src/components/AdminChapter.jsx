@@ -36,6 +36,22 @@ function AdminChapter() {
 const handleSubmit = async () => {
     try {
         if (isEdit) {
+            const lvl = parseInt(level);
+            if (isNaN(lvl)) {
+                alert("Level must be a number");
+                return;
+            }
+
+            if (!Number.isInteger(lvl)) {
+                alert("Level must be an integer");
+                return;
+            }
+
+            if (lvl < 1 || lvl > 10) {
+                alert("Level must be between 1 and 10");
+                return;
+            }
+        
             // UPDATE
             const res = await axios.put(`/api/modules/${slug}/${currentId}`, {
                 title: title,
@@ -179,16 +195,19 @@ const closeModal = () => {
                                     onChange={(e) => setDescription(e.target.value)}
                                     rows={3}
                                     style={{ width: "90%", resize: "vertical" }} // fills width, allows vertical resize
-                                />
+                                 />
 
                                 {isEdit && (
-                                <input
-                                    type="number"
-                                    className="module-name"
-                                    placeholder="Level"
-                                    value={level}
-                                    onChange={(e) => setLevel(e.target.value)}
-                                />
+                                    <input
+                                        type="number"
+                                        className="module-name"
+                                        placeholder="Level"
+                                        value={level}
+                                        min="1"
+                                        max="10"   
+                                        step="1"
+                                        onChange={(e) => setLevel(e.target.value)}
+                                    />
                                 )}
                                 <div className="modal-box-bottom">
                                     <button className="submit-button" onClick={handleSubmit}>Submit</button>

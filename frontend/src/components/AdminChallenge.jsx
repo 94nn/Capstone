@@ -19,7 +19,7 @@ function AdminChallenge() {
 
   const fetchChallenges = async () => {
     try {
-      const res = await axios.get('/api/challenge');
+      const res = await axios.get('/api/admin/challenge');
       setChallenges(res.data);
     } catch (err) {
       console.error('Error fetching challenges:', err);
@@ -39,7 +39,7 @@ function AdminChallenge() {
   const handleDeleteChallenge = async (id) => {
     if (!window.confirm('Are you sure you want to delete this challenge?')) return;
     try {
-      await axios.delete(`/api/challenge/${id}`);
+      await axios.delete(`/api/admin/challenge/${id}`);
       alert('Challenge deleted successfully!');
       fetchChallenges();
     } catch (err) {
@@ -52,10 +52,10 @@ function AdminChallenge() {
     e.preventDefault();
     try {
       if (challenge.id) {
-        await axios.put(`/api/challenge/${challenge.id}`, challenge);
+        await axios.put(`/api/admin/challenge/${challenge.id}`, challenge);
         alert('Update successfully!');
       } else {
-        await axios.post('/api/challenge', challenge);
+        await axios.post('/api/admin/challenge', challenge);
         alert('Create successfully!');
       }
       setShowModal(false);

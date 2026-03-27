@@ -455,8 +455,10 @@ Route::get('/student/{id}', function($id) {
         'level' => $student->level,
         'xp' => $student->xp_balance,
         'badges' => $student->badges_balance,
+        'coins' => $student->coins_balance,
         'image_url' => $student->profile_pic,
-        'bio' => $student->Bio
+        'bio' => $student->Bio,
+        'email' => $student->email
     ]);
 });
 
@@ -1004,13 +1006,13 @@ Route::delete('/feedback/{id}', function($id) {
 
 
 
-// 获取所有 challenge
-Route::get('/challenge', function() {
+// Admin: 获取所有 challenge
+Route::get('/admin/challenge', function() {
     return DB::table('challenge')->get();
 });
 
-// 获取单个 challenge + questions + options
-Route::get('/challenge/{id}', function($id) {
+// Admin: 获取单个 challenge + questions + options
+Route::get('/admin/challenge/{id}', function($id) {
     $challenge = DB::table('challenge')->where('id', $id)->first();
     if (!$challenge) return response()->json(['error'=>'Challenge not found'], 404);
 
@@ -1029,8 +1031,8 @@ Route::get('/challenge/{id}', function($id) {
     return response()->json($challenge);
 });
 
-// 创建 challenge + 内部 questions + options
-Route::post('/challenge', function(Request $request) {
+// Admin: 创建 challenge + 内部 questions + options
+Route::post('/admin/challenge', function(Request $request) {
     DB::beginTransaction();
     try {
         // 插入 challenge
@@ -1077,8 +1079,8 @@ Route::post('/challenge', function(Request $request) {
     }
 });
 
-// 更新 challenge + 内部 questions + options
-Route::put('/challenge/{id}', function(Request $request, $id) {
+// Admin: 更新 challenge + 内部 questions + options
+Route::put('/admin/challenge/{id}', function(Request $request, $id) {
     DB::beginTransaction();
     try {
         // 更新 challenge
@@ -1127,8 +1129,8 @@ Route::put('/challenge/{id}', function(Request $request, $id) {
     }
 });
 
-// 删除 challenge + 内部 questions + options
-Route::delete('/challenge/{id}', function($id) {
+// Admin: 删除 challenge + 内部 questions + options
+Route::delete('/admin/challenge/{id}', function($id) {
     DB::beginTransaction();
     try {
         $questionIds = DB::table('challenge_question')->where('challenge_id', $id)->pluck('id');

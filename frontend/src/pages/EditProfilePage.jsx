@@ -6,7 +6,6 @@ import { getImageUrl } from "../utils/imageUrl";
 export default function EditProfilePage() {
 	const [activeTab, setActiveTab] = useState("profile");
 
-	const [student, setStudent] = useState(null);
 	const [name, setName] = useState("");
 	const [bio, setBio] = useState("");
 	const [profileImage, setProfileImage] = useState("");
@@ -17,6 +16,7 @@ export default function EditProfilePage() {
   const admin_id = user?.id;
 
 	// Settings fields
+  const [originalEmail, setOriginalEmail] = useState("");
 	const [email, setEmail] = useState("");
 	const [currentPassword, setCurrentPassword] = useState("");
 	const [newPassword, setNewPassword] = useState("");
@@ -26,32 +26,33 @@ export default function EditProfilePage() {
 
 
   // Load student data
- useEffect(() => {
-	async function loadData() {
-		try {
-		let res;
+  useEffect(() => {
+    async function loadData() {
+      try {
+      let res;
 
-		if (role === "student" && student_id) {
-			res = await axios.get(`/api/student/${student_id}`);
-		} else if (role === "admin" && admin_id) {
-			res = await axios.get(`/api/admin/${admin_id}`);
-		}
+      if (role === "student" && student_id) {
+        res = await axios.get(`/api/student/${student_id}`);
+      } else if (role === "admin" && admin_id) {
+        res = await axios.get(`/api/admin/${admin_id}`);
+      }
 
-		if (!res) return;
+      if (!res) return;
 
-		setStudent(res.data);
-		setName(res.data.username || res.data.name || "");
-		setBio(res.data.bio || "");
-		setEmail(res.data.email || "");
-		setProfileImage(getImageUrl(res.data.image_url || res.data.profile_pic));
+      setName(res.data.username || res.data.name || "");
+      setBio(res.data.bio || "");
+      setEmail(res.data.email || "");
+      setProfileImage(getImageUrl(res.data.image_url || res.data.profile_pic));
+      setOriginalEmail(res.data.email || "");
 
-		} catch (error) {
-		console.error("Failed to load data:", error);
-		}
-	}
+      } catch (error) {
+      console.error("Failed to load data:", error);
+      }
+    }
 
-  loadData();
-}, [student_id, admin_id, role]);
+    loadData();
+  }, [student_id, admin_id, role]);
+
   // Image preview — uses local blob URL while editing, no need for getImageUrl
 	const handleImageChange = (e) => {
 		const file = e.target.files[0];

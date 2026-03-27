@@ -23,7 +23,7 @@ function ProfilePage() {
           res = await axios.get(`/api/admin/${admin_id}`);
         }
 
-        if (!res) return;
+      if (!res) return;
         setStudent(res.data);
       } catch (error) {
         console.log("Failed to load data", error);

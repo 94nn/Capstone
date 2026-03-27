@@ -57,7 +57,7 @@ const NotificationPopup = ({ isVisible, onClose, notifications, setNotifications
                             <div className="notif-item-body">
                                 <p className="notif-item-title">{notif.title}</p>
                                 <p className="notif-item-message">{notif.message}</p>
-                                <p className="notif-item-time">{notif.time}</p>
+                                <p className="notif-item-time">{notif.created_at}</p>
                             </div>
                         </div>
                     ))

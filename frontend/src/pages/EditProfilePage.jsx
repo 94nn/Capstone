@@ -11,9 +11,10 @@ export default function EditProfilePage() {
 	const [bio, setBio] = useState("");
 	const [profileImage, setProfileImage] = useState("");
 	const [selectedFile, setSelectedFile] = useState(null);
-	const user = JSON.parse(localStorage.getItem("user") || "null");
-	const student_id = localStorage.getItem("student_id");
-	const admin_id = user?.id;
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+  const role = localStorage.getItem("role");
+  const student_id = localStorage.getItem("student_id");
+  const admin_id = user?.id;
 
 	// Settings fields
 	const [email, setEmail] = useState("");
@@ -25,139 +26,144 @@ export default function EditProfilePage() {
 
 
   // Load student data
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const res = await axios.get(`/api/student/${userId}`);
-        setStudent(res.data);
-        setName(res.data.username || "");
-        setBio(res.data.bio || "");
-        setEmail(res.data.email || "");
-        // Use getImageUrl so relative paths are prefixed with backend URL
-        setProfileImage(getImageUrl(res.data.image_url));
-      } catch (error) {
-        console.error("Failed to load data:", error);
-      }
-    }
-    loadData();
-  }, [userId]);
+ useEffect(() => {
+	async function loadData() {
+		try {
+		let res;
 
+		if (role === "student" && student_id) {
+			res = await axios.get(`/api/student/${student_id}`);
+		} else if (role === "admin" && admin_id) {
+			res = await axios.get(`/api/admin/${admin_id}`);
+		}
+
+		if (!res) return;
+
+		setStudent(res.data);
+		setName(res.data.username || res.data.name || "");
+		setBio(res.data.bio || "");
+		setEmail(res.data.email || "");
+		setProfileImage(getImageUrl(res.data.image_url || res.data.profile_pic));
+
+		} catch (error) {
+		console.error("Failed to load data:", error);
+		}
+	}
+
+  loadData();
+}, [student_id, admin_id, role]);
   // Image preview — uses local blob URL while editing, no need for getImageUrl
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    if (file.size > 5 * 1024 * 1024) {
-      alert("File must be less than 5MB");
-      return;
-    }
-    setSelectedFile(file);
-    setProfileImage(URL.createObjectURL(file));
-  };
+	const handleImageChange = (e) => {
+		const file = e.target.files[0];
+		if (!file) return;
+		if (file.size > 5 * 1024 * 1024) {
+		alert("File must be less than 5MB");
+		return;
+		}
+		setSelectedFile(file);
+		setProfileImage(URL.createObjectURL(file));
+	};
 
 	// Save profile
 	const handleSaveProfile = async () => {
 		const formData = new FormData();
 		formData.append("name", name);
 		formData.append("bio", bio);
-	
-		if (selectedFile) formData.append("profile_pic", selectedFile);
-	
-		try {
-		let res;
-	
-		if (student_id) {
-			res = await fetch(`/api/update-profile/${student_id}`, {
-			method: "POST",
-			body: formData,
-			});
-		} else if (admin_id) {
-			res = await fetch(`/api/update-profile/${admin_id}`, {
-			method: "POST",
-			body: formData,
-			});
-		}
-	
-		if (!res.ok) throw new Error(await res.text());
-	
-		const data = await res.json();
-	
-		setProfileImage(data.image_url || data.profile_pic);
-		setSelectedFile(null);
-	
-		alert("Profile updated!");
-	
-		} catch (err) {
-		console.error(err);
-		alert("Failed to update profile");
-		}
 
-    try {
-      const res = await fetch(`/api/update-profile/${userId}`, {
-        method: "POST",
-        body: formData,
-      });
-      if (!res.ok) throw new Error(await res.text());
-      const data = await res.json();
-      // update-profile returns a full URL already, so use it directly
-      setProfileImage(getImageUrl(data.image_url));
-      setSelectedFile(null);
-      alert("Profile updated!");
-    } catch (err) {
-      console.error(err);
-      alert("Failed to update profile");
-    }
-  };
+		if (selectedFile) formData.append("profile_pic", selectedFile);
+
+		try {
+			let res;
+
+			if (role === "student") {
+			res = await fetch(`/api/update-profile/${student_id}`, {
+				method: "POST",
+				body: formData,
+			});
+			} else if (role === "admin") {
+			res = await fetch(`/api/update-profile/${admin_id}`, {
+				method: "POST",
+				body: formData,
+			});
+			}
+
+			if (!res.ok) throw new Error(await res.text());
+
+			const data = await res.json();
+
+			setProfileImage(getImageUrl(data.image_url || data.profile_pic));
+			setSelectedFile(null);
+
+			alert("Profile updated!");
+
+		} catch (err) {
+			console.error(err);
+			alert("Failed to update profile");
+		}
+	};
 
   // Save settings (email/password)
-  const handleSaveSettings = async () => {
-    if (newPassword && newPassword !== confirmPassword) {
-      alert("New password and confirm password do not match");
-      return;
-    }
+	const handleSaveSettings = async () => {
+		if (newPassword && newPassword !== confirmPassword) {
+			alert("Passwords do not match");
+			return;
+		}
+		try {
+			let res;
 
-    try {
-      const res = await axios.post(`/api/update-settings/${userId}`, {
-        email,
-        current_password: currentPassword,
-        new_password: newPassword,
-      });
+			if (role === "student") {
+			res = await axios.post(`/api/update-settings/${student_id}`, {
+				email,
+				current_password: currentPassword,
+				new_password: newPassword,
+			});
+			} else if (role === "admin") {
+			res = await axios.post(`/api/update-settings/${admin_id}`, {
+				email,
+				current_password: currentPassword,
+				new_password: newPassword,
+			});
+			}
 
-      if (res.status !== 200) throw new Error(res.data?.error || "Failed");
+			alert("Settings updated!");
 
-      alert("Settings updated!");
+		} catch (err) {
+			console.error(err);
+			alert("Failed to update settings");
+		}
+	};
 
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
-      setCurrentPasswordVerified(false);
+	const handleDeleteAccount = async () => {
+	const confirmDelete = window.confirm(
+		"Are you sure you want to delete your account?"
+	);
 
-      window.location.reload();
-    } catch (err) {
-      console.error(err);
-      alert("Failed to update settings");
-    }
-  };
+	if (!confirmDelete) return;
 
-  const handleDeleteAccount = async () => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete your account? This action cannot be undone."
-    );
+	try {
+		let res;
 
-    if (!confirmDelete) return;
+		if (role === "student") {
+		res = await axios.delete(`/api/delete-account/${student_id}`);
+		} else if (role === "admin") {
+		res = await axios.delete(`/api/delete-account/${admin_id}`);
+		}
 
-    try {
-      const res = await axios.delete(`/api/delete-account/${userId}`);
-      if (res.status === 200) {
-        alert("Account deleted successfully.");
-        window.location.href = "/homepage";
-      } else {
-        alert("Failed to delete account.");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Error deleting account.");
-    }
-  };
+		if (res.status === 200) {
+		alert("Account deleted");
+
+		localStorage.clear();
+		window.location.href = "/login";
+
+		} else {
+		alert("Failed");
+		}
+
+	} catch (err) {
+		console.error(err);
+		alert("Error deleting account");
+	}
+	};
 
   const verifyCurrentPassword = async () => {
     if (!currentPassword) {
@@ -166,7 +172,7 @@ export default function EditProfilePage() {
     }
 
     try {
-      const res = await axios.post(`/api/verify-password/${userId}`, {
+      const res = await axios.post(`/api/verify-password/${student_id}`, {
         current_password: currentPassword,
       });
 

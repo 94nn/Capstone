@@ -12,7 +12,7 @@ const Home_Page_Explore = () => {
             </div>
             <div className='hp-explore-content-container'>
                 <div className='hp-explore-card'>
-                    <button className='hp-explore-button' onClick={() => <SimplePage title="Challenge" description="Challenge" />}>
+                    <button className='hp-explore-button' onClick={() => navigate('/challenge')}>
                         <img src="images/pixelated_challenge_icon.png" alt="Challenge Icon" className='hp-challenge-icon' />
                         <div className='hp-explore-text'>
                             <h3>Challenge Pack</h3>

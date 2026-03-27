@@ -68,12 +68,6 @@ function FeedbackManager() {
     }
   };
 
-  // Edit feedback
-  const handleEdit = (fb) => {
-    setEditingId(fb.id);
-    setMessage(fb.feedback);
-  };
-
   return (
     
     <div style={{ padding: 20 }}>
@@ -82,7 +76,6 @@ function FeedbackManager() {
         Add Feedback
       </button>
       </div> */}
-      <br />
       {showModal && (
   <div className="modal-overlay">
     <div className="modal-content">
@@ -137,30 +130,30 @@ function FeedbackManager() {
             Cancel
           </button>
         </div>
-
       </form>
     </div>
   </div>
 )}
-      <div style={{ marginBottom: 10 }}>
+      <div className="filter-container" style={{ marginBottom: 10 }}>
         <input
             type="text"
+            className="filter-student"
             placeholder="Filter by Student Name"
             value={studentFilter}
             onChange={(e) => setStudentFilter(e.target.value)}
             style={{ marginRight: 10 }}
         />
-
         <input
             type="text"
+            className="filter-module"
             placeholder="Filter by Module Name"
             value={moduleFilter}
             onChange={(e) => setModuleFilter(e.target.value)}
         />
         </div>
+        <br />
       <h2 className="feedback-list-header">Feedback List</h2>
-      <br />
-      <table border="1" cellPadding="5">
+      <table className="feedback-table" border="1" cellPadding="5">
         <thead>
           <tr>
             <th>No.</th>
@@ -178,8 +171,7 @@ function FeedbackManager() {
               <td>{fb.module_name}</td>
               <td>{fb.feedback}</td>
               <td>
-                <button onClick={() => handleEdit(fb)}>Edit</button>
-                <button onClick={() => handleDelete(fb.id)}>Delete</button>
+                <button className="delete-button" onClick={() => handleDelete(fb.id)}>Delete</button>
               </td>
             </tr>
           ))}

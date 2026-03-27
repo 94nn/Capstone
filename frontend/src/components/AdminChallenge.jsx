@@ -138,32 +138,41 @@ const handleEdit = async (ch) => {
     }
   };
 
+  const closeModal = () => {
+      setShowModal(false);
+  };
+
   return (
     <div className="admin-challenge-page">
-      <h2>All Challenges</h2>
-      <button onClick={handleCreate}>Create Challenge</button>
+      <h2 className="challenge-header">Challenges</h2> <br />
+      <button className="create-button" onClick={handleCreate}>Create Challenge</button> <br />
       <div className="challenge-list">
         {challenges.map(ch => (
           <div key={ch.id} className="challenge-card">
-            <h3>{ch.title}</h3>
-            <p>{ch.content}</p>
-            <Link to={`/admin/challenge/${ch.id}`}>
-              <button>Enter</button>
-            </Link>
-            <button onClick={() => handleEdit(ch)}>Edit</button>
-            <button onClick={() => axios.delete(`/api/admin/challenge/${ch.id}`).then(fetchChallenges)}>Delete</button>
+            <h2 className='admin-challenge-title'>{ch.title}</h2> <br />
+            <h3 className='admin-challenge-description'>{ch.description}</h3> <br />
+            <p className='admin-challenge-content'>{ch.content}</p>
+            <br />
+            <Link to={`/admin/challenge/${ch.id}`}> 
+              <button className='secondary-button'>Enter</button>
+            </Link> &nbsp;
+            <button className="edit-button" onClick={() => handleEdit(ch)}>Edit</button> &nbsp;
+            <button className="delete-button" onClick={() => axios.delete(`/api/admin/challenge/${ch.id}`).then(fetchChallenges)}>Delete</button>
           </div>
         ))}
       </div>
-
       {showModal && (
         <div className="modal-overlay">
-          <div className="modal">
-            <h2>{challenge.id ? 'Edit Challenge' : 'Create Challenge'}</h2>
+          <div className="edit-popup-box">
+            <div className="edit-popup-box-header">
+              <h2 className="edit-title">{challenge.id ? 'Edit Challenge' : 'Create Challenge'}</h2>
+            <button className="close-button" onClick={closeModal}>X</button>
+            </div>
             <form onSubmit={handleSubmit}>
               <div>
                 <label>Title:</label>
                 <input
+                  className="edit-challenge-title"
                   value={challenge.title}
                   onChange={e => setChallenge(prev => ({ ...prev, title: e.target.value }))}
                   required
@@ -173,6 +182,7 @@ const handleEdit = async (ch) => {
               <div>
                 <label>Content:</label>
                 <textarea
+                  className="edit-challenge-content"
                   value={challenge.content}
                   onChange={e => setChallenge(prev => ({ ...prev, content: e.target.value }))}
                 />
@@ -181,6 +191,7 @@ const handleEdit = async (ch) => {
               <div>
                 <label>Module:</label>
                     <select
+                      className='edit-challenge-module'
                       value={challenge.module_id}
                       onChange={e => handleModuleChange(e.target.value)}
                       required
@@ -193,6 +204,7 @@ const handleEdit = async (ch) => {
               <div>
                 <label>Chapter:</label>
                 <select
+                  className='edit-challenge-chapter'
                   value={challenge.chapter_id}
                   onChange={e => setChallenge(prev => ({ ...prev, chapter_id: e.target.value }))}
                   required
@@ -202,10 +214,12 @@ const handleEdit = async (ch) => {
                   {chapters.map(c => <option key={c.id} value={c.id}>{c.title}</option>)}
                 </select>
               </div>
-
-              <hr />
-              <button type="submit">Submit</button>
-              <button type="button" onClick={() => setShowModal(false)}>Close</button>
+              <br />
+              <div className="button-row">
+                <button className='submit-button' type="submit">Submit</button> &nbsp;
+                <button className='cancel-button' type="button" onClick={() => setShowModal(false)}>Close</button>
+              </div>
+              
             </form>
           </div>
         </div>

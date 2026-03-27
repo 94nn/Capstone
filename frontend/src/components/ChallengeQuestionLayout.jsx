@@ -16,6 +16,10 @@ function ChallengeQuestionLayout() {
     const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
     useEffect(() => {
+        if (!isLoggedIn) {
+            navigate('/login');
+            return;
+        }
         async function loadData() {
             try {
                 const res = await axios.get(`/api/challenge/${slug}`);
@@ -25,7 +29,7 @@ function ChallengeQuestionLayout() {
             }
         }
         if (slug) loadData();
-    }, [slug]);
+    }, [slug, isLoggedIn, navigate]);
 
     const handleSelect = (questionId, optionId) => {
         if (!isLoggedIn) { setShowLoginPrompt(true); return; }

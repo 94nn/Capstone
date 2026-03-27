@@ -31,11 +31,9 @@ function LoginPage() {
             const data = await response.json();
 
             if (response.ok) {
-<<<<<<< HEAD
                 alert("Login successful");
                 localStorage.setItem("student_id", data.user.id);
                 console.log(data);
-=======
                 localStorage.setItem("role", data.role);
                 localStorage.setItem("user", JSON.stringify(data.user));
 
@@ -46,7 +44,6 @@ function LoginPage() {
                     localStorage.removeItem("student_id");
                     navigate("/admin");
                 }
->>>>>>> d724aa52f0cd712a8610695ab097cc3c83f7de89
             } else {
                 alert(data.message || "Login failed");
             }

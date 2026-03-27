@@ -15,7 +15,7 @@ function QuizLayout({setCurrentQuizId}) {
     const [answered, setAnswered] = useState(false);
     const [correctCount, setCorrectCount] = useState(0);
     const [finished, setFinished] = useState(false);
-<<<<<<< HEAD
+    const student_id = localStorage.getItem("student_id");
     const [feedback, setFeedback] = useState("");
     const [showFeedback, setShowFeedback] = useState(false);
 
@@ -53,10 +53,6 @@ const handleSubmitFeedback = async () => {
     alert("Failed to submit feedback");
   }
 };
-=======
-    const student_id = localStorage.getItem("student_id");
->>>>>>> d724aa52f0cd712a8610695ab097cc3c83f7de89
-
     useEffect(() => {
         async function loadSubChapters() {
             try {

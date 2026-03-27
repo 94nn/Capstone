@@ -358,6 +358,51 @@
     line-height: 1.2;
 }
 
+.ch-card-completed-badge {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 8px;
+    color: #14532d;
+    background: #bbf7d0;
+    border: 2px solid #22c55e;
+    border-bottom: 3px solid #15803d;
+    padding: 5px 10px;
+    border-radius: 3px;
+    letter-spacing: 0.2px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* ---- Completed card visual state ---- */
+.ch-card--completed {
+    background: #d6f5d6;
+    border-color: #22c55e;
+    box-shadow:
+        inset 0 2px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.08),
+        0 5px 0 #15803d,
+        0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.ch-card--completed::before {
+    border-color: #86efac;
+}
+
+.ch-card--completed::after {
+    background: #22c55e;
+}
+
+.ch-card--completed:hover,
+.ch-card--completed.ch-card--hovered {
+    box-shadow:
+        inset 0 2px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.08),
+        0 9px 0 #15803d,
+        0 12px 20px rgba(0, 0, 0, 0.35);
+}
+
+.ch-card--completed .ch-card-back {
+    background: #c6ecc6;
+}
+
 /* ---- Card accent variants ---- */
 .ch-card--blue        { --card-accent: #3b82f6; --card-accent-dark: #1d4ed8; }
 .ch-card--green       { --card-accent: #22c55e; --card-accent-dark: #15803d; }

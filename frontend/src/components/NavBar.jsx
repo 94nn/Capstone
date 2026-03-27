@@ -108,7 +108,7 @@ const NavBar = () => {
             {isDropdownVisible && (
                 <div className="dropdown" ref={dropdownRef}>
                     <ul>
-                        <li><NavLink to="/ProfilePage" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
+                        <li><NavLink to="/student/:id" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
                             Profile
                         </NavLink></li>
                         <li><NavLink to="/EditProfilePage" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>

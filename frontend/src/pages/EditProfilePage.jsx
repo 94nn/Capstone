@@ -26,7 +26,7 @@ export default function EditProfilePage() {
 
 
   // Load student data
- useEffect(() => {
+  useEffect(() => {
 	async function loadData() {
 		try {
 		let res;
@@ -50,8 +50,8 @@ export default function EditProfilePage() {
 		}
 	}
 
-  loadData();
-}, [student_id, admin_id, role]);
+	loadData();
+  }, [student_id, admin_id, role]);
   // Image preview — uses local blob URL while editing, no need for getImageUrl
 	const handleImageChange = (e) => {
 		const file = e.target.files[0];

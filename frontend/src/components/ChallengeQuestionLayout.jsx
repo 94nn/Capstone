@@ -12,6 +12,11 @@ function ChallengeQuestionLayout() {
     const [currentIndex, setCurrentIndex] = useState(0);
 
     useEffect(() => {
+        const student_id = localStorage.getItem('student_id');
+        if (!student_id) {
+            navigate('/login');
+            return;
+        }
         async function loadData() {
             try {
                 const res = await axios.get(`/api/challenge/${slug}`);
@@ -21,7 +26,7 @@ function ChallengeQuestionLayout() {
             }
         }
         if (slug) loadData();
-    }, [slug]);
+    }, [slug, navigate]);
 
     const handleSelect = (questionId, optionId) => {
         if (revealed[questionId]) return;
@@ -56,6 +61,7 @@ function ChallengeQuestionLayout() {
                 badge_id:        correctQ >= 2 ? challenge.badge_id : null,
             }).catch(err => console.error('Failed to save completion:', err));
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [allDone]);
 
     if (!challenge) return <p className="cq-loading">Loading...</p>;

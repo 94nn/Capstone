@@ -91,9 +91,7 @@ const SideProfile = () => {
                     </div>
                 </div>
                 <div className='hp-view-more-button'>
-                    <NavLink to="/leaderboard">
-                        <button>View more</button>
-                    </NavLink>
+                    <button onClick={() => navigate('/leaderboard')}>View more</button>
                 </div>
             </div>
 		</aside>

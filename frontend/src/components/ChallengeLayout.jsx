@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import axios from 'axios'
 import './ChallengeLayout.css'
 const CARD_SCHEMES = {
@@ -36,7 +36,10 @@ const ChallengeCard = ({ challenge, completion, onClick }) => {
         >
             {/* Front face */}
             <div className={`ch-card-front ${hovered ? 'ch-card-front--hidden' : ''}`}>
-                <span className="ch-card-topic">{challenge.topic}</span>
+                <div style={{ display: 'flex', gap: '6px', alignSelf: 'flex-start', flexWrap: 'wrap' }}>
+                    <span className="ch-card-topic">{challenge.topic}</span>
+                    {isCompleted && <span className="ch-card-completed-badge">✓ Completed</span>}
+                </div>
                 <div className="ch-card-icon">
                     {isCompleted
                         ? <div className="ch-card-stars">
@@ -98,11 +101,13 @@ const ChallengePage = () => {
     const [activeFilter, setActiveFilter] = useState('All')
     const [loading, setLoading] = useState(true)
     const navigate = useNavigate()
+    const location = useLocation()
+    const isBeforeLogin = location.pathname.includes('b4login')
 
     useEffect(() => {
         const student_id = localStorage.getItem('student_id')
         const requests = [axios.get('/api/challenge')]
-        if (student_id) requests.push(axios.get(`/api/challenge-completion/${student_id}`))
+        if (student_id && !isBeforeLogin) requests.push(axios.get(`/api/challenge-completion/${student_id}`))
 
         Promise.allSettled(requests)
             .then(([challengeRes, completionRes]) => {
@@ -156,8 +161,7 @@ const ChallengePage = () => {
                                 challenge={challenge}
                                 completion={completions[challenge.id] || null}
                                 onClick={(slug) => {
-                                    const role = localStorage.getItem('role')
-                                    if (!role) navigate('/login')
+                                    if (isBeforeLogin) navigate(`/challenge/b4login/${slug}`)
                                     else navigate(`/challenge/${slug}`)
                                 }}
                             />

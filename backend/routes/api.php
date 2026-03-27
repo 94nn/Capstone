@@ -9,6 +9,24 @@ use Illuminate\Support\Facades\Storage;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+
+// Helper: calculate level from XP and send level-up notification if changed
+function checkLevelUp($studentId) {
+    $student = DB::table('student')->where('id', $studentId)->first();
+    if (!$student) return;
+
+    $newLevel = intdiv($student->xp_balance, 100) + 1;
+    if ($newLevel > $student->level) {
+        DB::table('student')->where('id', $studentId)->update(['level' => $newLevel]);
+        DB::table('notification')->insert([
+            'student_id' => $studentId,
+            'title'      => 'Level Up!',
+            'message'    => "Congratulations! You've reached Level {$newLevel}!",
+            'is_read'    => 0,
+            'created_at' => now(),
+        ]);
+    }
+}
 use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\EditModule;
@@ -524,6 +542,8 @@ Route::post('/progress/update', function(Request $request) {
             DB::table('student')
                 ->where('id', $studentId)
                 ->increment('coins_balance', 10);
+
+            checkLevelUp($studentId);
         }
 
     } else {
@@ -545,6 +565,8 @@ Route::post('/progress/update', function(Request $request) {
             DB::table('student')
                 ->where('id', $studentId)
                 ->increment('coins_balance', 10);
+
+            checkLevelUp($studentId);
         }
     }
 
@@ -573,6 +595,11 @@ Route::post('/progress/update', function(Request $request) {
 
     $percentage = $total > 0 ? round(($completed / $total) * 100, 2) : 0;
 
+    $previousProgress = DB::table('progress')
+        ->where('student_id', $studentId)
+        ->where('module_id', $module->module_id)
+        ->first();
+
     DB::table('progress')->updateOrInsert(
         [
             'student_id' => $studentId,
@@ -583,6 +610,18 @@ Route::post('/progress/update', function(Request $request) {
             'progress' => $percentage
         ]
     );
+
+    // Notify on first module completion
+    if ($percentage >= 100 && (!$previousProgress || $previousProgress->progress < 100)) {
+        $moduleName = DB::table('modules')->where('id', $module->module_id)->value('name');
+        DB::table('notification')->insert([
+            'student_id' => $studentId,
+            'title'      => 'Module Completed!',
+            'message'    => "You've completed the {$moduleName} module! Well done!",
+            'is_read'    => 0,
+            'created_at' => now(),
+        ]);
+    }
 
     return response()->json([
         'message' => 'Progress updated',
@@ -849,6 +888,17 @@ Route::post('/challenge-completion', function (Request $request) {
                 'coins_balance'  => DB::raw("coins_balance + {$coins_earned}"),
                 'badges_balance' => DB::raw("badges_balance + " . ($badge_id ? 1 : 0)),
             ]);
+
+        $challengeTitle = DB::table('challenge')->where('id', $challenge_id)->value('title');
+        DB::table('notification')->insert([
+            'student_id' => $student_id,
+            'title'      => 'Challenge Completed!',
+            'message'    => "You've completed the {$challengeTitle} challenge! You earned {$xp_earned} XP and {$coins_earned} coins.",
+            'is_read'    => 0,
+            'created_at' => now(),
+        ]);
+
+        checkLevelUp($student_id);
     }
 
     return response()->json(['success' => true]);

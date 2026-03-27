@@ -165,18 +165,24 @@ function ChallengeQuestionLayout() {
                             </div>
                         )}
 
-                        {isRevealed && (
-                            <div className="cq-nav-row">
-                                {!isLast && (
-                                    <button
-                                        className="cq-next-btn"
-                                        onClick={() => setCurrentIndex(i => i + 1)}
-                                    >
-                                        Next →
-                                    </button>
-                                )}
-                            </div>
-                        )}
+                        <div className="cq-nav-row">
+                            {currentIndex > 0 && (
+                                <button
+                                    className="cq-prev-btn"
+                                    onClick={() => setCurrentIndex(i => i - 1)}
+                                >
+                                    ← Previous
+                                </button>
+                            )}
+                            {isRevealed && !isLast && (
+                                <button
+                                    className="cq-next-btn"
+                                    onClick={() => setCurrentIndex(i => i + 1)}
+                                >
+                                    Next →
+                                </button>
+                            )}
+                        </div>
                     </div>
                 );
             })() : null}

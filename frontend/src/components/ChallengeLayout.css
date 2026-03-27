@@ -754,6 +754,24 @@
     margin-top: 20px;
 }
 
+.cq-prev-btn {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 9px;
+    color: #3b2f2f;
+    background: #e9d8b4;
+    border: 2px solid #8b5e3c;
+    border-bottom: 4px solid #6b4423;
+    border-radius: 4px;
+    padding: 10px 22px;
+    cursor: pointer;
+    transition: transform 0.12s ease;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+}
+
+.cq-prev-btn:hover {
+    transform: translateY(-2px);
+}
+
 .cq-next-btn {
     font-family: 'Press Start 2P', cursive;
     font-size: 9px;

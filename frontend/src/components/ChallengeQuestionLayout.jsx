@@ -45,7 +45,7 @@ function ChallengeQuestionLayout() {
 
     useEffect(() => {
         if (allDone && challenge?.id) {
-            const student_id = 1; // TODO: replace with logged-in student id
+            const student_id = localStorage.getItem('student_id');
             axios.post('/api/challenge-completion', {
                 student_id,
                 challenge_id:    challenge.id,

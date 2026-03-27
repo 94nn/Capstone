@@ -100,14 +100,14 @@ const ChallengePage = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        const student_id = 1; // TODO: replace with logged-in student id
-        Promise.allSettled([
-            axios.get('/api/challenge'),
-            axios.get(`/api/challenge-completion/${student_id}`),
-        ])
+        const student_id = localStorage.getItem('student_id')
+        const requests = [axios.get('/api/challenge')]
+        if (student_id) requests.push(axios.get(`/api/challenge-completion/${student_id}`))
+
+        Promise.allSettled(requests)
             .then(([challengeRes, completionRes]) => {
                 if (challengeRes.status === 'fulfilled') setChallenges(challengeRes.value.data)
-                if (completionRes.status === 'fulfilled') setCompletions(completionRes.value.data)
+                if (completionRes && completionRes.status === 'fulfilled') setCompletions(completionRes.value.data)
             })
             .finally(() => setLoading(false))
     }, [])
@@ -155,7 +155,11 @@ const ChallengePage = () => {
                                 key={challenge.id}
                                 challenge={challenge}
                                 completion={completions[challenge.id] || null}
-                                onClick={(slug) => navigate(`/challenge/${slug}`)}
+                                onClick={(slug) => {
+                                    const role = localStorage.getItem('role')
+                                    if (!role) navigate('/login')
+                                    else navigate(`/challenge/${slug}`)
+                                }}
                             />
                         ))
                     )}

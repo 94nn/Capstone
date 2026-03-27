@@ -818,12 +818,7 @@ Route::post('/challenge-completion', function (Request $request) {
         ->first();
 
     if ($existing) {
-        // Calculate difference from previous attempt
-        $xp_diff    = $xp_earned    - $existing->xp_earned;
-        $coins_diff = $coins_earned - $existing->coins_earned;
-        $badge_diff = ($badge_id && !$existing->badge_id) ? 1
-                    : (!$badge_id && $existing->badge_id ? -1 : 0);
-
+        // Re-completion: only update the record, do not touch balances
         DB::table('student_challenge_completion')
             ->where('id', $existing->id)
             ->update([
@@ -834,16 +829,8 @@ Route::post('/challenge-completion', function (Request $request) {
                 'badge_id'        => $badge_id,
                 'completed_at'    => now(),
             ]);
-
-        // Update student balances with the difference
-        DB::table('student')
-            ->where('id', $student_id)
-            ->update([
-                'xp_balance'     => DB::raw("xp_balance + {$xp_diff}"),
-                'coins_balance'  => DB::raw("coins_balance + {$coins_diff}"),
-                'badges_balance' => DB::raw("badges_balance + {$badge_diff}"),
-            ]);
     } else {
+        // First completion: insert record and add rewards to student balances
         DB::table('student_challenge_completion')->insert([
             'student_id'      => $student_id,
             'challenge_id'    => $challenge_id,
@@ -855,7 +842,6 @@ Route::post('/challenge-completion', function (Request $request) {
             'completed_at'    => now(),
         ]);
 
-        // Add earned rewards to student balances
         DB::table('student')
             ->where('id', $student_id)
             ->update([

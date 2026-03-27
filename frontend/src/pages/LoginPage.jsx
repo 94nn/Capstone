@@ -31,9 +31,11 @@ function LoginPage() {
             const data = await response.json();
 
             if (response.ok) {
+                localStorage.setItem("role", data.role);
                 if (data.role === "admin") {
                     navigate("/admin");
                 } else if (data.role === "student") {
+                    localStorage.setItem("student_id", data.user.id);
                     navigate("/homepage");
                 }
             } else {

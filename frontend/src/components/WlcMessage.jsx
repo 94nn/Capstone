@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
 const messages = (username) => [
-  { before: "Welcome back, ", after: "! Let's get it." },
+  { before: "Welcome back, ", after: "! Let's g pet it." },
   { before: "Nice to see you again, ", after: "! Ready to dive into some math?" },
   { before: "Hey ", after: "! Let's crush some math today. 💪" },
   { before: "You're back, ", after: "! Time to level up your math skills! 🚀" },
@@ -15,7 +15,9 @@ const WlcMessage = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    axios.get('/api/student/1')
+    const student_id = localStorage.getItem('student_id')
+    if (!student_id) return
+    axios.get(`/api/student/${student_id}`)
       .then(res => setUsername(res.data.username))
       .catch(err => console.error('Error fetching user data:', err))
 

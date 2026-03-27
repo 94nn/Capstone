@@ -6,7 +6,6 @@ import { getImageUrl } from "../utils/imageUrl";
 export default function EditProfilePage() {
   const [activeTab, setActiveTab] = useState("profile");
 
-  const [student, setStudent] = useState(null);
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
   const [profileImage, setProfileImage] = useState("");
@@ -20,14 +19,13 @@ export default function EditProfilePage() {
 
   const [currentPasswordVerified, setCurrentPasswordVerified] = useState(false);
 
-  const userId = 1; // replace with actual logged-in user id
+  const userId = localStorage.getItem('student_id') || '1';
 
   // Load student data
   useEffect(() => {
     async function loadData() {
       try {
         const res = await axios.get(`/api/student/${userId}`);
-        setStudent(res.data);
         setName(res.data.username || "");
         setBio(res.data.bio || "");
         setEmail(res.data.email || "");

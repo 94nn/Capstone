@@ -14,7 +14,9 @@ const HomePage = () => {
 			<WlcMessage />
 			<SideProfile />
 			<div className='hp-left-column'>
+				{/* eslint-disable-next-line react/jsx-pascal-case */}
 				<Home_Page_Progress />
+				{/* eslint-disable-next-line react/jsx-pascal-case */}
 				<Home_Page_Explore />
 			</div>
 		</main>

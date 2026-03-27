@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import '../components/Profile.css';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import { getImageUrl } from '../utils/imageUrl';
 
 function ProfilePage() {
   const [student, setStudent] = useState(null);
-  const navigate = useNavigate();
+  const student_id = localStorage.getItem('student_id') || '1';
 
   useEffect(() => {
     async function loadData() {
       try {
-        const res = await axios.get(`/api/student/1`);
+        const res = await axios.get(`/api/student/${student_id}`);
         setStudent(res.data);
       } catch (error) {
         console.log("Failed to load data", error);
@@ -44,7 +44,7 @@ function ProfilePage() {
             </div>
           </div>
 
-          <NavLink to={`/student/1/edit`}>
+          <NavLink to={`/student/${student_id}/edit`}>
             <button className="edit-profile-btn">
               Edit profile
             </button>

@@ -5,8 +5,6 @@ import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 
-
-{/*按了button 要去 chapter*/}
 function AdminSubChapter() {
 
     const [showModal, setShowModal] = useState(false);
@@ -39,7 +37,7 @@ function AdminSubChapter() {
     try {
         if (isEdit) {
             // UPDATE
-             const res = await axios.put(`/api/modules/${slug}/${chapter_id}/${currentId}`, {
+             await axios.put(`/api/modules/${slug}/${chapter_id}/${currentId}`, {
                 title: title,
                 description: description,
                 subchapter_order: subchapter_order,

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import AdminQuiz from '../components/AdminQuiz.jsx';
-import {  Link, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 
 function AdminPage() {

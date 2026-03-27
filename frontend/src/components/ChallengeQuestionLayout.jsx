@@ -56,6 +56,7 @@ function ChallengeQuestionLayout() {
                 badge_id:        correctQ >= 2 ? challenge.badge_id : null,
             }).catch(err => console.error('Failed to save completion:', err));
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [allDone]);
 
     if (!challenge) return <p className="cq-loading">Loading...</p>;

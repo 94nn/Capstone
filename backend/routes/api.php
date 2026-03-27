@@ -770,15 +770,18 @@ Route::get('/challenge/{slug}', function ($slug) {
     $challenge = DB::table('challenge')
         ->join('modules', 'challenge.module_id', '=', 'modules.id')
         ->join('chapters', 'challenge.chapter_id', '=', 'chapters.id')
+        ->leftJoin('badge', 'challenge.badge_id', '=', 'badge.id')
         ->where('challenge.slug', $slug)
         ->select(
             'challenge.id',
             'chapters.title as title',
+            'challenge.title as challenge_title',
             'challenge.description',
             'challenge.content',
             'challenge.slug',
             'challenge.xp_quantity',
             'challenge.badge_id',
+            'badge.name as badge_name',
             'challenge.coins_quantity',
             'modules.name as topic'
         )
@@ -792,13 +795,56 @@ Route::get('/challenge/{slug}', function ($slug) {
 
     foreach ($questions as $question) {
         $question->options = DB::table('challenge_options')
-            ->where('challenge_question_id', $question->id)
+            ->where('c_question_id', $question->id)
             ->get();
     }
 
     $challenge->questions = $questions;
 
     return response()->json($challenge);
+});
+
+// Save challenge completion
+Route::post('/challenge-completion', function (Request $request) {
+    $existing = DB::table('student_challenge_completion')
+        ->where('student_id', $request->student_id)
+        ->where('challenge_id', $request->challenge_id)
+        ->first();
+
+    if ($existing) {
+        DB::table('student_challenge_completion')
+            ->where('id', $existing->id)
+            ->update([
+                'correct_answers' => $request->correct_answers,
+                'total_questions' => $request->total_questions,
+                'xp_earned'       => $request->xp_earned,
+                'coins_earned'    => $request->coins_earned,
+                'badge_id'        => $request->badge_id,
+                'completed_at'    => now(),
+            ]);
+    } else {
+        DB::table('student_challenge_completion')->insert([
+            'student_id'      => $request->student_id,
+            'challenge_id'    => $request->challenge_id,
+            'correct_answers' => $request->correct_answers,
+            'total_questions' => $request->total_questions,
+            'xp_earned'       => $request->xp_earned,
+            'coins_earned'    => $request->coins_earned,
+            'badge_id'        => $request->badge_id,
+            'completed_at'    => now(),
+        ]);
+    }
+
+    return response()->json(['success' => true]);
+});
+
+// Get all challenge completions for a student
+Route::get('/challenge-completion/{student_id}', function ($student_id) {
+    $completions = DB::table('student_challenge_completion')
+        ->where('student_id', $student_id)
+        ->get()
+        ->keyBy('challenge_id');
+    return response()->json($completions);
 });
 
 Route::post('/modules', [ModuleController::class, 'store']);

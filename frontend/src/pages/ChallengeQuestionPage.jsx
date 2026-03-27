@@ -8,14 +8,6 @@ function ChallengeQuestionPage() {
     return (
         <main className="main-layout-full">
             <div className="chapter-column">
-                <div className="page-actions">
-                    <Link to={`/challenge`} className="back-link">
-                        <button type="button" className="icon-button">
-                            <img src="/images/back.svg" alt="Back" id="back-icon" />
-                            Back to Challenge
-                        </button>
-                    </Link>
-                </div>
                 <ChallengeQuestionLayout />
             </div>
         </main>

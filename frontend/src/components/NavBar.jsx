@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate, useLocation } from 'react-router-dom'
 import './NavBar.css'
 import NotificationPopup from './NotificationPopup'
 import axios from 'axios'
@@ -22,6 +22,7 @@ const NavBar = () => {
     const role = localStorage.getItem("role");
     const admin_id = user?.id;
 
+    const location = useLocation();
     const unreadCount = notifications.filter((n) => !n.is_read).length;
 
     useEffect(() => {
@@ -44,14 +45,18 @@ const NavBar = () => {
         }
 
         loadData();
-    }, [student_id, admin_id, role]);
+    }, [student_id, admin_id, role, location.pathname]);
 
     // Fetch notifications from API
     useEffect(() => {
-        axios.get(`/api/notifications/${student_id}`)
-            .then(res => setNotifications(res.data))
-            .catch(err => console.error('Error fetching notifications:', err))
-    }, [student_id])
+        if (!student_id) return;
+        const timer = setTimeout(() => {
+            axios.get(`/api/notifications/${student_id}`)
+                .then(res => setNotifications(res.data))
+                .catch(err => console.error('Error fetching notifications:', err))
+        }, 300);
+        return () => clearTimeout(timer);
+    }, [student_id, location.pathname])
 
     // Close dropdowns when clicking outside
     useEffect(() => {

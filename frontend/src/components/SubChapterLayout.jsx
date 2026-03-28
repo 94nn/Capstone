@@ -1,16 +1,24 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 function SubChapterLayout() {
     const { slug, chapter_id } = useParams();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const isBeforeLogin = location.pathname.includes('b4login');
+    const isLoggedIn = !!localStorage.getItem('student_id');
     const [subchapters, setSubchapters] = useState([]);
     const [completed, setCompleted] = useState(false);
     const [selectedSubchapter, setSelectedSubchapter] = useState(null);
     const student_id = localStorage.getItem("student_id");
 
     useEffect(() => {
+        if (!isLoggedIn || isBeforeLogin) {
+            navigate('/login');
+            return;
+        }
         async function loadSubChapter() {
             try {
                 const { data } = await axios.get(`/api/modules/${slug}/${chapter_id}`);
@@ -40,7 +48,7 @@ function SubChapterLayout() {
         if (chapter_id && slug) {
             loadSubChapter();
         }
-    }, [chapter_id, slug, student_id]);
+    }, [chapter_id, slug, student_id, isLoggedIn, isBeforeLogin, navigate]);
 
     function handleOpenPopup(subchapter) {
         setSelectedSubchapter(subchapter);

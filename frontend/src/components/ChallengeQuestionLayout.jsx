@@ -16,7 +16,7 @@ function ChallengeQuestionLayout() {
     const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
     useEffect(() => {
-        if (!isLoggedIn) {
+        if (!isLoggedIn || isBeforeLogin) {
             navigate('/login');
             return;
         }

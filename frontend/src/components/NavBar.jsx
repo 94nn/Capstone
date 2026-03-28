@@ -4,6 +4,7 @@ import './NavBar.css'
 import NotificationPopup from './NotificationPopup'
 import axios from 'axios'
 import { getImageUrl } from "../utils/imageUrl";
+import Avatar from './Avatar';
 
 const NavBar = () => {
     const navigate = useNavigate();
@@ -12,7 +13,8 @@ const NavBar = () => {
     const [notifications, setNotifications] = useState([]);
     const [coins, setCoins] = useState(0);
 
-    const [profileImage, setProfileImage] = useState("");
+    const [profileImage, setProfileImage] = useState(null);
+    const [username, setUsername] = useState("");
 
     const dropdownRef = useRef(null);
     const profileContainerRef = useRef(null);
@@ -37,7 +39,8 @@ const NavBar = () => {
                 }
 
                 if (!res) return;
-                setProfileImage(getImageUrl(res.data.image_url || res.data.profile_pic));
+                setProfileImage(res.data.image_url || res.data.profile_pic || null);
+                setUsername(res.data.username || res.data.name || '');
                 if (res.data.coins !== undefined) setCoins(res.data.coins);
             } catch (error) {
                 console.error("Failed to load data:", error);
@@ -127,11 +130,7 @@ const NavBar = () => {
                     <span className="coins">{coins}</span>
                 </div>
                 <div className="profile-container" onClick={toggleDropdown} ref={profileContainerRef}>
-                    <img
-                        src={profileImage}
-                        alt="Profile"
-                        className="profile-pic"
-                    />
+                    <Avatar name={username || user?.name} src={profileImage} size={36} />
                     <span className="profile-name">{user?.name}</span>
                 </div>
             </div>

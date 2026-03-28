@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import "../components/EditProfilePage.css";
 import axios from "axios";
 import { getImageUrl } from "../utils/imageUrl";
+import Avatar from "../components/Avatar";
 
 export default function EditProfilePage() {
 	const [activeTab, setActiveTab] = useState("profile");
 
 	const [name, setName] = useState("");
 	const [bio, setBio] = useState("");
-	const [profileImage, setProfileImage] = useState("");
+	const [profileImage, setProfileImage] = useState(null);
+	const [rawProfilePic, setRawProfilePic] = useState(null);
 	const [selectedFile, setSelectedFile] = useState(null);
   const user = JSON.parse(localStorage.getItem("user") || "null");
   const role = localStorage.getItem("role");
@@ -42,7 +44,9 @@ export default function EditProfilePage() {
         setName(res.data.username || res.data.name || "");
         setBio(res.data.bio || "");
         setEmail(res.data.email || "");
-        setProfileImage(getImageUrl(res.data.image_url || res.data.profile_pic));
+        const pic = res.data.image_url || res.data.profile_pic || null;
+        setRawProfilePic(pic);
+        setProfileImage(getImageUrl(pic));
         setOriginalEmail(res.data.email || "");
       } catch (error) {
         console.error("Failed to load data:", error);
@@ -215,11 +219,15 @@ export default function EditProfilePage() {
             <div className="EditProfile-content">
               <div className="EditProfile-avatar-section">
                 <div className="EditProfile-avatar-wrapper">
-                  <img
-                    src={profileImage}
-                    alt="Profile"
-                    className="EditProfile-profilePicBanner"
-                  />
+                  {profileImage ? (
+                    <img
+                      src={profileImage}
+                      alt="Profile"
+                      className="EditProfile-profilePicBanner"
+                    />
+                  ) : (
+                    <Avatar name={name} src={rawProfilePic} size={200} className="EditProfile-profilePicBanner" />
+                  )}
                   <div
                     className="EditProfile-avatar-overlay"
                     onClick={() => document.getElementById("fileInput").click()}

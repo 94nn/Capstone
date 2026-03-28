@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../components/Profile.css";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
-import { getImageUrl } from "../utils/imageUrl";
+import Avatar from "../components/Avatar";
 
 function ProfilePage() {
   const [student, setStudent] = useState(null);
@@ -45,11 +45,7 @@ function ProfilePage() {
           />
 
           <div className='profile-picture'>
-            <img
-              src={getImageUrl(student?.image_url)}
-              alt='Profile'
-              className='profilePicBanner'
-            />
+            <Avatar name={student?.username} src={student?.image_url} size={120} className="profilePicBanner" />
           </div>
 
           <div className='profile-section'>

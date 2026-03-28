@@ -10,6 +10,7 @@ function AdminChallenge() {
   const [showModal, setShowModal] = useState(false);
   const [badgeName, setBadgeName] = useState('');
   const [imageFile, setImageFile] = useState(null);
+  const [currentBadgeImage, setCurrentBadgeImage] = useState('');
   const [challenge, setChallenge] = useState({
     id: null,
     title: '',
@@ -149,8 +150,13 @@ const handleEdit = async (ch) => {
     const challengeData = res.data[0]; // 取第一个 challenge
     // 更新 badge
     setBadgeName(challengeData.badge_name ?? '');
-    setImageFile(challengeData.badge_image ?? null);
+    setCurrentBadgeImage(challengeData.badge_image ?? '');
+    setImageFile(null);
     // 更新 questions
+    setChallenge(prev => ({
+      ...prev,
+      badge_image: challengeData.badge_image
+    }));
     setChallenge(prev => ({ ...prev, questions: challengeData.questions ?? [] }));
   }
   } catch (err) {
@@ -174,46 +180,68 @@ const handleDelete = async (challengeId) => {
 
 const handleSubmit = async (e) => {
   e.preventDefault();
+
   try {
-    let badgeId = challenge.badge_id;
-
-    if (imageFile && !badgeId) {
+    if (challenge.id) {
       const formData = new FormData();
-      formData.append('name', badgeName);
-      formData.append('image', imageFile);
 
-      const res = await axios.post('/admin/badge', formData, {
+      formData.append('title', challenge.title);
+      formData.append('description', challenge.description || '');
+      formData.append('content', challenge.content || '');
+      formData.append('badge_id', challenge.badge_id || '');
+      formData.append('badge_name', badgeName || '');
+      formData.append('xp_quantity', challenge.xp_quantity || 0);
+      formData.append('coins_quantity', challenge.coins_quantity || 0);
+      formData.append('module_id', challenge.module_id || '');
+      formData.append('chapter_id', challenge.chapter_id || '');
+      formData.append('questions', JSON.stringify(challenge.questions || []));
+
+      if (imageFile instanceof File) {
+        formData.append('badge_image', imageFile);
+      }
+
+      await axios.post(`/api/admin/challenge/${challenge.id}?_method=PUT`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
-      badgeId = res.data.id;
-    }
-    
-    const payload = {
-      title: challenge.title,
-      description: challenge.description ,
-      content: challenge.content ,
-      badge_id: challenge.badge_id,
-      xp_quantity: challenge.xp_quantity,
-      coins_quantity: challenge.coins_quantity,
-      module_id: challenge.module_id,
-      chapter_id: challenge.chapter_id,
-      questions: challenge.questions,
-    };
-
-    if (challenge.id) {
-      await axios.put(`/api/admin/challenge/${challenge.id}`, payload);
       alert('Update successfully!');
     } else {
+      let badgeId = challenge.badge_id;
+
+      if (imageFile instanceof File && !badgeId) {
+        const badgeForm = new FormData();
+        badgeForm.append('name', badgeName);
+        badgeForm.append('image', imageFile);
+
+        const res = await axios.post('/api/admin/badge', badgeForm, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+
+        badgeId = res.data.id;
+      }
+
+      const payload = {
+        title: challenge.title,
+        description: challenge.description,
+        content: challenge.content,
+        badge_id: badgeId,
+        xp_quantity: challenge.xp_quantity,
+        coins_quantity: challenge.coins_quantity,
+        module_id: challenge.module_id,
+        chapter_id: challenge.chapter_id,
+        questions: challenge.questions,
+      };
+
       await axios.post('/api/admin/challenge', payload);
       alert('Create successfully!');
     }
 
     setShowModal(false);
-    fetchChallenges(); // 刷新列表
+    fetchChallenges();
   } catch (err) {
     console.error(err);
-    alert('Submit failed!');
+    console.log(err.response?.data);
+    alert(err.response?.data?.error || 'Submit failed!');
   }
 };
 
@@ -287,11 +315,23 @@ const closeModal = () => {
               /></div>
               <div className="">
                 <label>Badge</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setImageFile(e.target.files[0])}
-              />
+                  {/* 显示当前 badge 图片 */}
+                  {challenge.badge_image && (
+                    <div style={{ marginBottom: '10px' }}>
+                      <img
+                        src={`http://127.0.0.1:8000/storage/${challenge.badge_image}`}
+                        alt="Badge"
+                        style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                      />
+                    </div>
+                  )}
+
+                  {/* 上传新图片 */}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setImageFile(e.target.files[0])}
+                  />
               </div>
               <div>
                 <label>Module:</label>

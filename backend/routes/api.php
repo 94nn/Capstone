@@ -1045,7 +1045,6 @@ Route::post('/admin/challenge', function(Request $request) {
 
 
 
-/// 更新 challenge + 内部 questions + options + badge
 Route::put('/admin/challenge/{id}', function(Request $request, $id) {
     DB::beginTransaction();
     try {
@@ -1055,15 +1054,22 @@ Route::put('/admin/challenge/{id}', function(Request $request, $id) {
 
         $badgeId = $request->badge_id ?? null;
 
-        // ====== 新增：更新 badge ======
+        // 更新 badge table
         if ($badgeId) {
-            $badgeData = ['name' => $request->badge_name ?? null];
+            $badgeData = [];
+
+            if ($request->filled('badge_name')) {
+                $badgeData['name'] = $request->badge_name;
+            }
+
             if ($request->hasFile('badge_image')) {
                 $badgeData['image_path'] = $request->file('badge_image')->store('badges', 'public');
             }
-            DB::table('badge')->where('id', $badgeId)->update($badgeData);
+
+            if (!empty($badgeData)) {
+                DB::table('badge')->where('id', $badgeId)->update($badgeData);
+            }
         }
-        // =================================
 
         DB::table('challenge')->where('id', $id)->update([
             'title' => $request->title,
@@ -1071,20 +1077,39 @@ Route::put('/admin/challenge/{id}', function(Request $request, $id) {
             'content' => $request->content ?? null,
             'badge_id' => $badgeId,
             'xp_quantity' => $request->xp_quantity ?? 0,
-            'coins_quantity' => $request->coins_quantity,
+            'coins_quantity' => $request->coins_quantity ?? 0,
             'module_id' => $request->module_id,
             'chapter_id' => $request->chapter_id,
-            'slug' => Str::slug($moduleName . '-' . $request->name),
+            'slug' => Str::slug($moduleName . '-' . $request->title),
         ]);
 
-        $questionIds = DB::table('challenge_question')->where('challenge_id', $id)->pluck('id');
-        DB::table('challenge_options')->whereIn('c_question_id', $questionIds)->delete();
-        DB::table('challenge_question')->where('challenge_id', $id)->delete();
+        $questions = $request->questions;
 
-        foreach ($request->questions ?? [] as $q) {
+        if (is_string($questions)) {
+            $questions = json_decode($questions, true);
+        }
+
+        $questions = $questions ?? [];
+
+        $questionIds = DB::table('challenge_question')
+            ->where('challenge_id', $id)
+            ->pluck('id');
+
+        DB::table('challenge_options')
+            ->whereIn('c_question_id', $questionIds)
+            ->delete();
+
+        DB::table('challenge_question')
+            ->where('challenge_id', $id)
+            ->delete();
+
+        foreach ($questions as $q) {
             $correctAnswer = null;
+
             foreach ($q['options'] ?? [] as $opt) {
-                if ($opt['is_correct'] ?? false) $correctAnswer = $opt['option_text'] ?? null;
+                if (!empty($opt['is_correct'])) {
+                    $correctAnswer = $opt['option_text'] ?? null;
+                }
             }
 
             $questionId = DB::table('challenge_question')->insertGetId([
@@ -1098,7 +1123,7 @@ Route::put('/admin/challenge/{id}', function(Request $request, $id) {
                 DB::table('challenge_options')->insert([
                     'c_question_id' => $questionId,
                     'option_text' => $opt['option_text'] ?? '',
-                    'is_correct' => $opt['is_correct'] ?? false,
+                    'is_correct' => !empty($opt['is_correct']),
                 ]);
             }
         }
@@ -1110,7 +1135,6 @@ Route::put('/admin/challenge/{id}', function(Request $request, $id) {
         return response()->json(['error' => $e->getMessage()], 500);
     }
 });
-
 // 删除 challenge + 内部 questions + options
 Route::delete('/admin/challenge/{id}', function($id) {
     DB::beginTransaction();

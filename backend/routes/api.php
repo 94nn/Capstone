@@ -15,7 +15,7 @@ function checkLevelUp($studentId) {
     $student = DB::table('student')->where('id', $studentId)->first();
     if (!$student) return;
 
-    $newLevel = intdiv($student->xp_balance, 100) + 1;
+    $newLevel = intdiv($student->xp_balance, 100);
     if ($newLevel > $student->level) {
         DB::table('student')->where('id', $studentId)->update(['level' => $newLevel]);
         DB::table('notification')->insert([
@@ -597,11 +597,6 @@ Route::post('/progress/update', function(Request $request) {
 
     $percentage = $total > 0 ? round(($completed / $total) * 100, 2) : 0;
 
-    $previousProgress = DB::table('progress')
-        ->where('student_id', $studentId)
-        ->where('module_id', $module->module_id)
-        ->first();
-
     DB::table('progress')->updateOrInsert(
         [
             'student_id' => $studentId,
@@ -613,16 +608,25 @@ Route::post('/progress/update', function(Request $request) {
         ]
     );
 
-    // Notify on first module completion
-    if ($percentage >= 100 && (!$previousProgress || $previousProgress->progress < 100)) {
-        $moduleName = DB::table('modules')->where('id', $module->module_id)->value('name');
-        DB::table('notification')->insert([
-            'student_id' => $studentId,
-            'title'      => 'Module Completed!',
-            'message'    => "You've completed the {$moduleName} module! Well done!",
-            'is_read'    => 0,
-            'created_at' => now(),
-        ]);
+    // Notify when a subchapter exercise is completed
+    if ($passed) {
+        $subchapterInfo = DB::table('subchapters')
+            ->join('chapters', 'subchapters.chapter_id', '=', 'chapters.id')
+            ->join('modules', 'chapters.module_id', '=', 'modules.id')
+            ->where('subchapters.id', $subchapterId)
+            ->select('subchapters.title as subchapter_title', 'subchapters.subchapter_order', 'chapters.title as chapter_title', 'modules.name as module_name')
+            ->first();
+
+        if ($subchapterInfo) {
+            $exerciseNum = $subchapterInfo->subchapter_order;
+            DB::table('notification')->insert([
+                'student_id' => $studentId,
+                'title'      => 'Exercise Completed!',
+                'message'    => "You've completed Exercise {$exerciseNum} ({$subchapterInfo->subchapter_title}) from {$subchapterInfo->module_name} - {$subchapterInfo->chapter_title}!",
+                'is_read'    => 0,
+                'created_at' => now(),
+            ]);
+        }
     }
 
     return response()->json([
@@ -859,7 +863,11 @@ Route::post('/challenge-completion', function (Request $request) {
         ->first();
 
     if ($existing) {
-        // Re-completion: only update the record, do not touch balances
+        // Re-completion: award the difference if student improved
+        $xp_diff    = $xp_earned - $existing->xp_earned;
+        $coins_diff = $coins_earned - $existing->coins_earned;
+        $new_badge  = $badge_id && !$existing->badge_id;
+
         DB::table('student_challenge_completion')
             ->where('id', $existing->id)
             ->update([
@@ -870,6 +878,18 @@ Route::post('/challenge-completion', function (Request $request) {
                 'badge_id'        => $badge_id,
                 'completed_at'    => now(),
             ]);
+
+        if ($xp_diff > 0 || $coins_diff > 0 || $new_badge) {
+            DB::table('student')
+                ->where('id', $student_id)
+                ->update([
+                    'xp_balance'     => DB::raw("xp_balance + " . max($xp_diff, 0)),
+                    'coins_balance'  => DB::raw("coins_balance + " . max($coins_diff, 0)),
+                    'badges_balance' => DB::raw("badges_balance + " . ($new_badge ? 1 : 0)),
+                ]);
+
+            checkLevelUp($student_id);
+        }
     } else {
         // First completion: insert record and add rewards to student balances
         DB::table('student_challenge_completion')->insert([

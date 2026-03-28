@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./Leaderboard.css";
+import { getImageUrl } from "../utils/imageUrl";
 
 const RANK_COLORS = {
     1: { color: "#FFB800", glow: "rgba(255,184,0,0.4)"   },
@@ -57,10 +58,12 @@ function Starfield() {
 
 function Avatar({ name, src, size }) {
     const initials = name.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
+    const imgSrc = getImageUrl(src);
+    const hasImage = !!src;
     return (
         <div className="leaderboard-avatar" style={{ width: size, height: size, fontSize: size * 0.3 }}>
-            {src
-                ? <img src={src} alt={name} onError={e => { e.target.style.display = "none"; }} />
+            {hasImage
+                ? <img src={imgSrc} alt={name} onError={e => { e.target.style.display = "none"; }} />
                 : initials}
         </div>
     );

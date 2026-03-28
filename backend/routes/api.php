@@ -931,8 +931,15 @@ Route::delete('/feedback/{id}', function($id) {
 
 
 // 获取所有 challenge
-Route::get('/admin/challenge', function() {
-    return DB::table('challenge')->get();
+Route::get('/admin/challenge', function () {
+    return DB::table('challenge')
+        ->leftJoin('badge', 'challenge.badge_id', '=', 'badge.id')
+        ->select(
+            'challenge.*',
+            'badge.name as badge_name',
+            'badge.image_path as badge_image'
+        )
+        ->get();
 });
 
 
@@ -1014,15 +1021,10 @@ Route::post('/admin/challenge', function(Request $request) {
         ]);
 
         foreach ($request->questions ?? [] as $q) {
-            $correctAnswer = null;
-            foreach ($q['options'] ?? [] as $opt) {
-                if ($opt['is_correct'] ?? false) $correctAnswer = $opt['option_text'] ?? null;
-            }
 
             $questionId = DB::table('challenge_question')->insertGetId([
                 'challenge_id' => $challengeId,
                 'question' => $q['question'] ?? '',
-                'answer' => $correctAnswer,
                 'explanation' => $q['explanation'] ?? null,
             ]);
 
@@ -1104,18 +1106,11 @@ Route::put('/admin/challenge/{id}', function(Request $request, $id) {
             ->delete();
 
         foreach ($questions as $q) {
-            $correctAnswer = null;
 
-            foreach ($q['options'] ?? [] as $opt) {
-                if (!empty($opt['is_correct'])) {
-                    $correctAnswer = $opt['option_text'] ?? null;
-                }
-            }
 
             $questionId = DB::table('challenge_question')->insertGetId([
                 'challenge_id' => $id,
                 'question' => $q['question'] ?? '',
-                'answer' => $correctAnswer,
                 'explanation' => $q['explanation'] ?? null,
             ]);
 

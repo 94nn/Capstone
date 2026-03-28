@@ -66,16 +66,20 @@ function ChallengeQuestion() {
 
   let updatedQuestions = [...(challenge.questions || [])];
 
+  const questionPayload = {
+    question: form.question,
+    explanation: form.explanation,
+    options: form.options
+  };
+
   if (editingIndex !== null) {
-    // 编辑
-    updatedQuestions[editingIndex] = { ...form };
+    updatedQuestions[editingIndex] = questionPayload;
   } else {
-    // 新增
-    updatedQuestions.push({ ...form });
+    updatedQuestions.push(questionPayload);
   }
 
   try {
-    await axios.put(`/api/api/admin/challenge/${id}`, {
+    await axios.put(`/api/admin/challenge/${id}`, {
       ...challenge,
       questions: updatedQuestions
     });
@@ -84,7 +88,7 @@ function ChallengeQuestion() {
     fetchData();
   } catch (err) {
     console.error(err);
-    alert("Er9ror");
+    alert("Err3or");
   }
 };
 

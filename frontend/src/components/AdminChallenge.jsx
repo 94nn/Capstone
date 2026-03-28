@@ -256,6 +256,18 @@ const closeModal = () => {
             <h2 className='admin-challenge-title'>{ch.title}</h2> <br />
             <h3 className='admin-challenge-description'>{ch.description}</h3> <br />
             <p className='admin-challenge-content'>{ch.content}</p>
+              <p><strong>XP:</strong> {ch.xp_quantity ?? 0}</p>
+              <p><strong>Coins:</strong> {ch.coins_quantity ?? 0}</p>
+
+              <p><strong>Badge:</strong> {ch.badge_name ?? 'None'}</p>
+
+              {ch.badge_image && (
+                <img
+                  src={`http://127.0.0.1:8000/storage/${ch.badge_image}`}
+                  alt="Badge"
+                  style={{ width: '80px', height: '80px', objectFit: 'cover', marginTop: '10px' }}
+                />
+              )}
             <br />
             <Link to={`/admin/challenge/${ch.id}`}> 
               <button className='secondary-button'>Enter</button>

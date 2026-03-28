@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(/c/xampp/mysql/bin/mysql -u root mathdex -e \"UPDATE student SET profile_pic = REPLACE\\(profile_pic, ''/images/'', ''/profile_pics/''\\);\")",
+      "Bash(/c/xampp/mysql/bin/mysql -u root mathdex -e \"SELECT DISTINCT profile_pic FROM student;\")"
+    ]
+  }
+}

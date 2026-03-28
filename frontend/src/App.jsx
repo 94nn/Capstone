@@ -26,6 +26,8 @@ function AppContent() {
         "/modules/b4login/:slug/:chapter_id",
         "/modules/b4login/:slug/:chapter_id/:subchapter_id",
         "/challenge/b4login",
+        "/challenge/b4login/module/:module_id",
+        "/challenge/b4login/:slug",
         "/leaderboard/b4login",
     ];
 

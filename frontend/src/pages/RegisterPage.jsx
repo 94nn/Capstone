@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 
 function RegisterPage() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -31,6 +32,7 @@ const handleSubmit = async (e) => {
 
     if (response.ok) {
       alert("Register successful");
+      navigate("/login");
     } else {
       const text = await response.text();
       alert(text);

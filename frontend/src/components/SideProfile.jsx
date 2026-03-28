@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import axios from 'axios'
 import { useNavigate, NavLink } from 'react-router-dom'
+import Avatar from './Avatar'
 
 const SideProfile = () => {
     const navigate = useNavigate()
@@ -32,7 +33,7 @@ const SideProfile = () => {
         <aside className="hp-sidebar">
 			<div className="hp-card">
                 <div className='hp-side-profile-card'>
-                    <img src={student_image} alt="Profile" className="hp-profile-pic" />
+                    <Avatar name={student_name} src={student_image} size={64} className="hp-profile-pic" />
                     <div>
                         <p className="hp-side-profile-name">{student_name}</p>
 				        <p className="hp-side-profile-level">Level {level}</p>
@@ -62,7 +63,7 @@ const SideProfile = () => {
                     <div className='hp-first'>
                         <div className='hp-avatar-wrapper'>
                             <span className='hp-crown'>👑</span>
-                            <img src={leaderboard[0]?.profile_pic} alt="1st place" />
+                            <Avatar name={leaderboard[0]?.name} src={leaderboard[0]?.profile_pic} size={56} />
                         </div>
                         <div className='hp-leaderboard-info'>
                             <p className='hp-leaderboard-name'>{leaderboard[0]?.name}</p>
@@ -72,7 +73,7 @@ const SideProfile = () => {
                     <div className='hp-second'>
                         <div className='hp-avatar-wrapper'>
                             <span className='hp-crown'>👑</span>
-                            <img src={leaderboard[1]?.profile_pic} alt="2nd place" />
+                            <Avatar name={leaderboard[1]?.name} src={leaderboard[1]?.profile_pic} size={56} />
                         </div>
                         <div className='hp-leaderboard-info'>
                             <p className='hp-leaderboard-name'>{leaderboard[1]?.name}</p>
@@ -82,7 +83,7 @@ const SideProfile = () => {
                     <div className='hp-third'>
                         <div className='hp-avatar-wrapper'>
                             <span className='hp-crown'>👑</span>
-                            <img src={leaderboard[2]?.profile_pic} alt="3rd place" />
+                            <Avatar name={leaderboard[2]?.name} src={leaderboard[2]?.profile_pic} size={56} />
                         </div>
                         <div className='hp-leaderboard-info'>
                             <p className='hp-leaderboard-name'>{leaderboard[2]?.name}</p>
@@ -91,9 +92,7 @@ const SideProfile = () => {
                     </div>
                 </div>
                 <div className='hp-view-more-button'>
-                    <NavLink to="/leaderboard">
-                        <button>View more</button>
-                    </NavLink>
+                    <button onClick={() => navigate('/leaderboard')}>View more</button>
                 </div>
             </div>
 		</aside>

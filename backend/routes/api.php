@@ -9,6 +9,24 @@ use Illuminate\Support\Facades\Storage;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+
+// Helper: calculate level from XP and send level-up notification if changed
+function checkLevelUp($studentId) {
+    $student = DB::table('student')->where('id', $studentId)->first();
+    if (!$student) return;
+
+    $newLevel = intdiv($student->xp_balance, 100);
+    if ($newLevel > $student->level) {
+        DB::table('student')->where('id', $studentId)->update(['level' => $newLevel]);
+        DB::table('notification')->insert([
+            'student_id' => $studentId,
+            'title'      => 'Level Up!',
+            'message'    => "Congratulations! You've reached Level {$newLevel}!",
+            'is_read'    => 0,
+            'created_at' => now(),
+        ]);
+    }
+}
 use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\EditModule;
@@ -515,8 +533,10 @@ Route::get('/student/{id}', function($id) {
         'level' => $student->level,
         'xp' => $student->xp_balance,
         'badges' => $student->badges_balance,
+        'coins' => $student->coins_balance,
         'image_url' => $student->profile_pic,
-        'bio' => $student->Bio
+        'bio' => $student->Bio,
+        'email' => $student->email
     ]);
 });
 
@@ -602,6 +622,8 @@ Route::post('/progress/update', function(Request $request) {
             DB::table('student')
                 ->where('id', $studentId)
                 ->increment('coins_balance', 10);
+
+            checkLevelUp($studentId);
         }
 
     } else {
@@ -623,6 +645,8 @@ Route::post('/progress/update', function(Request $request) {
             DB::table('student')
                 ->where('id', $studentId)
                 ->increment('coins_balance', 10);
+
+            checkLevelUp($studentId);
         }
     }
 
@@ -661,6 +685,27 @@ Route::post('/progress/update', function(Request $request) {
             'progress' => $percentage
         ]
     );
+
+    // Notify when a subchapter exercise is completed
+    if ($passed) {
+        $subchapterInfo = DB::table('subchapters')
+            ->join('chapters', 'subchapters.chapter_id', '=', 'chapters.id')
+            ->join('modules', 'chapters.module_id', '=', 'modules.id')
+            ->where('subchapters.id', $subchapterId)
+            ->select('subchapters.title as subchapter_title', 'subchapters.subchapter_order', 'chapters.title as chapter_title', 'modules.name as module_name')
+            ->first();
+
+        if ($subchapterInfo) {
+            $exerciseNum = $subchapterInfo->subchapter_order;
+            DB::table('notification')->insert([
+                'student_id' => $studentId,
+                'title'      => 'Exercise Completed!',
+                'message'    => "You've completed Exercise {$exerciseNum} ({$subchapterInfo->subchapter_title}) from {$subchapterInfo->module_name} - {$subchapterInfo->chapter_title}!",
+                'is_read'    => 0,
+                'created_at' => now(),
+            ]);
+        }
+    }
 
     return response()->json([
         'message' => 'Progress updated',
@@ -805,38 +850,168 @@ Route::post('/hint/unlock', function (Request $request) {
 Route::get('/challenge', function () {
     $challenges = DB::table('challenge')
         ->join('modules', 'challenge.module_id', '=', 'modules.id')
+        ->join('chapters', 'challenge.chapter_id', '=', 'chapters.id')
         ->select(
             'challenge.id',
-            'challenge.title',
+            'chapters.title as title',
             'challenge.slug',
-            'challenge.badges as xp',
+            'challenge.xp_quantity',
+            'challenge.badge_id',
+            'challenge.coins_quantity',
             'modules.name as topic',
-            DB::raw('(SELECT COUNT(*) FROM challenge_question WHERE challenge_question.module_id = challenge.module_id) as num_challenges')
+            DB::raw('(SELECT COUNT(*) FROM challenge_question WHERE challenge_question.challenge_id = challenge.id) as num_challenges'),
+            DB::raw('challenge.xp_quantity * (SELECT COUNT(*) FROM challenge_question WHERE challenge_question.challenge_id = challenge.id) as total_xp'),
+            DB::raw('challenge.coins_quantity * (SELECT COUNT(*) FROM challenge_question WHERE challenge_question.challenge_id = challenge.id) as total_coins')
         )
         ->get();
     return response()->json($challenges);
 });
- 
+
 // GET challenges by module — MUST be before /challenge/{slug}
 Route::get('/challenge/module/{module_id}', function ($module_id) {
     return response()->json(
         DB::table('challenge')
             ->join('modules', 'challenge.module_id', '=', 'modules.id')
+            ->join('chapters', 'challenge.chapter_id', '=', 'chapters.id')
             ->where('challenge.module_id', $module_id)
-            ->select('challenge.id', 'challenge.title', 'challenge.content', 'challenge.badges', 'modules.id as module_id', 'modules.name as module_name')
+            ->select(
+                'challenge.id',
+                'chapters.title as title',
+                'challenge.description',
+                'challenge.slug',
+                'challenge.xp_quantity',
+                'challenge.badge_id',
+                'challenge.coins_quantity',
+                'modules.id as module_id',
+                'modules.name as module_name'
+            )
             ->get()
     );
 });
- 
-// GET single challenge by module slug — wildcard, must be LAST
+
+// GET single challenge by slug — wildcard, must be LAST
 Route::get('/challenge/{slug}', function ($slug) {
     $challenge = DB::table('challenge')
         ->join('modules', 'challenge.module_id', '=', 'modules.id')
-        ->where('modules.slug', $slug)
-        ->select('challenge.id', 'challenge.title', 'challenge.content', 'challenge.badges', 'modules.id as module_id', 'modules.name as module_name', 'modules.slug as slug')
+        ->join('chapters', 'challenge.chapter_id', '=', 'chapters.id')
+        ->leftJoin('badge', 'challenge.badge_id', '=', 'badge.id')
+        ->where('challenge.slug', $slug)
+        ->select(
+            'challenge.id',
+            'chapters.title as title',
+            'challenge.title as challenge_title',
+            'challenge.description',
+            'challenge.content',
+            'challenge.slug',
+            'challenge.xp_quantity',
+            'challenge.badge_id',
+            'badge.name as badge_name',
+            'challenge.coins_quantity',
+            'modules.name as topic'
+        )
+        ->first();
+
+    if (!$challenge) return response()->json(['message' => 'Challenge not found'], 404);
+
+    $questions = DB::table('challenge_question')
+        ->where('challenge_id', $challenge->id)
         ->get();
-    if ($challenge->isEmpty()) return response()->json(['message' => 'Challenge not found'], 404);
+
+    foreach ($questions as $question) {
+        $question->options = DB::table('challenge_options')
+            ->where('c_question_id', $question->id)
+            ->get();
+    }
+
+    $challenge->questions = $questions;
+
     return response()->json($challenge);
+});
+
+// Save challenge completion
+Route::post('/challenge-completion', function (Request $request) {
+    $student_id   = $request->student_id;
+    $challenge_id = $request->challenge_id;
+    $xp_earned    = $request->xp_earned;
+    $coins_earned = $request->coins_earned;
+    $badge_id     = $request->badge_id;
+
+    $existing = DB::table('student_challenge_completion')
+        ->where('student_id', $student_id)
+        ->where('challenge_id', $challenge_id)
+        ->first();
+
+    if ($existing) {
+        // Re-completion: award the difference if student improved
+        $xp_diff    = $xp_earned - $existing->xp_earned;
+        $coins_diff = $coins_earned - $existing->coins_earned;
+        $new_badge  = $badge_id && !$existing->badge_id;
+
+        DB::table('student_challenge_completion')
+            ->where('id', $existing->id)
+            ->update([
+                'correct_answers' => $request->correct_answers,
+                'total_questions' => $request->total_questions,
+                'xp_earned'       => $xp_earned,
+                'coins_earned'    => $coins_earned,
+                'badge_id'        => $badge_id,
+                'completed_at'    => now(),
+            ]);
+
+        if ($xp_diff > 0 || $coins_diff > 0 || $new_badge) {
+            DB::table('student')
+                ->where('id', $student_id)
+                ->update([
+                    'xp_balance'     => DB::raw("xp_balance + " . max($xp_diff, 0)),
+                    'coins_balance'  => DB::raw("coins_balance + " . max($coins_diff, 0)),
+                    'badges_balance' => DB::raw("badges_balance + " . ($new_badge ? 1 : 0)),
+                ]);
+
+            checkLevelUp($student_id);
+        }
+    } else {
+        // First completion: insert record and add rewards to student balances
+        DB::table('student_challenge_completion')->insert([
+            'student_id'      => $student_id,
+            'challenge_id'    => $challenge_id,
+            'correct_answers' => $request->correct_answers,
+            'total_questions' => $request->total_questions,
+            'xp_earned'       => $xp_earned,
+            'coins_earned'    => $coins_earned,
+            'badge_id'        => $badge_id,
+            'completed_at'    => now(),
+        ]);
+
+        DB::table('student')
+            ->where('id', $student_id)
+            ->update([
+                'xp_balance'     => DB::raw("xp_balance + {$xp_earned}"),
+                'coins_balance'  => DB::raw("coins_balance + {$coins_earned}"),
+                'badges_balance' => DB::raw("badges_balance + " . ($badge_id ? 1 : 0)),
+            ]);
+
+        $challengeTitle = DB::table('challenge')->where('id', $challenge_id)->value('title');
+        DB::table('notification')->insert([
+            'student_id' => $student_id,
+            'title'      => 'Challenge Completed!',
+            'message'    => "You've completed the {$challengeTitle} challenge! You earned {$xp_earned} XP and {$coins_earned} coins.",
+            'is_read'    => 0,
+            'created_at' => now(),
+        ]);
+
+        checkLevelUp($student_id);
+    }
+
+    return response()->json(['success' => true]);
+});
+
+// Get all challenge completions for a student
+Route::get('/challenge-completion/{student_id}', function ($student_id) {
+    $completions = DB::table('student_challenge_completion')
+        ->where('student_id', $student_id)
+        ->get()
+        ->keyBy('challenge_id');
+    return response()->json($completions);
 });
 
 Route::post('/modules', [ModuleController::class, 'store']);
@@ -930,6 +1105,7 @@ Route::delete('/feedback/{id}', function($id) {
 
 
 
+<<<<<<< HEAD
 // 获取所有 challenge
 Route::get('/admin/challenge', function () {
     return DB::table('challenge')
@@ -954,6 +1130,16 @@ Route::get('/admin/challenge/{id}', function($id) {
         'badge.image_path as badge_image'
     )
     ->first();
+=======
+// Admin: 获取所有 challenge
+Route::get('/admin/challenge', function() {
+    return DB::table('challenge')->get();
+});
+
+// Admin: 获取单个 challenge + questions + options
+Route::get('/admin/challenge/{id}', function($id) {
+    $challenge = DB::table('challenge')->where('id', $id)->first();
+>>>>>>> origin/main
     if (!$challenge) return response()->json(['error'=>'Challenge not found'], 404);
 
     $questions = DB::table('challenge_question')
@@ -971,6 +1157,7 @@ Route::get('/admin/challenge/{id}', function($id) {
     return response()->json($challenge);
 });
 
+<<<<<<< HEAD
 Route::get('/admin/badge', function() {
     return DB::table('badge')->get();
 });
@@ -1005,6 +1192,9 @@ Route::post('/admin/badge', function (Request $request) {
 });
 
 // 创建 challenge + 内部 questions + options
+=======
+// Admin: 创建 challenge + 内部 questions + options
+>>>>>>> origin/main
 Route::post('/admin/challenge', function(Request $request) {
     DB::beginTransaction();
     try {
@@ -1045,8 +1235,12 @@ Route::post('/admin/challenge', function(Request $request) {
     }
 });
 
+<<<<<<< HEAD
 
 
+=======
+// Admin: 更新 challenge + 内部 questions + options
+>>>>>>> origin/main
 Route::put('/admin/challenge/{id}', function(Request $request, $id) {
     DB::beginTransaction();
     try {
@@ -1131,8 +1325,12 @@ Route::put('/admin/challenge/{id}', function(Request $request, $id) {
     }
 });
 
+<<<<<<< HEAD
 
 // 删除 challenge + 内部 questions + options
+=======
+// Admin: 删除 challenge + 内部 questions + options
+>>>>>>> origin/main
 Route::delete('/admin/challenge/{id}', function($id) {
     DB::beginTransaction();
     try {

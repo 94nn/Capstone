@@ -4,6 +4,7 @@ import axios from 'axios'
 
 const Footer = () => {
     const [modules, setModules] = useState([])
+    const isLoggedIn = !!localStorage.getItem('student_id')
 
     useEffect(() => {
         axios.get('/api/modules')
@@ -16,7 +17,7 @@ const Footer = () => {
             <div className='footer-header'>
                 <div className='mathdex-header'>
                     <h1>Mathdex</h1>
-                    <img src="images/mathdex_logo.png" alt="Mathdex Logo" className='mathdex-logo' />
+                    <img src="/images/mathdex_logo.png" alt="Mathdex Logo" className='mathdex-logo' />
                 </div>
                 <div>
                     <p>Made with ❤️ from 6 bitches</p>
@@ -25,19 +26,19 @@ const Footer = () => {
             <div className='footer-content'>
                 <div className='footer-category'>
                     <p>COMPANY</p>
-                    <Link to="/aboutus" className='footer-links'>About Us</Link>
+                    <Link to={isLoggedIn ? "/aboutus" : "/aboutus/b4login"} className='footer-links'>About Us</Link>
                 </div>
                 <div className='footer-category'>
                     <p>PRACTICE</p>
-                    <Link to="/challenges" className='footer-links'>Challenges</Link>
+                    <Link to={isLoggedIn ? "/challenge" : "/challenge/b4login"} className='footer-links'>Challenges</Link>
                 </div>
                 <div className='footer-category'>
                     <p>LEARN</p>
                     <div className='footer-links-container'>
                         {modules.map(module => (
-                            <Link 
+                            <Link
                                 key={module.id}
-                                to={`/modules/${module.slug}`} 
+                                to={isLoggedIn ? `/modules/${module.slug}` : `/modules/b4login/${module.slug}`}
                                 className='footer-links'
                             >
                                 {module.name}

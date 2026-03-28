@@ -1,14 +1,23 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 function ChapterLayout() {
     const { slug } = useParams();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const isBeforeLogin = location.pathname.includes('b4login');
+    const isLoggedIn = !!localStorage.getItem('student_id');
     const [chapters, setChapters] = useState([]);
 	const chapter = chapters[0];
 
     useEffect(() => {
+        if (!isLoggedIn || isBeforeLogin) {
+            navigate('/login');
+            return;
+        }
+
         async function loadData() {
             try {
 				const res = await axios.get(`/api/modules/${slug}`);
@@ -22,7 +31,7 @@ function ChapterLayout() {
         if (slug) {
             loadData();
         }
-    }, [slug]);
+    }, [slug, isLoggedIn, isBeforeLogin, navigate]);
 
     return (
         <section className="lesson-section">

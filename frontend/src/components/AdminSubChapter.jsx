@@ -5,8 +5,6 @@ import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 
-
-{/*按了button 要去 chapter*/}
 function AdminSubChapter() {
 
     const [showModal, setShowModal] = useState(false);

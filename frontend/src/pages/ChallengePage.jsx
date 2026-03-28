@@ -1,10 +1,14 @@
 import ChallengeLayout from "../components/ChallengeLayout";
+import Footer from "../components/Footer";
 
 function ChallengePage() {
     return (
-        <main className="main-layout-full">
-            <ChallengeLayout />
-        </main>
+        <div>
+            <main className="main-layout-full">
+                <ChallengeLayout />
+            </main>
+            <Footer />
+        </div>
     );
 }
 

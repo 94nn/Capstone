@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 
 function QuizLayout({setCurrentQuizId}) {
     const { slug, chapter_id, subchapter_id } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
+    const isBeforeLogin = location.pathname.includes('b4login');
+    const isLoggedIn = !!localStorage.getItem('student_id');
     const [subchapters, setSubchapters] = useState([]);
     const [quizzes, setQuizzes] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -52,9 +55,14 @@ const handleSubmitFeedback = async () => {
     alert("Failed to submit feedback");
   }
 };
-    const student_id = localStorage.getItem("student_id");
+   
 
     useEffect(() => {
+        if (!isLoggedIn || isBeforeLogin) {
+            navigate('/login');
+            return;
+        }
+
         async function loadSubChapters() {
             try {
                 const res = await axios.get(`/api/modules/${slug}/${chapter_id}`);
@@ -82,7 +90,7 @@ const handleSubmitFeedback = async () => {
         if (slug && chapter_id && subchapter_id) {
             loadQuiz();
         }
-    }, [slug, chapter_id, subchapter_id]);
+    }, [slug, chapter_id, subchapter_id, isLoggedIn, isBeforeLogin, navigate]);
 
     useEffect(() => {
         setCurrentIndex(0);

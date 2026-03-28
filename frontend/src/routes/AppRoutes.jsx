@@ -2,7 +2,6 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import ModulePage from "../pages/ModulePage";
 import ChapterPage from "../pages/ChapterPage";
 import SubChapterPage from "../pages/SubChapterPage";
-import SimplePage from "../pages/SimplePage";
 import HomePage from "../pages/HomePage";
 import ProfilePage from "../pages/ProfilePage";
 import EditProfilePage from "../pages/EditProfilePage";
@@ -37,7 +36,7 @@ function AppRoutes() {
 
 			<Route path="/modules/:slug/:chapter_id/:subchapter_id" element={<QuizPage />} />
 
-			<Route path="/challenge/module/:module_id" element={<ChallengePage />} />
+			<Route path="/challenge" element={<ChallengePage />} />
 
 			<Route path="/challenge/:slug" element={<ChallengeQuestionPage />} />
 
@@ -45,11 +44,7 @@ function AppRoutes() {
 
 			<Route path="/EditProfilePage" element={<EditProfilePage />} />
 
-            <Route path="/leaderboard" element={<SimplePage title="Leaderboard" description="Leaderboard" />}/>
-
             <Route path="/aboutus" element={<AboutUsPage />} />
-
-            <Route path="/profilepage" element={<ProfilePage />} />
 
             <Route
                 path="/admin"
@@ -64,6 +59,7 @@ function AppRoutes() {
             <Route path="/admin/challenge" element={<AdminChallengePage />} />
             <Route path="/admin/challenge/:id" element={<AdminChallengeQuesPage />} />
 
+            <Route path="/admin/challenge/:challenge_id" element={<AdminChallengePage />} />
 
             <Route path="*" element={<Navigate to="/homepage" replace />} />
         </Routes>

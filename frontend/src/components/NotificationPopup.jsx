@@ -4,19 +4,26 @@ import './NotificationPopup.css'
 
 const NotificationPopup = ({ isVisible, onClose, notifications, setNotifications }) => {
     const popupRef = useRef(null)
+    const student_id = localStorage.getItem('student_id')
 
     const unreadCount = notifications.filter(n => !n.is_read).length
 
-    const markRead = (id) => {
-        axios.patch(`/api/notifications/${id}/read`)
-            .catch(err => console.error('Error marking notification as read:', err))
-        setNotifications(notifications.map(n => n.id === id ? { ...n, is_read: true } : n))
+    const markRead = async (id) => {
+        setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: 1 } : n))
+        try {
+            await axios.patch(`/api/notifications/${id}/read`)
+        } catch (err) {
+            console.error('Error marking notification as read:', err)
+        }
     }
 
-    const markAllRead = () => {
-        axios.patch('/api/notifications/read-all/1')
-            .catch(err => console.error('Error marking all as read:', err))
-        setNotifications(notifications.map(n => ({ ...n, is_read: true })))
+    const markAllRead = async () => {
+        setNotifications(prev => prev.map(n => ({ ...n, is_read: 1 })))
+        try {
+            await axios.patch(`/api/notifications/read-all/${student_id}`)
+        } catch (err) {
+            console.error('Error marking all as read:', err)
+        }
     }
 
     useEffect(() => {

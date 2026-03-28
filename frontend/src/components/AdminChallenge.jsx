@@ -42,7 +42,7 @@ const handleUpload = async () => {
     // 上传成功后，把 badge_id 存进 challenge
     setChallenge(prev => ({
       ...prev,
-      badge_id: res.data.id // ✅ 关键
+      badge_id: res.data.id 
     }));
 
     alert('Badge uploaded and linked to challenge!');
@@ -123,46 +123,43 @@ const handleModuleChange = async (moduleId) => {
 };
 
 const handleEdit = async (ch) => {
-  // 初始化 challenge 状态（chapter_id 先空，等 fetch 完再设）
   setChallenge({
     id: ch.id,
     title: ch.title,
     description: ch.description ?? '',
     content: ch.content ?? '',
-    badge_id: ch.badge_id ,
+    badge_id: ch.badge_id,
     xp_quantity: ch.xp_quantity ?? 0,
     coins_quantity: ch.coins_quantity ?? 0,
     module_id: ch.module_id,
-    chapter_id: '',               // 等 fetch 完再设
-    questions: ch.questions ?? [], // 保证是数组
+    chapter_id: '',
+    questions: ch.questions ?? [],
   });
 
   try {
-    // fetch 该 module 的章节
     const res = await axios.get(`/api/admin/challenge/${ch.id}`);
-    setChapters(res.data);
+    const challengeData = res.data;
 
-    // fetch 完后再设回原 chapter_id
-    setChallenge(prev => ({ ...prev, chapter_id: ch.chapter_id }));
+    // 先拿真正的 chapters
+    const chapterRes = await axios.get(`/api/api/modules/${challengeData.module_id}/chapters`);
+    setChapters(chapterRes.data);
 
-    
- if (res.data && res.data.length > 0) {
-    const challengeData = res.data[0]; // 取第一个 challenge
-    // 更新 badge
+    // 再一次性更新 challenge
+    setChallenge(prev => ({
+      ...prev,
+      module_id: challengeData.module_id ?? '',
+      chapter_id: challengeData.chapter_id ?? '',
+      badge_image: challengeData.badge_image ?? '',
+      questions: challengeData.questions ?? [],
+    }));
+
     setBadgeName(challengeData.badge_name ?? '');
     setCurrentBadgeImage(challengeData.badge_image ?? '');
     setImageFile(null);
-    // 更新 questions
-    setChallenge(prev => ({
-      ...prev,
-      badge_image: challengeData.badge_image
-    }));
-    setChallenge(prev => ({ ...prev, questions: challengeData.questions ?? [] }));
-  }
   } catch (err) {
     console.error('Failed to fetch chapters:', err);
   } finally {
-    setShowModal(true); // 确保 modal 一定打开
+    setShowModal(true);
   }
 };
 const handleDelete = async (challengeId) => {

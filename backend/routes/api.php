@@ -946,7 +946,7 @@ Route::get('/admin/challenge/{id}', function($id) {
         'badge.name as badge_name',
         'badge.image_path as badge_image'
     )
-    ->get();
+    ->first();
     if (!$challenge) return response()->json(['error'=>'Challenge not found'], 404);
 
     $questions = DB::table('challenge_question')
@@ -1010,7 +1010,7 @@ Route::post('/admin/challenge', function(Request $request) {
             'coins_quantity' => $request->coins_quantity ,
             'module_id' => $request->module_id,
             'chapter_id' => $request->chapter_id,
-            'slug' => Str::slug($request->title) . '-' . time(),
+            'slug' => Str::slug($request->title),
         ]);
 
         foreach ($request->questions ?? [] as $q) {
@@ -1135,6 +1135,8 @@ Route::put('/admin/challenge/{id}', function(Request $request, $id) {
         return response()->json(['error' => $e->getMessage()], 500);
     }
 });
+
+
 // 删除 challenge + 内部 questions + options
 Route::delete('/admin/challenge/{id}', function($id) {
     DB::beginTransaction();

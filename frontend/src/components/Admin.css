@@ -258,7 +258,8 @@
     padding-top: 0.5rem;
 }
 
-.edit-challenge-title, .edit-challenge-content, .edit-challenge-module, .edit-challenge-chapter{
+.edit-challenge-title, .edit-challenge-description, .edit-challenge-content, .edit-challenge-badge-name, .edit-challenge-badge,
+.edit-challenge-module, .edit-challenge-chapter, .edit-challenge-xp, .edit-challenge-coins {
     width: 100%;
     box-sizing: border-box;
     padding: 12px 14px;

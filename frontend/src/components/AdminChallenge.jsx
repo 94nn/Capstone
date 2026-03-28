@@ -317,6 +317,7 @@ const closeModal = () => {
               <label>Badge</label> 
               <input
                 type="text"
+                className='edit-challenge-badge-name'
                 placeholder="Badge Name"
                 value={badgeName}
                 onChange={(e) => setBadgeName(e.target.value)}
@@ -338,6 +339,7 @@ const closeModal = () => {
                   {/* 上传新图片 */}
                   <input
                     type="file"
+                    className='edit-challenge-badge'
                     accept="image/*"
                     onChange={(e) => setImageFile(e.target.files[0])}
                   />
@@ -372,6 +374,7 @@ const closeModal = () => {
                 <label>XP Quantity</label>
                 <input
                   type="number"
+                  className='edit-challenge-xp'
                   min="0"
                   value={challenge.xp_quantity}
                   onChange={e =>
@@ -387,6 +390,7 @@ const closeModal = () => {
                 <label>Coins Quantity</label>
                 <input
                   type="number"
+                  className='edit-challenge-coins'
                   min="0"
                   value={challenge.coins_quantity}
                   onChange={e =>

@@ -75,6 +75,67 @@ Route::delete('/modules/{id}', function ($id) {
     ]);
 });
 
+//Admin Modules
+Route::get('/admin', function () {
+    return DB::table('modules')->get();
+});
+
+//add Admin modules function
+Route::post('/admin', function (Request $request) {
+
+    $slug = Str::slug($request->name);
+
+    $id = DB::table('modules')->insertGetId([
+        'name' => $request->name,
+        'description' => $request->description,
+        'slug' => $slug
+    ]);
+
+    return response()->json([
+        'id' => $id,
+        'name' => $request->name,
+        'description' => $request->description,
+        'slug' => $slug,
+    ]);
+});
+
+//edit Admin modules function
+Route::put('/admin/{id}', function (Request $request, $id) {
+    $slug = Str::slug($request->name); 
+
+    // 处理重复
+    $count = DB::table('modules')
+        ->where('slug', 'LIKE', "$slug%")
+        ->where('id', '!=', $id)
+        ->count();
+
+    if ($count > 0) {
+        $slug = $slug . '-' . ($count + 1);
+    }
+
+    DB::table('modules')
+        ->where('id', $id)
+        ->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'slug' => $slug,
+        ]);
+
+    return response()->json([
+        'message' => 'Updated successfully',
+        'slug' => $slug
+    ]);
+});
+
+//delete function
+Route::delete('/admin/{id}', function ($id) {
+    DB::table('modules')->where('id', $id)->delete();
+
+    return response()->json([
+        'message' => 'Deleted successfully'
+    ]);
+});
+
 
 //Chapters
 Route::get('/modules/{slug}', function ($slug) {
@@ -168,14 +229,30 @@ Route::put('/modules/{slug}/{id}', function (Request $request, $slug, $id) {
 //delete chapter
 Route::delete('/modules/{slug}/{id}', function ($slug, $id) {
 
-    // 删除
-    DB::table('chapters')->where('id', $id)->delete();
-    $moduleId = $chapter->module_id;
+    // 1. 找 module
+    $module = DB::table('modules')->where('slug', $slug)->first();
+    if (!$module) {
+        return response()->json(['error' => 'Module not found'], 404);
+    }
+
+    // 2. 找 chapter（确保属于该 module）
+    $chapter = DB::table('chapters')
+        ->where('id', $id)
+        ->where('module_id', $module->id)
+        ->first();
+
+    if (!$chapter) {
+        return response()->json(['error' => 'Chapter not found'], 404);
+    }
+
     $deletedLevel = $chapter->level;
 
-    // 后面的往前补
+    // 3. 删除
+    DB::table('chapters')->where('id', $id)->delete();
+
+    // 4. 补位
     DB::table('chapters')
-        ->where('module_id', $moduleId)
+        ->where('module_id', $module->id)
         ->where('level', '>', $deletedLevel)
         ->decrement('level');
 
@@ -219,7 +296,8 @@ $maxOrder = DB::table('subchapters')
     return response()->json([
         'id' => $id,
         'title' => $request->title,
-        'description' => $request->description,  
+        'description' => $request->description, 
+        'subchapter_order' => $nextOrder,  
     ]);
 });
 
@@ -669,7 +747,8 @@ Route::get('/subchapter_progress/{student_id}/{chapter_id}/{subchapter_id}', fun
 
 // Admin Team Route
 Route::get('/team', function() {
-    return DB::table('admin')->get();
+    return DB::table('
+    ')->get();
 });
 
 Route::get('/hint/{quiz_id}', function($quiz_id) {
@@ -722,7 +801,7 @@ Route::post('/hint/unlock', function (Request $request) {
     ]);
 });
 
-// GET all challenges
+// GET all  
 Route::get('/challenge', function () {
     $challenges = DB::table('challenge')
         ->join('modules', 'challenge.module_id', '=', 'modules.id')
@@ -856,9 +935,18 @@ Route::get('/admin/challenge', function() {
     return DB::table('challenge')->get();
 });
 
+
 // 获取单个 challenge + questions + options
 Route::get('/admin/challenge/{id}', function($id) {
-    $challenge = DB::table('challenge')->where('id', $id)->first();
+    $challenge = DB::table('challenge')
+    ->leftJoin('badge', 'challenge.badge_id', '=', 'badge.id')
+    ->where('challenge.id', $id)
+    ->select(
+        'challenge.*',
+        'badge.name as badge_name',
+        'badge.image_path as badge_image'
+    )
+    ->get();
     if (!$challenge) return response()->json(['error'=>'Challenge not found'], 404);
 
     $questions = DB::table('challenge_question')
@@ -876,30 +964,64 @@ Route::get('/admin/challenge/{id}', function($id) {
     return response()->json($challenge);
 });
 
+Route::get('/admin/badge', function() {
+    return DB::table('badge')->get();
+});
+
+Route::get('/admin/badge', function() {
+    return DB::table('badge')->get();
+});
+
+// badge
+Route::post('/admin/badge', function (Request $request) {
+
+    // 验证
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+    ]);
+
+    // 存图片（storage/app/public/badges）
+    $path = $request->file('image')->store('badges', 'public');
+
+    // 存 DB
+    $id = DB::table('badge')->insertGetId([
+        'name' => $request->name,
+        'image_path' => $path,
+    ]);
+
+    return response()->json([
+        'message' => 'Badge created',
+        'id' => $id,
+        'image_path' => $path
+    ]);
+});
+
 // 创建 challenge + 内部 questions + options
 Route::post('/admin/challenge', function(Request $request) {
     DB::beginTransaction();
     try {
-        // 插入 challenge（module_id & chapter_id 由前端传入）
         $challengeId = DB::table('challenge')->insertGetId([
             'title' => $request->title,
+            'description' => $request->description,
             'content' => $request->content,
-            'badges' => $request->title,
+            'badge_id' => $request->badge_id,
+            'xp_quantity' => $request->xp_quantity ,
+            'coins_quantity' => $request->coins_quantity ,
             'module_id' => $request->module_id,
             'chapter_id' => $request->chapter_id,
-            'slug' => Str::slug($request->title),
+            'slug' => Str::slug($request->title) . '-' . time(),
         ]);
 
-        // 插入 questions + options
         foreach ($request->questions ?? [] as $q) {
             $correctAnswer = null;
             foreach ($q['options'] ?? [] as $opt) {
-                if ($opt['is_correct'] ?? false) $correctAnswer = $opt['option_text'];
+                if ($opt['is_correct'] ?? false) $correctAnswer = $opt['option_text'] ?? null;
             }
 
             $questionId = DB::table('challenge_question')->insertGetId([
                 'challenge_id' => $challengeId,
-                'question' => $q['question'],
+                'question' => $q['question'] ?? '',
                 'answer' => $correctAnswer,
                 'explanation' => $q['explanation'] ?? null,
             ]);
@@ -914,42 +1036,60 @@ Route::post('/admin/challenge', function(Request $request) {
         }
 
         DB::commit();
-        return response()->json(['message' => 'Created']);
+        return response()->json(['message' => 'Created', 'id' => $challengeId]);
     } catch (\Exception $e) {
         DB::rollback();
         return response()->json(['error' => $e->getMessage()], 500);
     }
 });
 
-// 更新 challenge + 内部 questions + options
+
+
+/// 更新 challenge + 内部 questions + options + badge
 Route::put('/admin/challenge/{id}', function(Request $request, $id) {
     DB::beginTransaction();
     try {
-        // 更新 challenge
+        $moduleName = DB::table('modules')
+            ->where('id', $request->module_id)
+            ->value('name');
+
+        $badgeId = $request->badge_id ?? null;
+
+        // ====== 新增：更新 badge ======
+        if ($badgeId) {
+            $badgeData = ['name' => $request->badge_name ?? null];
+            if ($request->hasFile('badge_image')) {
+                $badgeData['image_path'] = $request->file('badge_image')->store('badges', 'public');
+            }
+            DB::table('badge')->where('id', $badgeId)->update($badgeData);
+        }
+        // =================================
+
         DB::table('challenge')->where('id', $id)->update([
             'title' => $request->title,
-            'content' => $request->content,
-            'badges' => $request->title,
+            'description' => $request->description ?? null,
+            'content' => $request->content ?? null,
+            'badge_id' => $badgeId,
+            'xp_quantity' => $request->xp_quantity ?? 0,
+            'coins_quantity' => $request->coins_quantity,
             'module_id' => $request->module_id,
             'chapter_id' => $request->chapter_id,
-            'slug' => Str::slug($request->title),
+            'slug' => Str::slug($moduleName . '-' . $request->name),
         ]);
 
-        // 删除旧 questions + options
         $questionIds = DB::table('challenge_question')->where('challenge_id', $id)->pluck('id');
         DB::table('challenge_options')->whereIn('c_question_id', $questionIds)->delete();
         DB::table('challenge_question')->where('challenge_id', $id)->delete();
 
-        // 插入新的 questions + options
         foreach ($request->questions ?? [] as $q) {
             $correctAnswer = null;
             foreach ($q['options'] ?? [] as $opt) {
-                if ($opt['is_correct'] ?? false) $correctAnswer = $opt['option_text'];
+                if ($opt['is_correct'] ?? false) $correctAnswer = $opt['option_text'] ?? null;
             }
 
             $questionId = DB::table('challenge_question')->insertGetId([
                 'challenge_id' => $id,
-                'question' => $q['question'],
+                'question' => $q['question'] ?? '',
                 'answer' => $correctAnswer,
                 'explanation' => $q['explanation'] ?? null,
             ]);

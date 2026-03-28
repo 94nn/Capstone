@@ -24,7 +24,7 @@ const handleSubmit = async () => {
     try {
         if (isEdit) {
             // UPDATE
-            const res = await axios.put(`/api/modules/${currentId}`, {
+            const res = await axios.put(`/api/admin/${currentId}`, {
                 name: name,
                 description: description
             });
@@ -39,7 +39,7 @@ const handleSubmit = async () => {
             setModules(updated);
 
             } else {
-            const res = await axios.post("/api/modules", {
+            const res = await axios.post("/api/admin", {
                 name: name,
                 description: description
             });
@@ -64,7 +64,7 @@ const handleSubmit = async () => {
     if (!confirmDelete) return;
 
     try {
-        await fetch(`http://127.0.0.1:8000/api/modules/${id}`, {
+        await fetch(`http://127.0.0.1:8000/api/admin/${id}`, {
             method: "DELETE",
         });
 

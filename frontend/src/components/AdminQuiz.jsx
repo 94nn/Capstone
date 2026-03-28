@@ -85,6 +85,9 @@ const [editQuizId, setEditQuizId] = useState(null);
 
     // 删除题目
     const handleDeleteQuiz = async (quizId) => {
+     const confirmDelete = window.confirm("Are you sure you want to delete?");
+
+    if (!confirmDelete) return;
         try {
             await axios.delete(
                 `/api/modules/${slug}/${chapter_id}/${subchapter_id}/quiz/${quizId}`

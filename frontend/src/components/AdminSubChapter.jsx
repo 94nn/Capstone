@@ -64,7 +64,7 @@ function AdminSubChapter() {
              const res = await axios.post(`/api/modules/${slug}/${chapter_id}`, {
                 title: title,
                 description: description,
-                subchapter_order: subchapters.length + 1
+                // subchapter_order: subchapters.length + 1
             });
             // 更新 UI
                       

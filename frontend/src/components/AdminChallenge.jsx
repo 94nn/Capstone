@@ -8,6 +8,8 @@ function AdminChallenge() {
   const [modules, setModules] = useState([]);
   const [chapters, setChapters] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [badgeName, setBadgeName] = useState('');
+  const [imageFile, setImageFile] = useState(null);
   const [challenge, setChallenge] = useState({
     id: null,
     title: '',
@@ -20,6 +22,34 @@ function AdminChallenge() {
     fetchChallenges();
     fetchModules();
   }, []);
+
+const handleUpload = async () => {
+  if (!badgeName || !imageFile) {
+    alert('Please fill all fields');
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('name', badgeName);
+  formData.append('image', imageFile);
+
+  try {
+    const res = await axios.post('/api/admin/badge', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+
+    // 上传成功后，把 badge_id 存进 challenge
+    setChallenge(prev => ({
+      ...prev,
+      badge_id: res.data.id // ✅ 关键
+    }));
+
+    alert('Badge uploaded and linked to challenge!');
+  } catch (err) {
+    console.error(err);
+    alert('Upload failed!');
+  }
+};
 
   const fetchChallenges = async () => {
     try {
@@ -54,9 +84,14 @@ const handleCreate = () => {
   setChallenge({
     id: null,
     title: '',
+    description: '',
     content: '',
-    module_id: '',
-    chapter_id: '',
+    badge_id: null,       
+    xp_quantity: 0,       
+    coins_quantity: 0,     
+    module_id: '',         
+    chapter_id: '',        
+    questions: [],         
   });
 
   // 初始化章节列表为空
@@ -87,61 +122,105 @@ const handleModuleChange = async (moduleId) => {
 };
 
 const handleEdit = async (ch) => {
-  // 先设基本数据，但 chapter_id 暂空
+  // 初始化 challenge 状态（chapter_id 先空，等 fetch 完再设）
   setChallenge({
     id: ch.id,
     title: ch.title,
-    content: ch.content,
+    description: ch.description ?? '',
+    content: ch.content ?? '',
+    badge_id: ch.badge_id ,
+    xp_quantity: ch.xp_quantity ?? 0,
+    coins_quantity: ch.coins_quantity ?? 0,
     module_id: ch.module_id,
-    chapter_id: '',
-    questions: ch.questions ?? [],
+    chapter_id: '',               // 等 fetch 完再设
+    questions: ch.questions ?? [], // 保证是数组
   });
 
   try {
     // fetch 该 module 的章节
-    const res = await axios.get(`/api/api/modules/${ch.module_id}/chapters`);
+    const res = await axios.get(`/api/admin/challenge/${ch.id}`);
     setChapters(res.data);
 
     // fetch 完后再设回原 chapter_id
     setChallenge(prev => ({ ...prev, chapter_id: ch.chapter_id }));
 
+    
+ if (res.data && res.data.length > 0) {
+    const challengeData = res.data[0]; // 取第一个 challenge
+    // 更新 badge
+    setBadgeName(challengeData.badge_name ?? '');
+    setImageFile(challengeData.badge_image ?? null);
+    // 更新 questions
+    setChallenge(prev => ({ ...prev, questions: challengeData.questions ?? [] }));
+  }
   } catch (err) {
     console.error('Failed to fetch chapters:', err);
   } finally {
     setShowModal(true); // 确保 modal 一定打开
   }
 };
+const handleDelete = async (challengeId) => {
+  if (!window.confirm('Are you sure you want to delete this challenge?')) return;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const payload = {
-        title: challenge.title,
-        content: challenge.content,
-        module_id: challenge.module_id,
-        chapter_id: challenge.chapter_id,
-        questions: challenge.questions ?? [],
-      };
+  try {
+    await axios.delete(`/api/admin/challenge/${challengeId}`);
+    alert('Challenge deleted successfully!');
+    fetchChallenges(); // 删除后刷新列表
+  } catch (err) {
+    console.error('Failed to delete challenge:', err);
+    alert('Delete failed!');
+  }
+};
 
-      if (challenge.id) {
-        await axios.put(`/api/admin/challenge/${challenge.id}`, payload);
-        alert('Update successfully!');
-      } else {
-        await axios.post('/api/admin/challenge', payload);
-        alert('Create successfully!');
-      }
-      setShowModal(false);
-      fetchChallenges();
-    } catch (err) {
-      console.error(err);
-      alert('Submit failed!');
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    let badgeId = challenge.badge_id;
+
+    if (imageFile && !badgeId) {
+      const formData = new FormData();
+      formData.append('name', badgeName);
+      formData.append('image', imageFile);
+
+      const res = await axios.post('/admin/badge', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+
+      badgeId = res.data.id;
     }
-  };
+    
+    const payload = {
+      title: challenge.title,
+      description: challenge.description ,
+      content: challenge.content ,
+      badge_id: challenge.badge_id,
+      xp_quantity: challenge.xp_quantity,
+      coins_quantity: challenge.coins_quantity,
+      module_id: challenge.module_id,
+      chapter_id: challenge.chapter_id,
+      questions: challenge.questions,
+    };
 
-  const closeModal = () => {
-      setShowModal(false);
-  };
+    if (challenge.id) {
+      await axios.put(`/api/admin/challenge/${challenge.id}`, payload);
+      alert('Update successfully!');
+    } else {
+      await axios.post('/api/admin/challenge', payload);
+      alert('Create successfully!');
+    }
 
+    setShowModal(false);
+    fetchChallenges(); // 刷新列表
+  } catch (err) {
+    console.error(err);
+    alert('Submit failed!');
+  }
+};
+
+
+const closeModal = () => {
+  setShowModal(false);
+};
   return (
     <div className="admin-challenge-page">
       <h2 className="challenge-header">Challenges</h2> <br />
@@ -157,7 +236,7 @@ const handleEdit = async (ch) => {
               <button className='secondary-button'>Enter</button>
             </Link> &nbsp;
             <button className="edit-button" onClick={() => handleEdit(ch)}>Edit</button> &nbsp;
-            <button className="delete-button" onClick={() => axios.delete(`/api/admin/challenge/${ch.id}`).then(fetchChallenges)}>Delete</button>
+            <button className="delete-button" onClick={() => handleDelete(ch.id)}>Delete</button>
           </div>
         ))}
       </div>
@@ -180,6 +259,16 @@ const handleEdit = async (ch) => {
               </div>
 
               <div>
+                <label>Description:</label>
+                <textarea
+                  className="edit-challenge-description"
+                  value={challenge.description}
+                  onChange={e => setChallenge(prev => ({ ...prev, description: e.target.value }))}
+                />
+              </div>
+
+
+              <div>
                 <label>Content:</label>
                 <textarea
                   className="edit-challenge-content"
@@ -187,7 +276,23 @@ const handleEdit = async (ch) => {
                   onChange={e => setChallenge(prev => ({ ...prev, content: e.target.value }))}
                 />
               </div>
-
+              <div className="">
+              <label>Badge</label> 
+              <input
+                type="text"
+                placeholder="Badge Name"
+                value={badgeName}
+                onChange={(e) => setBadgeName(e.target.value)}
+                
+              /></div>
+              <div className="">
+                <label>Badge</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setImageFile(e.target.files[0])}
+              />
+              </div>
               <div>
                 <label>Module:</label>
                     <select
@@ -214,12 +319,41 @@ const handleEdit = async (ch) => {
                   {chapters.map(c => <option key={c.id} value={c.id}>{c.title}</option>)}
                 </select>
               </div>
+               <div className="form-group">
+                <label>XP Quantity</label>
+                <input
+                  type="number"
+                  min="0"
+                  value={challenge.xp_quantity}
+                  onChange={e =>
+                    setChallenge(prev => ({
+                      ...prev,
+                      xp_quantity: parseInt(e.target.value) || 0
+                    }))
+                  }
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Coins Quantity</label>
+                <input
+                  type="number"
+                  min="0"
+                  value={challenge.coins_quantity}
+                  onChange={e =>
+                    setChallenge(prev => ({
+                      ...prev,
+                      coins_quantity: parseInt(e.target.value) || 0
+                    }))
+                  }
+                />
+              </div>
               <br />
               <div className="button-row">
                 <button className='submit-button' type="submit">Submit</button> &nbsp;
                 <button className='cancel-button' type="button" onClick={() => setShowModal(false)}>Close</button>
               </div>
-              
+             
             </form>
           </div>
         </div>

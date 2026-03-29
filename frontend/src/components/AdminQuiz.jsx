@@ -85,6 +85,9 @@ const [editQuizId, setEditQuizId] = useState(null);
 
     // 删除题目
     const handleDeleteQuiz = async (quizId) => {
+     const confirmDelete = window.confirm("Are you sure you want to delete?");
+
+    if (!confirmDelete) return;
         try {
             await axios.delete(
                 `/api/modules/${slug}/${chapter_id}/${subchapter_id}/quiz/${quizId}`
@@ -177,7 +180,7 @@ const handleSubmitQuiz = async () => {
                                 </label>
                             </div>
                         ))}
-                        <button className="add-option-button" onClick={() => handleAddOption(quiz.id)}>Add Option</button>
+                        <button className="quiz-add-option-button" onClick={() => handleAddOption(quiz.id)}>Add Option</button>
                     </div>
 
                     <textarea
@@ -191,7 +194,6 @@ const handleSubmitQuiz = async () => {
                         <button className="delete-quiz-button" onClick={() => handleDeleteQuiz(quiz.id)}>Delete Question</button>
                     </div>
 
-                    {/* <hr style={{ margin: "1rem 0" }} /> */}
 {/* Modal for Create Quiz */}
 {showModal && (
     <div className="modal-overlay">
@@ -260,7 +262,6 @@ const handleSubmitQuiz = async () => {
                 rows={3}
                 style={{ width: "90%", resize: "vertical" }}
             />
-            <br />
             <div className="modal-box-bottom">
                 <button className="submit-button" onClick={handleSubmitQuiz}>Submit</button>
                 <button className="cancel-button" onClick={() => setShowModal(false)}>Cancel</button>

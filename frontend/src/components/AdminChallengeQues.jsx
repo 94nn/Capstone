@@ -3,7 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 
 function ChallengeQuestion() {
-  const { challenge_id } = useParams();
+  const { id } = useParams();
 
   const [challenge, setChallenge] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -12,15 +12,15 @@ function ChallengeQuestion() {
   const [form, setForm] = useState({
     question: "",
     explanation: "",
-    options: [{ text: "", is_correct: false }]
+    options: [{ option_text: "", is_correct: false }]
   });
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [id]);
 
   const fetchData = async () => {
-    const res = await axios.get(`/api/challenge/${challenge_id}`);
+    const res = await axios.get(`/api/admin/challenge/${id}`);
     setChallenge(res.data);
   };
 
@@ -29,7 +29,7 @@ function ChallengeQuestion() {
     setForm({
       question: "",
       explanation: "",
-      options: [{ text: "", is_correct: false }]
+      options: [{ option_text: "", is_correct: false }]
     });
     setShowForm(true);
   };
@@ -44,32 +44,7 @@ function ChallengeQuestion() {
     setShowForm(true);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    let updatedQuestions = [...(challenge.questions || [])];
-
-    if (editingIndex !== null) {
-      // 编辑现有 question
-      updatedQuestions[editingIndex] = { ...form };
-    } else {
-      // 新增 question
-      updatedQuestions.push({ ...form });
-    }
-
-    try {
-      await axios.put(`/api/challenge/${challenge_id}`, {
-        ...challenge,
-        questions: updatedQuestions
-      });
-
-      setShowForm(false);
-      fetchData();
-    } catch (err) {
-      console.error(err);
-      alert("Error");
-    }
-  };
+  
 
   const handleDelete = (index) => {
     if (!window.confirm("Delete this question?")) return;
@@ -77,7 +52,7 @@ function ChallengeQuestion() {
     const updatedQuestions = [...(challenge.questions || [])];
     updatedQuestions.splice(index, 1);
 
-    axios.put(`/api/challenge/${challenge_id}`, {
+    axios.put(`/api/admin/challenge/${id}`, {
       ...challenge,
       questions: updatedQuestions
     }).then(fetchData)
@@ -86,11 +61,41 @@ function ChallengeQuestion() {
         alert("Error deleting question");
       });
   };
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  let updatedQuestions = [...(challenge.questions || [])];
+
+  const questionPayload = {
+    question: form.question,
+    explanation: form.explanation,
+    options: form.options
+  };
+
+  if (editingIndex !== null) {
+    updatedQuestions[editingIndex] = questionPayload;
+  } else {
+    updatedQuestions.push(questionPayload);
+  }
+
+  try {
+    await axios.put(`/api/admin/challenge/${id}`, {
+      ...challenge,
+      questions: updatedQuestions
+    });
+
+    setShowForm(false);
+    fetchData();
+  } catch (err) {
+    console.error(err);
+    alert("Err3or");
+  }
+};
 
   const addOption = () => {
     setForm(prev => ({
       ...prev,
-      options: [...prev.options, { text: "", is_correct: false }]
+      options: [...prev.options, { option_text: "", is_correct: false }]
     }));
   };
 
@@ -101,59 +106,94 @@ function ChallengeQuestion() {
   };
 
   if (!challenge) return <p>Loading...</p>;
+  
+  const removeOption = (index) => {
+    setForm(prev => ({
+      ...prev,
+      options: prev.options.filter((_, i) => i !== index)
+    }));
+  };
 
   return (
     <div>
-      <h2>{challenge.title}</h2>
-
-      <button onClick={openCreate}>Add Question</button>
+      <br />
+      <h2 className="admin-challenge-title">{challenge.title}</h2><br />
+      <button className="create-button" onClick={openCreate}>Add Question</button><br />
 
       {challenge.questions?.map((q, i) => (
-        <div key={i}>
-          <p><strong>{q.question}</strong></p>
-          <p>{q.explanation}</p>
+        <div key={i} className="challenge-card">
+          <p className="challenge-question"><strong>{q.question}</strong></p> <br />
+          <p className="challenge-explanation">{q.explanation}</p>
           <ul>
             {q.options?.map((opt, oi) => (
               <li key={oi}>
-                {opt.text} {opt.is_correct ? "(✔)" : ""}
+                {opt.option_text} {opt.is_correct ? "(✔)" : ""}
               </li>
             ))}
           </ul>
-          <button onClick={() => openEdit(q, i)}>Edit</button>
-          <button onClick={() => handleDelete(i)}>Delete</button>
-          <hr />
+          <div className="button-row">
+            <button className="edit-button" onClick={() => openEdit(q, i)}>Edit</button>
+            <button className="delete-button" onClick={() => handleDelete(i)}>Delete</button>
+          </div>
+          
         </div>
       ))}
 
       {showForm && (
-        <form onSubmit={handleSubmit}>
-          <input
-            placeholder="Question"
-            value={form.question}
-            onChange={e => setForm({ ...form, question: e.target.value })}
-          />
-          <input
-            placeholder="Explanation"
-            value={form.explanation}
-            onChange={e => setForm({ ...form, explanation: e.target.value })}
-          />
-          <h4>Options</h4>
-          {form.options.map((opt, i) => (
-            <div key={i}>
-              <input
-                value={opt.text}
-                onChange={e => updateOption(i, "text", e.target.value)}
-              />
-              <input
-                type="checkbox"
-                checked={opt.is_correct}
-                onChange={e => updateOption(i, "is_correct", e.target.checked)}
-              />
+        <div className="modal-overlay">
+          <div className="edit-popup-box">
+            <div className="edit-popup-box-header">
+              <h2 className="edit-title">{editingIndex !== null ? "Edit Challenge Question" : "Add Challenge Question"}</h2>
+              <button className="close-button" onClick={() => setShowForm(false)}>X</button>
             </div>
-          ))}
-          <button type="button" onClick={addOption}>Add Option</button>
-          <button type="submit">Submit</button>
-        </form>
+            <br />
+            <form onSubmit={handleSubmit}>
+              <label>Question:</label>
+                <input
+                  className="edit-challenge-question"
+                  placeholder="Question"
+                  value={form.question}
+                  onChange={e => setForm({ ...form, question: e.target.value })}
+                />
+              <label>Explanation:</label>
+                <input
+                  className="edit-challenge-explanation"
+                  placeholder="Explanation"
+                  value={form.explanation}
+                  onChange={e => setForm({ ...form, explanation: e.target.value })}
+                />
+              <label>Options:</label>
+              {form.options.map((opt, i) => (
+                <div key={i} className="edit-challenge-option">
+                  <input
+                    value={opt.option_text}
+                    onChange={e => updateOption(i, "option_text", e.target.value)}
+                  />
+                  <div className="row">
+                    <input
+                      type="checkbox"
+                      checked={opt.is_correct}
+                      onChange={e => updateOption(i, "is_correct", e.target.checked)}
+                    />
+                    <button
+                      type="button"
+                      className='remove-option-button' 
+                      onClick={() => removeOption(i)}
+                    >
+                      X
+                    </button>
+                  </div>
+                </div>
+              ))}
+              <br />
+              <div className="button-row">
+                <button className="challenge-add-option-button" type="button" onClick={addOption}>Add Option</button>
+                <button className="submit-button" type="submit">Submit</button>
+                <button className='cancel-button' type="button" onClick={() => setShowForm(false)}>Close</button>
+              </div>
+            </form>
+          </div>
+        </div>
       )}
     </div>
   );

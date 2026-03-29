@@ -1,5 +1,4 @@
 import React from 'react'
-import SimplePage from '../pages/SimplePage'
 
 import { useNavigate } from 'react-router-dom'
 

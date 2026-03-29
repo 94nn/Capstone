@@ -147,6 +147,25 @@
     box-shadow: 2px 2px 0 #020617;
 }
 
+.feedback-button{
+    padding: 0.1rem 0.1rem;
+    border-radius: 999px;
+    background: linear-gradient(to bottom, #0fbbf0, #0d46ef);
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 0.9rem;
+    font-family: "Press Start 2P", monospace;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 #020617;
+    transition: transform 0.08s ease;
+}
+
+.feedback-button:hover {
+    filter: brightness(1.05);
+    transform: translate(2px,2px);
+    box-shadow: 2px 2px 0 #020617;
+}
+
 .popup-buttons {
     display: flex;
     justify-content: center;

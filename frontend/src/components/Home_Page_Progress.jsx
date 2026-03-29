@@ -8,6 +8,7 @@ const HomePageProgress = () => {
     const student_id = localStorage.getItem("student_id");
 
     useEffect(() => {
+        if (!student_id) return
         axios.get(`/api/progress/${student_id}`)
             .then(res => setProgress(res.data))
             .catch(err => console.error('Error fetching progress:', err))
@@ -23,7 +24,7 @@ const HomePageProgress = () => {
                 {progress.map(progress => (
                     <div key={progress.course_slug} className="cp-card" onClick={() => navigate(`/modules/${progress.course_slug}`)}>
                         <div className="cp-image-wrap">
-                            <img src='/images/course_background.jpg' alt='Course image' className="cp-image" />
+                            <img src='/images/course_background.jpg' alt='Course background' className="cp-image" />
                         </div>
 
                         <div className="cp-body">

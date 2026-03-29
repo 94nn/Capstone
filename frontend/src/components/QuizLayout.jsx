@@ -150,9 +150,10 @@ const handleSubmitFeedback = async () => {
     }
 
     async function updateProgress() {
+        const studentId = localStorage.getItem("student_id");
         try {
             await axios.post("/api/progress/update", {
-                student_id: student_id,
+                student_id: studentId,
                 subchapter_id: subchapter_id,
                 correct_answers: correctCount,
                 total_questions: quizzes.length,

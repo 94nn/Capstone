@@ -140,6 +140,7 @@
     justify-content: center;
     gap: 30px;
     padding: 20px;
+    padding-bottom: 100px;
 }
 
 .team-card {

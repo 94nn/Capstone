@@ -798,8 +798,7 @@ Route::get('/subchapter_progress/{student_id}/{chapter_id}/{subchapter_id}', fun
 
 // Admin Team Route
 Route::get('/team', function() {
-    return DB::table('
-    ')->get();
+    return DB::table('admin')->get();
 });
 
 Route::get('/hint/{quiz_id}', function($quiz_id) {

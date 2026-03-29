@@ -64,7 +64,7 @@ const NotificationPopup = ({ isVisible, onClose, notifications, setNotifications
                             {!notif.is_read && <span className="notif-dot" />}
                             {notif.image_url && (
                                 <img
-                                    src={`http://127.0.0.1:8000/storage/${notif.image_url}`}
+                                    src={`http://127.0.0.1:8000/${notif.image_url}`}
                                     alt="badge"
                                     className="notif-badge-image"
                                 />

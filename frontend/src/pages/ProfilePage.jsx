@@ -120,12 +120,12 @@ function ProfilePage() {
         <div className='profilePage-badge-card'>
           <div className='profilePage-badge-header'>
             <h3>Course Badges</h3>
-            <span>{student?.badges?.length || 0}/6</span>
+            <span>{student?.badges || 0}/6</span>
           </div>
 
           <div className='profilePage-badge-grid'>
             {badgesList.map((badge) => {
-              const earned = badge.id <= (student?.badges || 0);
+              const earned = student?.badges_list?.includes(badge.id);
 
               return (
                 <img

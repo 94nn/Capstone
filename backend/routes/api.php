@@ -528,6 +528,7 @@ Route::delete('/modules/{slug}/{chapter_id}/{subchapter_id}/quiz/{quiz_id}', fun
 //Home Page Student
 Route::get('/student/{id}', function($id) {
     $student = DB::table('student')->where('id', $id)->first();
+    $badges = DB::table('student_challenge_completion')->where('student_id', $id)->whereNotNull('badge_id')->pluck('badge_id');
     return response()->json([
         'username' => $student->name,
         'level' => $student->level,
@@ -536,7 +537,8 @@ Route::get('/student/{id}', function($id) {
         'coins' => $student->coins_balance,
         'image_url' => $student->profile_pic,
         'bio' => $student->Bio,
-        'email' => $student->email
+        'email' => $student->email,
+        'badges_list' => $badges
     ]);
 });
 

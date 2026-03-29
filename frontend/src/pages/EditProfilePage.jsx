@@ -70,6 +70,12 @@ export default function EditProfilePage() {
 
 	// Save profile
 	const handleSaveProfile = async () => {
+
+    if (!name.trim()) {
+      alert("Name cannot be empty");
+      return;
+    }
+
 		const formData = new FormData();
 		formData.append("name", name);
 		formData.append("bio", bio);
@@ -108,10 +114,20 @@ export default function EditProfilePage() {
 
   // Save settings (email/password)
 	const handleSaveSettings = async () => {
+    if (!email.includes("@")) {
+      alert("Invalid email format");
+      return;
+    }
+    
 		if (newPassword && newPassword !== confirmPassword) {
 			alert("Passwords do not match");
 			return;
 		}
+
+    if (newPassword && newPassword.length < 6) {
+      alert("Password must be at least 6 characters");
+      return;
+    }
 		try {
 			let res;
 

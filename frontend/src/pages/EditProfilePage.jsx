@@ -75,6 +75,7 @@ export default function EditProfilePage() {
 		formData.append("bio", bio);
 
 		if (selectedFile) formData.append("profile_pic", selectedFile);
+		formData.append("role", role);
 
 		try {
 			let res;

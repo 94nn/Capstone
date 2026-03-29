@@ -69,7 +69,7 @@ function ProfilePage() {
         <div className="card profile-card">
 
           <div className="character-container">
-            <img src="/images/tempCharacter.png" alt="character" className="character-pic" />
+            <img src="/images/boy_student.png" alt="character" className="character-pic" />
 
             <div className="character-info">
               <h1><span className="character-name">{student?.username}</span></h1>

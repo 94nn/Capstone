@@ -98,6 +98,12 @@ Route::get('/admin', function () {
     return DB::table('modules')->get();
 });
 
+Route::get('/admin/user/{id}', function ($id) {
+    $admin = DB::table('admin')->where('id', $id)->first();
+    if (!$admin) return response()->json(['error' => 'Admin not found'], 404);
+    return response()->json($admin);
+});
+
 //add Admin modules function
 Route::post('/admin', function (Request $request) {
 
@@ -1105,7 +1111,6 @@ Route::delete('/feedback/{id}', function($id) {
 
 
 
-<<<<<<< HEAD
 // 获取所有 challenge
 Route::get('/admin/challenge', function () {
     return DB::table('challenge')
@@ -1130,16 +1135,6 @@ Route::get('/admin/challenge/{id}', function($id) {
         'badge.image_path as badge_image'
     )
     ->first();
-=======
-// Admin: 获取所有 challenge
-Route::get('/admin/challenge', function() {
-    return DB::table('challenge')->get();
-});
-
-// Admin: 获取单个 challenge + questions + options
-Route::get('/admin/challenge/{id}', function($id) {
-    $challenge = DB::table('challenge')->where('id', $id)->first();
->>>>>>> origin/main
     if (!$challenge) return response()->json(['error'=>'Challenge not found'], 404);
 
     $questions = DB::table('challenge_question')
@@ -1155,11 +1150,6 @@ Route::get('/admin/challenge/{id}', function($id) {
     $challenge->questions = $questions;
 
     return response()->json($challenge);
-});
-
-<<<<<<< HEAD
-Route::get('/admin/badge', function() {
-    return DB::table('badge')->get();
 });
 
 Route::get('/admin/badge', function() {
@@ -1192,9 +1182,6 @@ Route::post('/admin/badge', function (Request $request) {
 });
 
 // 创建 challenge + 内部 questions + options
-=======
-// Admin: 创建 challenge + 内部 questions + options
->>>>>>> origin/main
 Route::post('/admin/challenge', function(Request $request) {
     DB::beginTransaction();
     try {
@@ -1235,12 +1222,7 @@ Route::post('/admin/challenge', function(Request $request) {
     }
 });
 
-<<<<<<< HEAD
-
-
-=======
 // Admin: 更新 challenge + 内部 questions + options
->>>>>>> origin/main
 Route::put('/admin/challenge/{id}', function(Request $request, $id) {
     DB::beginTransaction();
     try {
@@ -1325,12 +1307,7 @@ Route::put('/admin/challenge/{id}', function(Request $request, $id) {
     }
 });
 
-<<<<<<< HEAD
-
-// 删除 challenge + 内部 questions + options
-=======
 // Admin: 删除 challenge + 内部 questions + options
->>>>>>> origin/main
 Route::delete('/admin/challenge/{id}', function($id) {
     DB::beginTransaction();
     try {
@@ -1360,47 +1337,71 @@ Route::get('api/modules/{module_id}/chapters', function($module_id) {
 
 
 Route::post('/update-profile/{id}', function(Request $request, $id) {
+    $admin = DB::table('admin')->where('id', $id)->first();
+
+    if ($admin) {
+        $updateData = [];
+
+        if ($request->filled('name')) $updateData['name'] = $request->input('name');
+        if ($request->filled('bio')) $updateData['bio'] = $request->input('bio');
+
+        if ($request->hasFile('profile_pic')) {
+            $file = $request->file('profile_pic');
+
+            if ($admin->image_url && file_exists(public_path($admin->image_url))) {
+                unlink(public_path($admin->image_url));
+            }
+
+            $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
+                        . '.' . $file->getClientOriginalExtension();
+
+            $file->move(public_path('profile_pics'), $filename);
+            $updateData['image_url'] = '/profile_pics/' . $filename;
+        }
+
+        DB::table('admin')->where('id', $id)->update($updateData);
+        $updated = DB::table('admin')->where('id', $id)->first();
+
+        return response()->json([
+            'name' => $updated->name,
+            'bio' => $updated->bio,
+            'image_url' => $updated->image_url,
+        ]);
+    }
+
     $student = DB::table('student')->where('id', $id)->first();
 
     if (!$student) {
-        return response()->json(['error' => 'Student not found'], 404);
+        return response()->json(['error' => 'User not found'], 404);
     }
 
     $updateData = [];
 
-    // Update name and bio
     if ($request->filled('name')) $updateData['name'] = $request->input('name');
     if ($request->filled('bio')) $updateData['Bio'] = $request->input('bio');
 
-    // Handle profile image upload
     if ($request->hasFile('profile_pic')) {
         $file = $request->file('profile_pic');
 
-        // Delete old image if it exists
         if ($student->profile_pic && file_exists(public_path($student->profile_pic))) {
             unlink(public_path($student->profile_pic));
         }
 
-        // Unique filename
-        $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) 
+        $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
                     . '.' . $file->getClientOriginalExtension();
 
-        // Move to public/profile_pics
         $file->move(public_path('profile_pics'), $filename);
-
         $updateData['profile_pic'] = 'profile_pics/' . $filename;
     }
 
-    // Update DB
     DB::table('student')->where('id', $id)->update($updateData);
-
     $updatedStudent = DB::table('student')->where('id', $id)->first();
 
     return response()->json([
         'username' => $updatedStudent->name,
         'bio' => $updatedStudent->Bio,
         'image_url' => $updatedStudent->profile_pic
-            ? url($updatedStudent->profile_pic)  // full URL
+            ? url($updatedStudent->profile_pic)
             : null,
         'level' => $updatedStudent->level,
         'xp' => $updatedStudent->xp_balance,

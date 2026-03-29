@@ -324,7 +324,7 @@ const closeModal = () => {
                 
               /></div>
               <div className="">
-                <label>Badge</label>
+                <label>Badge Image</label>
                   {/* 显示当前 badge 图片 */}
                   {challenge.badge_image && (
                     <div style={{ marginBottom: '10px' }}>

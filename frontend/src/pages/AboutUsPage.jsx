@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { FaGithub, FaInstagram } from 'react-icons/fa'
 import './AboutUsPage.css'
 import axios from 'axios'
@@ -7,6 +7,7 @@ import Footer from '../components/Footer'
 
 const AboutUsPage = () => {
     const [team, setTeam] = useState([])
+    const starsRef = useRef(null)
 
     useEffect(() => {
         window.scrollTo(0, 0)
@@ -14,27 +15,33 @@ const AboutUsPage = () => {
         axios.get('/api/team')
             .then(res => setTeam(res.data))
             .catch(err => console.error('Error fetching team:', err))
+    }, [])
 
-        // Generate stars
-        const container = document.querySelector('.about-us-container')
+    useEffect(() => {
+        const container = starsRef.current
+        if (!container) return
 
-        document.querySelectorAll('.star').forEach(s => s.remove())
+        // Clear existing stars
+        container.innerHTML = ''
 
         for (let i = 0; i < 120; i++) {
-        const star = document.createElement('div')
-        star.className = 'star'
-        star.style.left = `${Math.random() * 98}%`
-        star.style.top = `${Math.random() * 98}%`
-        star.style.width = `${Math.random() * 2 + 1}px`
-        star.style.height = star.style.width
-        star.style.animationDelay = `${Math.random() * 3}s`
-        container.appendChild(star)
+            const star = document.createElement('div')
+            star.className = 'star'
+            star.style.left = `${Math.random() * 98}%`
+            star.style.top = `${Math.random() * 98}%`
+            star.style.width = `${Math.random() * 2 + 1}px`
+            star.style.height = star.style.width
+            star.style.animationDelay = `${Math.random() * 3}s`
+            container.appendChild(star)
         }
+
+        return () => { container.innerHTML = '' }
     }, [])
 
   return (
     <div>
         <div className="about-us-container">
+            <div ref={starsRef} className="stars-layer" aria-hidden="true" />
             <div className="about-us-section">
                 <div className="about-us-image">
                     <img src="/images/Calculator.png" alt="Calculator" className='calculator'/>

@@ -89,6 +89,13 @@
     }
 }
 
+.stars-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
 .star {
     position: absolute;
     background: white;

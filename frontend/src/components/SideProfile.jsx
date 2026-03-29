@@ -52,7 +52,7 @@ const SideProfile = () => {
                     </div>
 				</div>
                 <div className="hp-view-profile-button">
-                    <button onClick={() => navigate('/ProfilePage')}>View Profile</button>
+                    <button onClick={() => navigate(`/student/${student_id}`)}>View Profile</button>
                 </div>
 			</div>
             <div className='hp-leaderboard-card'>

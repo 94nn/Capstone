@@ -534,18 +534,28 @@ Route::delete('/modules/{slug}/{chapter_id}/{subchapter_id}/quiz/{quiz_id}', fun
 //Home Page Student
 Route::get('/student/{id}', function($id) {
     $student = DB::table('student')->where('id', $id)->first();
-    $badges = DB::table('student_challenge_completion')->where('student_id', $id)->whereNotNull('badge_id')->pluck('badge_id');
+    $badges = DB::table('student_challenge_completion')->where('student_id', $id)->whereNotNull('badge_id')->distinct()->pluck('badge_id')->toArray();
     return response()->json([
         'username' => $student->name,
         'level' => $student->level,
         'xp' => $student->xp_balance,
-        'badges' => $student->badges_balance,
+        'badges' => count($badges),
         'coins' => $student->coins_balance,
         'image_url' => $student->profile_pic,
         'bio' => $student->Bio,
         'email' => $student->email,
         'badges_list' => $badges
     ]);
+});
+
+Route::get('/profile/badges', function() {
+    $badges = DB::table('badge')
+        ->join('challenge', 'badge.id', '=', 'challenge.badge_id')
+        ->select('badge.*')
+        ->distinct()
+        ->get();
+
+    return response()->json($badges);
 });
 
 // Leaderboard Page Leaderboard

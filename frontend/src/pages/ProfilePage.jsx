@@ -6,6 +6,7 @@ import Avatar from "../components/Avatar";
 
 function ProfilePage() {
   const [student, setStudent] = useState(null);
+  const [badgesList, setBadgesList] = useState([]);
 
   const user = JSON.parse(localStorage.getItem("user") || "null");
   const student_id = localStorage.getItem("student_id");
@@ -22,14 +23,18 @@ function ProfilePage() {
     return "/images/Character01.png";
   };
 
-  const badgesList = [
-    { id: 1, icon: "/images/Badge01.png" },
-    { id: 2, icon: "/images/Badge02.png" },
-    { id: 3, icon: "/images/Badge03.png" },
-    { id: 4, icon: "/images/Badge04.png" },
-    { id: 5, icon: "/images/Badge05.png" },
-    { id: 6, icon: "/images/Badge06.png" },
-  ];
+  useEffect(() => {
+    async function loadBadges() {
+      try {
+        const res = await axios.get("/api/profile/badges");
+        setBadgesList(res.data);
+      } catch (err) {
+        console.log("Failed to load badges", err);
+      }
+    }
+
+    loadBadges();
+  }, []);
 
   useEffect(() => {
     async function loadData() {
@@ -120,7 +125,7 @@ function ProfilePage() {
         <div className='profilePage-badge-card'>
           <div className='profilePage-badge-header'>
             <h3>Course Badges</h3>
-            <span>{student?.badges || 0}/6</span>
+            <span>{student?.badges || 0}/{badgesList.length}</span>
           </div>
 
           <div className='profilePage-badge-grid'>
@@ -130,7 +135,7 @@ function ProfilePage() {
               return (
                 <img
                   key={badge.id}
-                  src={badge.icon}
+                  src={`/${badge.image_path}`}
                   alt={`badge-${badge.id}`}
                   className={`profilePage-badge-icon ${earned ? "earned" : "locked"}`}
                 />

@@ -36,7 +36,7 @@ export default function EditProfilePage() {
         if (role === "student" && student_id) {
           res = await axios.get(`/api/student/${student_id}`);
         } else if (role === "admin" && admin_id) {
-          res = await axios.get(`/api/admin/${admin_id}`);
+          res = await axios.get(`/api/admin/user/${admin_id}`);
         }
 
         if (!res) return;
@@ -81,6 +81,7 @@ export default function EditProfilePage() {
 		formData.append("bio", bio);
 
 		if (selectedFile) formData.append("profile_pic", selectedFile);
+		formData.append("role", role);
 
 		try {
 			let res;
@@ -103,6 +104,10 @@ export default function EditProfilePage() {
 
 			setProfileImage(getImageUrl(data.image_url || data.profile_pic));
 			setSelectedFile(null);
+
+			// Update localStorage so navbar reflects changes
+			const updatedUser = { ...user, name: data.name || data.username || name, image_url: data.image_url || user?.image_url };
+			localStorage.setItem("user", JSON.stringify(updatedUser));
 
 			alert("Profile updated!");
 

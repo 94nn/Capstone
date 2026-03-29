@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import axios from 'axios'
 import './NotificationPopup.css'
+import { getImageUrl } from '../utils/imageUrl'
 
 const NotificationPopup = ({ isVisible, onClose, notifications, setNotifications }) => {
     const popupRef = useRef(null)
@@ -61,6 +62,13 @@ const NotificationPopup = ({ isVisible, onClose, notifications, setNotifications
                             onClick={() => markRead(notif.id)}
                         >
                             {!notif.is_read && <span className="notif-dot" />}
+                            {notif.image_url && (
+                                <img
+                                    src={`http://127.0.0.1:8000/storage/${notif.image_url}`}
+                                    alt="badge"
+                                    className="notif-badge-image"
+                                />
+                            )}
                             <div className="notif-item-body">
                                 <p className="notif-item-title">{notif.title}</p>
                                 <p className="notif-item-message">{notif.message}</p>

@@ -98,6 +98,12 @@ Route::get('/admin', function () {
     return DB::table('modules')->get();
 });
 
+Route::get('/admin/user/{id}', function ($id) {
+    $admin = DB::table('admin')->where('id', $id)->first();
+    if (!$admin) return response()->json(['error' => 'Admin not found'], 404);
+    return response()->json($admin);
+});
+
 //add Admin modules function
 Route::post('/admin', function (Request $request) {
 
@@ -794,8 +800,7 @@ Route::get('/subchapter_progress/{student_id}/{chapter_id}/{subchapter_id}', fun
 
 // Admin Team Route
 Route::get('/team', function() {
-    return DB::table('
-    ')->get();
+    return DB::table('admin')->get();
 });
 
 Route::get('/hint/{quiz_id}', function($quiz_id) {
@@ -908,6 +913,7 @@ Route::get('/challenge/{slug}', function ($slug) {
             'challenge.xp_quantity',
             'challenge.badge_id',
             'badge.name as badge_name',
+            'badge.image_path as badge_image',
             'challenge.coins_quantity',
             'modules.name as topic'
         )
@@ -1000,6 +1006,20 @@ Route::post('/challenge-completion', function (Request $request) {
             'is_read'    => 0,
             'created_at' => now(),
         ]);
+
+        if ($badge_id) {
+            $badge = DB::table('badge')->where('id', $badge_id)->first();
+            if ($badge) {
+                DB::table('notification')->insert([
+                    'student_id' => $student_id,
+                    'title'      => 'Badge Earned!',
+                    'message'    => "You earned the \"{$badge->name}\" badge for completing the {$challengeTitle} challenge!",
+                    'image_url'  => $badge->image_path,
+                    'is_read'    => 0,
+                    'created_at' => now(),
+                ]);
+            }
+        }
 
         checkLevelUp($student_id);
     }
@@ -1162,10 +1182,6 @@ Route::get('/admin/badge', function() {
     return DB::table('badge')->get();
 });
 
-Route::get('/admin/badge', function() {
-    return DB::table('badge')->get();
-});
-
 // badge
 Route::post('/admin/badge', function (Request $request) {
 
@@ -1192,7 +1208,6 @@ Route::post('/admin/badge', function (Request $request) {
 });
 
 // 创建 challenge + 内部 questions + options
-// Admin: 创建 challenge + 内部 questions + options
 Route::post('/admin/challenge', function(Request $request) {
     DB::beginTransaction();
     try {
@@ -1325,6 +1340,7 @@ Route::delete('/admin/challenge/{id}', function($id) {
         $questionIds = DB::table('challenge_question')->where('challenge_id', $id)->pluck('id');
         DB::table('challenge_options')->whereIn('c_question_id', $questionIds)->delete();
         DB::table('challenge_question')->where('challenge_id', $id)->delete();
+        DB::table('student_challenge_completion')->where('challenge_id', $id)->delete();
         DB::table('challenge')->where('id', $id)->delete();
         DB::commit();
         return response()->json(['message' => 'Deleted']);
@@ -1348,48 +1364,62 @@ Route::get('api/modules/{module_id}/chapters', function($module_id) {
 
 
 Route::post('/update-profile/{id}', function(Request $request, $id) {
-    $student = DB::table('student')->where('id', $id)->first();
+    $role = $request->input('role');
 
-    if (!$student) {
-        return response()->json(['error' => 'Student not found'], 404);
+    if ($role === 'admin') {
+        $admin = DB::table('admin')->where('id', $id)->first();
+        if (!$admin) return response()->json(['error' => 'Admin not found'], 404);
+
+        $updateData = [];
+        if ($request->filled('name')) $updateData['name'] = $request->input('name');
+        if ($request->filled('bio')) $updateData['bio'] = $request->input('bio');
+
+        if ($request->hasFile('profile_pic')) {
+            $file = $request->file('profile_pic');
+            if ($admin->image_url && file_exists(public_path($admin->image_url))) {
+                unlink(public_path($admin->image_url));
+            }
+            $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
+                        . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('profile_pics'), $filename);
+            $updateData['image_url'] = '/profile_pics/' . $filename;
+        }
+
+        DB::table('admin')->where('id', $id)->update($updateData);
+        $updated = DB::table('admin')->where('id', $id)->first();
+
+        return response()->json([
+            'name' => $updated->name,
+            'bio' => $updated->bio,
+            'image_url' => $updated->image_url,
+        ]);
     }
 
-    $updateData = [];
+    $student = DB::table('student')->where('id', $id)->first();
+    if (!$student) return response()->json(['error' => 'Student not found'], 404);
 
-    // Update name and bio
+    $updateData = [];
     if ($request->filled('name')) $updateData['name'] = $request->input('name');
     if ($request->filled('bio')) $updateData['Bio'] = $request->input('bio');
 
-    // Handle profile image upload
     if ($request->hasFile('profile_pic')) {
         $file = $request->file('profile_pic');
-
-        // Delete old image if it exists
         if ($student->profile_pic && file_exists(public_path($student->profile_pic))) {
             unlink(public_path($student->profile_pic));
         }
-
-        // Unique filename
-        $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) 
+        $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
                     . '.' . $file->getClientOriginalExtension();
-
-        // Move to public/profile_pics
         $file->move(public_path('profile_pics'), $filename);
-
         $updateData['profile_pic'] = 'profile_pics/' . $filename;
     }
 
-    // Update DB
     DB::table('student')->where('id', $id)->update($updateData);
-
     $updatedStudent = DB::table('student')->where('id', $id)->first();
 
     return response()->json([
         'username' => $updatedStudent->name,
         'bio' => $updatedStudent->Bio,
-        'image_url' => $updatedStudent->profile_pic
-            ? url($updatedStudent->profile_pic)  // full URL
-            : null,
+        'image_url' => $updatedStudent->profile_pic ? url($updatedStudent->profile_pic) : null,
         'level' => $updatedStudent->level,
         'xp' => $updatedStudent->xp_balance,
         'badges' => $updatedStudent->badges_balance,

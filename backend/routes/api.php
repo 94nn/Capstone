@@ -912,6 +912,7 @@ Route::get('/challenge/{slug}', function ($slug) {
             'challenge.xp_quantity',
             'challenge.badge_id',
             'badge.name as badge_name',
+            'badge.image_path as badge_image',
             'challenge.coins_quantity',
             'modules.name as topic'
         )
@@ -1004,6 +1005,20 @@ Route::post('/challenge-completion', function (Request $request) {
             'is_read'    => 0,
             'created_at' => now(),
         ]);
+
+        if ($badge_id) {
+            $badge = DB::table('badge')->where('id', $badge_id)->first();
+            if ($badge) {
+                DB::table('notification')->insert([
+                    'student_id' => $student_id,
+                    'title'      => 'Badge Earned!',
+                    'message'    => "You earned the \"{$badge->name}\" badge for completing the {$challengeTitle} challenge!",
+                    'image_url'  => $badge->image_path,
+                    'is_read'    => 0,
+                    'created_at' => now(),
+                ]);
+            }
+        }
 
         checkLevelUp($student_id);
     }
@@ -1314,6 +1329,7 @@ Route::delete('/admin/challenge/{id}', function($id) {
         $questionIds = DB::table('challenge_question')->where('challenge_id', $id)->pluck('id');
         DB::table('challenge_options')->whereIn('c_question_id', $questionIds)->delete();
         DB::table('challenge_question')->where('challenge_id', $id)->delete();
+        DB::table('student_challenge_completion')->where('challenge_id', $id)->delete();
         DB::table('challenge')->where('id', $id)->delete();
         DB::commit();
         return response()->json(['message' => 'Deleted']);
@@ -1337,24 +1353,23 @@ Route::get('api/modules/{module_id}/chapters', function($module_id) {
 
 
 Route::post('/update-profile/{id}', function(Request $request, $id) {
-    $admin = DB::table('admin')->where('id', $id)->first();
+    $role = $request->input('role');
 
-    if ($admin) {
+    if ($role === 'admin') {
+        $admin = DB::table('admin')->where('id', $id)->first();
+        if (!$admin) return response()->json(['error' => 'Admin not found'], 404);
+
         $updateData = [];
-
         if ($request->filled('name')) $updateData['name'] = $request->input('name');
         if ($request->filled('bio')) $updateData['bio'] = $request->input('bio');
 
         if ($request->hasFile('profile_pic')) {
             $file = $request->file('profile_pic');
-
             if ($admin->image_url && file_exists(public_path($admin->image_url))) {
                 unlink(public_path($admin->image_url));
             }
-
             $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
                         . '.' . $file->getClientOriginalExtension();
-
             $file->move(public_path('profile_pics'), $filename);
             $updateData['image_url'] = '/profile_pics/' . $filename;
         }
@@ -1370,26 +1385,19 @@ Route::post('/update-profile/{id}', function(Request $request, $id) {
     }
 
     $student = DB::table('student')->where('id', $id)->first();
-
-    if (!$student) {
-        return response()->json(['error' => 'User not found'], 404);
-    }
+    if (!$student) return response()->json(['error' => 'Student not found'], 404);
 
     $updateData = [];
-
     if ($request->filled('name')) $updateData['name'] = $request->input('name');
     if ($request->filled('bio')) $updateData['Bio'] = $request->input('bio');
 
     if ($request->hasFile('profile_pic')) {
         $file = $request->file('profile_pic');
-
         if ($student->profile_pic && file_exists(public_path($student->profile_pic))) {
             unlink(public_path($student->profile_pic));
         }
-
         $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
                     . '.' . $file->getClientOriginalExtension();
-
         $file->move(public_path('profile_pics'), $filename);
         $updateData['profile_pic'] = 'profile_pics/' . $filename;
     }
@@ -1400,9 +1408,7 @@ Route::post('/update-profile/{id}', function(Request $request, $id) {
     return response()->json([
         'username' => $updatedStudent->name,
         'bio' => $updatedStudent->Bio,
-        'image_url' => $updatedStudent->profile_pic
-            ? url($updatedStudent->profile_pic)
-            : null,
+        'image_url' => $updatedStudent->profile_pic ? url($updatedStudent->profile_pic) : null,
         'level' => $updatedStudent->level,
         'xp' => $updatedStudent->xp_balance,
         'badges' => $updatedStudent->badges_balance,

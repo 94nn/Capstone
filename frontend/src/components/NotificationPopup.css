@@ -182,3 +182,11 @@
         max-width: 360px;
     }
 }
+
+.notif-badge-image {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    border-radius: 6px;
+    flex-shrink: 0;
+}

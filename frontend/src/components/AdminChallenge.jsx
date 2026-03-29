@@ -390,6 +390,7 @@ const closeModal = () => {
                 <label>Coins Quantity</label>
                 <input
                   type="number"
+                  className='edit-challenge-xp'
                   min="0"
                   value={challenge.coins_quantity}
                   onChange={e =>

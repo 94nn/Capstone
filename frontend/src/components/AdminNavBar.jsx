@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import './NavBar.css'
 import NotificationPopup from './NotificationPopup'
 import axios from 'axios'
+import { getImageUrl } from '../utils/imageUrl'
 
 const AdminNavBar = () => {
     const navigate = useNavigate();
@@ -72,14 +73,8 @@ const AdminNavBar = () => {
                 </NavLink>
             </nav>
             <div className="nav-bar-right">
-                <div className="bell-container" onClick={toggleNotif}>
-                    <img src="/images/bell.png" alt="Bell Icon" className='bell-icon' />
-                    {unreadCount > 0 && (
-                        <span className="notif-badge">{unreadCount}</span>
-                    )}
-                </div>
                 <div className="profile-container" onClick={toggleDropdown}>
-                    <img src={user?.profile_pic} alt="Profile" className="profile-pic" />
+                    <img src={getImageUrl(user?.image_url)} alt="Profile" className="profile-pic" />
                     <span className="profile-name">{user?.name}</span>
                 </div>
             </div>
@@ -94,7 +89,7 @@ const AdminNavBar = () => {
             {isDropdownVisible && (
                 <div className="dropdown" ref={dropdownRef}>
                     <ul>
-                        <li><NavLink to="/ProfilePage" className={({ isActive }) => `dropdown-item ${isActive ? "dropdown-item-active" : ""}`}>
+                        <li><NavLink to="/admin/profile" className={({ isActive }) => `dropdown-item ${isActive ? "dropdown-item-active" : ""}`}>
                             Profile
                         </NavLink></li>
                         <li><NavLink to="/EditProfilePage" className={({ isActive }) => `dropdown-item ${isActive ? "dropdown-item-active" : ""}`}>

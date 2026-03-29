@@ -3,7 +3,7 @@ const BACKEND_URL = 'http://127.0.0.1:8000'
 export function getImageUrl(path) {
     if (!path) return null
     if (path.startsWith('http')) return path
-    return `${BACKEND_URL}/${path}`
+    return `${BACKEND_URL}/${path.replace(/^\//, '')}`
 }
 
 export function getInitials(name) {

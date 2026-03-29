@@ -821,7 +821,23 @@ Route::get('/hint/{quiz_id}', function($quiz_id) {
     return response()->json($hints);
 });
 
+Route::get('/hint/unlocked/{student_id}/{quiz_id}', function($student_id, $quiz_id) {
+    $unlockedHints = DB::table('hint_unlock')
+        ->join('hint', 'hint_unlock.hint_id', '=', 'hint.id')
+        ->where('hint_unlock.student_id', $student_id)
+        ->where('hint.quiz_id', $quiz_id)
+        ->select('hint.id', 'hint.content')
+        ->get();
+
+    return response()->json($unlockedHints);
+});
+
 Route::post('/hint/unlock', function (Request $request) {
+    $request->validate([
+        'student_id' => 'required|integer',
+        'hint_id' => 'required|integer',
+    ]);
+
     $student = DB::table('student')->where('id', $request->student_id)->first();
     $hint = DB::table('hint')->where('id', $request->hint_id)->first();
 
@@ -833,10 +849,29 @@ Route::post('/hint/unlock', function (Request $request) {
         return response()->json(['error' => 'Hint not found'], 404);
     }
 
-    if ($hint->type === 'free') {
+    $alreadyUnlocked = DB::table('hint_unlock')
+        ->where('student_id', $request->student_id)
+        ->where('hint_id', $request->hint_id)
+        ->exists();
+
+    if ($alreadyUnlocked) {
         return response()->json([
             'content' => $hint->content,
-            'coins_balance' => $student->coins_balance
+            'coins_balance' => $student->coins_balance,
+            'message' => 'Hint already unlocked'
+        ]);
+    }
+
+    if ($hint->type === 'free') {
+        DB::table('hint_unlock')->insert([
+            'student_id' => $request->student_id,
+            'hint_id' => $request->hint_id,
+        ]);
+
+        return response()->json([
+            'content' => $hint->content,
+            'coins_balance' => $student->coins_balance,
+            'message' => 'Free hint unlocked successfully'
         ]);
     }
 
@@ -848,19 +883,36 @@ Route::post('/hint/unlock', function (Request $request) {
         ], 400);
     }
 
-    $newBalance = $student->coins_balance - $price;
+    DB::beginTransaction();
 
-    DB::table('student')
-        ->where('id', $request->student_id)
-        ->update([
-            'coins_balance' => $newBalance
+    try {
+        $newBalance = $student->coins_balance - $price;
+
+        DB::table('student')
+            ->where('id', $request->student_id)
+            ->update([
+                'coins_balance' => $newBalance
+            ]);
+
+        DB::table('hint_unlock')->insert([
+            'student_id' => $request->student_id,
+            'hint_id' => $request->hint_id,
         ]);
 
-    return response()->json([
-        'content' => $hint->content,
-        'coins_balance' => $newBalance,
-        'message' => 'Hint unlocked successfully'
-    ]);
+        DB::commit();
+
+        return response()->json([
+            'content' => $hint->content,
+            'coins_balance' => $newBalance,
+            'message' => 'Hint unlocked successfully'
+        ]);
+    } catch (\Exception $e) {
+        DB::rollBack();
+
+        return response()->json([
+            'error' => 'Failed to unlock hint'
+        ], 500);
+    }
 });
 
 // GET all  

@@ -130,7 +130,7 @@ const NavBar = () => {
                     <span className="coins">{coins}</span>
                 </div>
                 <div className="profile-container" onClick={toggleDropdown} ref={profileContainerRef}>
-                    <Avatar name={username || user?.name} src={profileImage} size={36} />
+                    <Avatar name={username || user?.name} src={profileImage} size={48} />
                     <span className="profile-name">{user?.name}</span>
                 </div>
             </div>

@@ -1163,31 +1163,6 @@ Route::get('/admin/challenge/{id}', function($id) {
     ->first();
 });
 
-// Admin: 获取所有 challenge
-Route::get('/admin/challenge', function() {
-    return DB::table('challenge')->get();
-});
-
-// Admin: 获取单个 challenge + questions + options
-Route::get('/admin/challenge/{id}', function($id) {
-    $challenge = DB::table('challenge')->where('id', $id)->first();
-    if (!$challenge) return response()->json(['error'=>'Challenge not found'], 404);
-
-    $questions = DB::table('challenge_question')
-        ->where('challenge_id', $id)
-        ->get()
-        ->map(function($q){
-            $q->options = DB::table('challenge_options')
-                ->where('c_question_id', $q->id)
-                ->get();
-            return $q;
-        });
-
-    $challenge->questions = $questions;
-
-    return response()->json($challenge);
-});
-
 Route::get('/admin/badge', function() {
     return DB::table('badge')->get();
 });

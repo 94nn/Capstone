@@ -1105,7 +1105,6 @@ Route::delete('/feedback/{id}', function($id) {
 
 
 
-<<<<<<< HEAD
 // 获取所有 challenge
 Route::get('/admin/challenge', function () {
     return DB::table('challenge')
@@ -1130,7 +1129,8 @@ Route::get('/admin/challenge/{id}', function($id) {
         'badge.image_path as badge_image'
     )
     ->first();
-=======
+});
+
 // Admin: 获取所有 challenge
 Route::get('/admin/challenge', function() {
     return DB::table('challenge')->get();
@@ -1139,7 +1139,6 @@ Route::get('/admin/challenge', function() {
 // Admin: 获取单个 challenge + questions + options
 Route::get('/admin/challenge/{id}', function($id) {
     $challenge = DB::table('challenge')->where('id', $id)->first();
->>>>>>> origin/main
     if (!$challenge) return response()->json(['error'=>'Challenge not found'], 404);
 
     $questions = DB::table('challenge_question')
@@ -1157,7 +1156,6 @@ Route::get('/admin/challenge/{id}', function($id) {
     return response()->json($challenge);
 });
 
-<<<<<<< HEAD
 Route::get('/admin/badge', function() {
     return DB::table('badge')->get();
 });
@@ -1192,9 +1190,7 @@ Route::post('/admin/badge', function (Request $request) {
 });
 
 // 创建 challenge + 内部 questions + options
-=======
 // Admin: 创建 challenge + 内部 questions + options
->>>>>>> origin/main
 Route::post('/admin/challenge', function(Request $request) {
     DB::beginTransaction();
     try {
@@ -1235,12 +1231,7 @@ Route::post('/admin/challenge', function(Request $request) {
     }
 });
 
-<<<<<<< HEAD
-
-
-=======
 // Admin: 更新 challenge + 内部 questions + options
->>>>>>> origin/main
 Route::put('/admin/challenge/{id}', function(Request $request, $id) {
     DB::beginTransaction();
     try {
@@ -1325,12 +1316,7 @@ Route::put('/admin/challenge/{id}', function(Request $request, $id) {
     }
 });
 
-<<<<<<< HEAD
-
-// 删除 challenge + 内部 questions + options
-=======
 // Admin: 删除 challenge + 内部 questions + options
->>>>>>> origin/main
 Route::delete('/admin/challenge/{id}', function($id) {
     DB::beginTransaction();
     try {

@@ -12,6 +12,25 @@ function ProfilePage() {
   const admin_id = user?.id;
   const role = localStorage.getItem("role");
 
+  const getCharacterImage = (level) => {
+    if (level >= 50) return "/images/character06.png";
+    if (level >= 40) return "/images/character05.png";
+    if (level >= 30) return "/images/character04.png";
+    if (level >= 20) return "/images/character03.png";
+    if (level >= 10) return "/images/character02.png";
+
+    return "/images/Character01.png";
+  };
+
+  const badgesList = [
+    { id: 1, icon: "/images/Badge01.png" },
+    { id: 2, icon: "/images/Badge02.png" },
+    { id: 3, icon: "/images/Badge03.png" },
+    { id: 4, icon: "/images/Badge04.png" },
+    { id: 5, icon: "/images/Badge05.png" },
+    { id: 6, icon: "/images/Badge06.png" },
+  ];
+
   useEffect(() => {
     async function loadData() {
       try {
@@ -64,11 +83,11 @@ function ProfilePage() {
       {/* RIGHT SIDE */}
       <aside className='sidebar'>
         <div className='card profile-card'>
-          <div className='character-container'>
+          <div className='profilePage-character-container'>
             <img
-              src='/images/tempCharacter.png'
+              src={getCharacterImage(student?.level)}
               alt='character'
-              className='character-pic'
+              className='profilePage-character-pic'
             />
 
             <div className='character-info'>
@@ -96,6 +115,31 @@ function ProfilePage() {
               <span className='stat-text'>Badges</span>
             </div>
           </div>
+        </div>
+
+        <div className='profilePage-badge-card'>
+          <div className='profilePage-badge-header'>
+            <h3>Course Badges</h3>
+            <span>{student?.badges?.length || 0}/6</span>
+          </div>
+
+          <div className='profilePage-badge-grid'>
+            {badgesList.map((badge) => {
+              const earned = badge.id <= (student?.badges || 0);
+
+              return (
+                <img
+                  key={badge.id}
+                  src={badge.icon}
+                  alt={`badge-${badge.id}`}
+                  className={`profilePage-badge-icon ${earned ? "earned" : "locked"}`}
+                />
+              );
+            })}
+          </div>
+          <p className='profilePage-badge-subtext'>
+            Complete a chapter to earn a badge - collect them all!
+          </p>
         </div>
       </aside>
     </div>

@@ -216,7 +216,7 @@ function ChallengeQuestionLayout() {
                     {correctQ >= 2 && challenge.badge_name && (
                         <div className="cq-badge-earned">
                             {challenge.badge_image
-                                ? <img src={`http://127.0.0.1:8000/storage/${challenge.badge_image}`} alt={challenge.badge_name} className="cq-badge-icon" style={{ width: '48px', height: '48px', objectFit: 'contain' }} />
+                                ? <img src={`http://127.0.0.1:8000/${challenge.badge_image}`} alt={challenge.badge_name} className="cq-badge-icon" style={{ width: '48px', height: '48px', objectFit: 'contain' }} />
                                 : <span className="cq-badge-icon">🏅</span>
                             }
                             <div>

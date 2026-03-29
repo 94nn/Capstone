@@ -1179,8 +1179,10 @@ Route::post('/admin/badge', function (Request $request) {
         'image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
     ]);
 
-    // 存图片（storage/app/public/badges）
-    $path = $request->file('image')->store('badges', 'public');
+    $file = $request->file('image');
+    $filename = time() . '_' . $file->getClientOriginalName();
+    $file->move(public_path('images/badges'), $filename);
+    $path = 'images/badges/' . $filename;
 
     // 存 DB
     $id = DB::table('badge')->insertGetId([
@@ -1255,7 +1257,14 @@ Route::put('/admin/challenge/{id}', function(Request $request, $id) {
             }
 
             if ($request->hasFile('badge_image')) {
-                $badgeData['image_path'] = $request->file('badge_image')->store('badges', 'public');
+                $oldBadge = DB::table('badge')->where('id', $badgeId)->first();
+                if ($oldBadge && $oldBadge->image_path && file_exists(public_path($oldBadge->image_path))) {
+                    unlink(public_path($oldBadge->image_path));
+                }
+                $file = $request->file('badge_image');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('images/badges'), $filename);
+                $badgeData['image_path'] = 'images/badges/' . $filename;
             }
 
             if (!empty($badgeData)) {

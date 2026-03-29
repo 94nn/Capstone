@@ -263,7 +263,7 @@ const closeModal = () => {
 
               {ch.badge_image && (
                 <img
-                  src={`http://127.0.0.1:8000/storage/${ch.badge_image}`}
+                  src={`http://127.0.0.1:8000/${ch.badge_image}`}
                   alt="Badge"
                   style={{ width: '80px', height: '80px', objectFit: 'cover', marginTop: '10px' }}
                 />
@@ -329,7 +329,7 @@ const closeModal = () => {
                   {challenge.badge_image && (
                     <div style={{ marginBottom: '10px' }}>
                       <img
-                        src={`http://127.0.0.1:8000/storage/${challenge.badge_image}`}
+                        src={`http://127.0.0.1:8000/${challenge.badge_image}`}
                         alt="Badge"
                         style={{ width: '100px', height: '100px', objectFit: 'cover' }}
                       />

@@ -117,6 +117,11 @@ const NavBar = () => {
                 <NavLink to="/leaderboard" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
                     Leaderboard
                 </NavLink>
+                {role === "student" && (
+                    <NavLink to={`/student/${student_id}`} className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
+                        Analytics
+                    </NavLink>
+                )}
             </nav>
             <div className="nav-bar-right">
                 <div className="bell-container" onClick={toggleNotif}>

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-// Helper: calculate level from XP and send level-up notification if changed
+// Calculate level from XP and send level-up notification
 function checkLevelUp($studentId) {
     $student = DB::table('student')->where('id', $studentId)->first();
     if (!$student) return;

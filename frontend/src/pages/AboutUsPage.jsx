@@ -3,6 +3,7 @@ import { FaGithub, FaInstagram } from 'react-icons/fa'
 import './AboutUsPage.css'
 import axios from 'axios'
 import Footer from '../components/Footer'
+import { getImageUrl } from '../utils/imageUrl'
 
 const AboutUsPage = () => {
     const [team, setTeam] = useState([])
@@ -60,7 +61,7 @@ const AboutUsPage = () => {
                                     <span className='dot'></span>
                                 </div>
                                 <div className='card-image'>
-                                    <img src={admin.image_url} alt={admin.name} />
+                                    <img src={getImageUrl(admin.image_url)} alt={admin.name} />
                                 </div>
                                 <div className='card-footer'>
                                     <span className='card-button'></span>

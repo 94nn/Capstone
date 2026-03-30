@@ -514,6 +514,26 @@ Route::post('/progress/update', function(Request $request) {
     $totalQuestions = $request->total_questions;
     $passed = $request->passed;
 
+    // Log this attempt
+    $subInfo = DB::table('subchapters')
+        ->join('chapters', 'subchapters.chapter_id', '=', 'chapters.id')
+        ->join('modules', 'chapters.module_id', '=', 'modules.id')
+        ->where('subchapters.id', $subchapterId)
+        ->select('subchapters.title as sub_title', 'modules.name as module_name')
+        ->first();
+
+    DB::table('attempt_log')->insert([
+        'student_id'      => $studentId,
+        'type'            => 'quiz',
+        'reference_id'    => $subchapterId,
+        'reference_title' => $subInfo->sub_title ?? 'Unknown',
+        'module_name'     => $subInfo->module_name ?? null,
+        'correct_answers' => $newCorrectAnswers,
+        'total_questions' => $totalQuestions,
+        'passed'          => $passed ? 1 : 0,
+        'created_at'      => now(),
+    ]);
+
     $existingProgress = DB::table('subchapter_progress')
         ->where('student_id', $studentId)
         ->where('subchapter_id', $subchapterId)
@@ -856,6 +876,25 @@ Route::post('/challenge-completion', function (Request $request) {
     $xp_earned    = $request->xp_earned;
     $coins_earned = $request->coins_earned;
     $badge_id     = $request->badge_id;
+
+    // Log this attempt
+    $chalInfo = DB::table('challenge')
+        ->join('modules', 'challenge.module_id', '=', 'modules.id')
+        ->where('challenge.id', $challenge_id)
+        ->select('challenge.title', 'modules.name as module_name')
+        ->first();
+
+    DB::table('attempt_log')->insert([
+        'student_id'      => $student_id,
+        'type'            => 'challenge',
+        'reference_id'    => $challenge_id,
+        'reference_title' => $chalInfo->title ?? 'Unknown',
+        'module_name'     => $chalInfo->module_name ?? null,
+        'correct_answers' => $request->correct_answers,
+        'total_questions' => $request->total_questions,
+        'passed'          => $request->correct_answers > 0 ? 1 : 0,
+        'created_at'      => now(),
+    ]);
 
     $existing = DB::table('student_challenge_completion')
         ->where('student_id', $student_id)
@@ -1284,4 +1323,181 @@ Route::patch('/notifications/read-all/{user_id}', function($user_id) {
     DB::table('notification')->where('student_id', $user_id)->update(['is_read' => 1]);
 
     return response()->json(['success' => true]);
+});
+
+// ── Analytics ────────────────────────────────────────────────
+
+// Student analytics - personal stats
+Route::get('/analytics/student/{student_id}', function ($student_id) {
+    $student = DB::table('student')->where('id', $student_id)->first();
+    if (!$student) return response()->json(['error' => 'Student not found'], 404);
+
+    // Total subchapters per module for context
+    $modules = DB::table('modules')->get();
+    $moduleStats = $modules->map(function ($mod) use ($student_id) {
+        $totalSubs = DB::table('subchapters')
+            ->join('chapters', 'subchapters.chapter_id', '=', 'chapters.id')
+            ->where('chapters.module_id', $mod->id)
+            ->count();
+        $completedSubs = DB::table('subchapter_progress')
+            ->join('subchapters', 'subchapter_progress.subchapter_id', '=', 'subchapters.id')
+            ->join('chapters', 'subchapters.chapter_id', '=', 'chapters.id')
+            ->where('chapters.module_id', $mod->id)
+            ->where('subchapter_progress.student_id', $student_id)
+            ->where('subchapter_progress.status', 'completed')
+            ->count();
+        return [
+            'module_name' => $mod->name,
+            'total_subchapters' => $totalSubs,
+            'completed_subchapters' => $completedSubs,
+            'progress' => $totalSubs > 0 ? round(($completedSubs / $totalSubs) * 100) : 0,
+        ];
+    });
+
+    // Challenge stats
+    $challengeStats = DB::table('student_challenge_completion')
+        ->join('challenge', 'student_challenge_completion.challenge_id', '=', 'challenge.id')
+        ->join('modules', 'challenge.module_id', '=', 'modules.id')
+        ->where('student_challenge_completion.student_id', $student_id)
+        ->select(
+            'modules.name as module_name',
+            'challenge.title as challenge_title',
+            'student_challenge_completion.correct_answers',
+            'student_challenge_completion.total_questions',
+            'student_challenge_completion.xp_earned',
+            'student_challenge_completion.coins_earned',
+            'student_challenge_completion.completed_at'
+        )
+        ->orderBy('student_challenge_completion.completed_at', 'desc')
+        ->get();
+
+    // Quiz accuracy per module
+    $quizAccuracy = DB::table('subchapter_progress')
+        ->join('subchapters', 'subchapter_progress.subchapter_id', '=', 'subchapters.id')
+        ->join('chapters', 'subchapters.chapter_id', '=', 'chapters.id')
+        ->join('modules', 'chapters.module_id', '=', 'modules.id')
+        ->where('subchapter_progress.student_id', $student_id)
+        ->where('subchapter_progress.status', 'completed')
+        ->select(
+            'modules.name as module_name',
+            DB::raw('SUM(subchapter_progress.correct_answers) as total_correct'),
+            DB::raw('SUM(subchapter_progress.total_questions) as total_questions')
+        )
+        ->groupBy('modules.name')
+        ->get()
+        ->map(function ($row) {
+            $row->accuracy = $row->total_questions > 0
+                ? round(($row->total_correct / $row->total_questions) * 100)
+                : 0;
+            return $row;
+        });
+
+    // All attempts
+    $attempts = DB::table('attempt_log')
+        ->where('student_id', $student_id)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    return response()->json([
+        'student' => [
+            'name' => $student->name,
+            'level' => $student->level,
+            'xp' => $student->xp_balance,
+            'coins' => $student->coins_balance,
+            'badges' => $student->badges_balance,
+        ],
+        'module_stats' => $moduleStats,
+        'challenge_stats' => $challengeStats,
+        'quiz_accuracy' => $quizAccuracy,
+        'attempts' => $attempts,
+    ]);
+});
+
+// Admin analytics - overview of all students
+Route::get('/analytics/admin', function () {
+    // Overall stats
+    $totalStudents = DB::table('student')->count();
+    $totalXp = DB::table('student')->sum('xp_balance');
+    $avgXp = DB::table('student')->avg('xp_balance');
+    $totalChallengesCompleted = DB::table('student_challenge_completion')->count();
+    $totalExercisesCompleted = DB::table('subchapter_progress')->where('status', 'completed')->count();
+
+    // Per-module breakdown
+    $modules = DB::table('modules')->get();
+    $moduleBreakdown = $modules->map(function ($mod) {
+        $totalSubs = DB::table('subchapters')
+            ->join('chapters', 'subchapters.chapter_id', '=', 'chapters.id')
+            ->where('chapters.module_id', $mod->id)
+            ->count();
+
+        $completions = DB::table('subchapter_progress')
+            ->join('subchapters', 'subchapter_progress.subchapter_id', '=', 'subchapters.id')
+            ->join('chapters', 'subchapters.chapter_id', '=', 'chapters.id')
+            ->where('chapters.module_id', $mod->id)
+            ->where('subchapter_progress.status', 'completed')
+            ->count();
+
+        $uniqueStudents = DB::table('subchapter_progress')
+            ->join('subchapters', 'subchapter_progress.subchapter_id', '=', 'subchapters.id')
+            ->join('chapters', 'subchapters.chapter_id', '=', 'chapters.id')
+            ->where('chapters.module_id', $mod->id)
+            ->where('subchapter_progress.status', 'completed')
+            ->distinct('subchapter_progress.student_id')
+            ->count('subchapter_progress.student_id');
+
+        $accuracy = DB::table('subchapter_progress')
+            ->join('subchapters', 'subchapter_progress.subchapter_id', '=', 'subchapters.id')
+            ->join('chapters', 'subchapters.chapter_id', '=', 'chapters.id')
+            ->where('chapters.module_id', $mod->id)
+            ->where('subchapter_progress.status', 'completed')
+            ->selectRaw('SUM(correct_answers) as correct, SUM(total_questions) as total')
+            ->first();
+
+        $avgAccuracy = ($accuracy->total > 0)
+            ? round(($accuracy->correct / $accuracy->total) * 100)
+            : 0;
+
+        return [
+            'module_name' => $mod->name,
+            'total_exercises' => $totalSubs,
+            'completions' => $completions,
+            'unique_students' => $uniqueStudents,
+            'avg_accuracy' => $avgAccuracy,
+        ];
+    });
+
+    // Top students
+    $topStudents = DB::table('student')
+        ->orderBy('xp_balance', 'desc')
+        ->limit(10)
+        ->select('id', 'name', 'xp_balance', 'level', 'coins_balance', 'badges_balance', 'profile_pic')
+        ->get();
+
+    // Challenge completion rates
+    $challengeBreakdown = DB::table('challenge')
+        ->join('modules', 'challenge.module_id', '=', 'modules.id')
+        ->leftJoin('student_challenge_completion', 'challenge.id', '=', 'student_challenge_completion.challenge_id')
+        ->select(
+            'challenge.id',
+            'challenge.title',
+            'modules.name as module_name',
+            DB::raw('COUNT(student_challenge_completion.id) as times_completed'),
+            DB::raw('ROUND(AVG(student_challenge_completion.correct_answers), 1) as avg_correct'),
+            DB::raw('MAX(student_challenge_completion.total_questions) as total_questions')
+        )
+        ->groupBy('challenge.id', 'challenge.title', 'modules.name')
+        ->get();
+
+    return response()->json([
+        'overview' => [
+            'total_students' => $totalStudents,
+            'total_xp_earned' => $totalXp,
+            'avg_xp' => round($avgXp),
+            'total_challenges_completed' => $totalChallengesCompleted,
+            'total_exercises_completed' => $totalExercisesCompleted,
+        ],
+        'module_breakdown' => $moduleBreakdown,
+        'top_students' => $topStudents,
+        'challenge_breakdown' => $challengeBreakdown,
+    ]);
 });

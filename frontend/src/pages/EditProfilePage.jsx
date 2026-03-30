@@ -159,35 +159,35 @@ export default function EditProfilePage() {
 	};
 
 	const handleDeleteAccount = async () => {
-	const confirmDelete = window.confirm(
-		"Are you sure you want to delete your account?"
-	);
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete your account?"
+    );
 
-	if (!confirmDelete) return;
+	  if (!confirmDelete) return;
 
-	try {
-		let res;
+    try {
+      let res;
 
-		if (role === "student") {
-		res = await axios.delete(`/api/delete-account/${student_id}`);
-		} else if (role === "admin") {
-		res = await axios.delete(`/api/delete-account/${admin_id}`);
-		}
+      if (role === "student") {
+      res = await axios.delete(`/api/delete-account/${student_id}`);
+      } else if (role === "admin") {
+      res = await axios.delete(`/api/delete-account/${admin_id}`);
+      }
 
-		if (res.status === 200) {
-		alert("Account deleted");
+      if (res.status === 200) {
+      alert("Account deleted");
 
-		localStorage.clear();
-		window.location.href = "/login";
+      localStorage.clear();
+      window.location.href = "/login";
 
-		} else {
-		alert("Failed");
-		}
+      } else {
+      alert("Failed");
+      }
 
-	} catch (err) {
-		console.error(err);
-		alert("Error deleting account");
-	}
+    } catch (err) {
+      console.error(err);
+      alert("Error deleting account");
+    }
 	};
 
   const verifyCurrentPassword = async () => {

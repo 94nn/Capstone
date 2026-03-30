@@ -117,6 +117,9 @@ const NavBar = () => {
                 <NavLink to="/leaderboard" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
                     Leaderboard
                 </NavLink>
+                <NavLink to="/analytics" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
+                    Analytics
+                </NavLink>
             </nav>
             <div className="nav-bar-right">
                 <div className="bell-container" onClick={toggleNotif}>
@@ -130,7 +133,7 @@ const NavBar = () => {
                     <span className="coins">{coins}</span>
                 </div>
                 <div className="profile-container" onClick={toggleDropdown} ref={profileContainerRef}>
-                    <Avatar name={username || user?.name} src={profileImage} size={48} />
+                    <Avatar name={username || user?.name} src={profileImage} size={36} />
                     <span className="profile-name">{user?.name}</span>
                 </div>
             </div>

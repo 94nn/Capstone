@@ -60,16 +60,15 @@ function ProfilePage() {
   }, [student_id, admin_id, role]);
 
   return (
-    <div >
-      <div className='main-layout main-layout-split profile-content'>
-        {/* LEFT SIDE */}
-        <div className='profile-left'>
-          <div className='banner-container'>
-            <img
-              src='/images/banner.png'
-              alt='banner'
-              className='profile-banner'
-            />
+    <div className='main-layout main-layout-split'>
+      {/* LEFT SIDE */}
+      <div className='profile-left'>
+        <div className='banner-container'>
+			<img
+				src='/images/banner.png'
+				alt='banner'
+				className='profile-banner'
+			/>
 
             <div className='profile-picture'>
               <Avatar name={student?.username} src={student?.image_url} size={120} className="profilePicBanner" />
@@ -150,7 +149,6 @@ function ProfilePage() {
             </p>
           </div>
         </aside>
-      </div>
       <Footer />
     </div>
   );

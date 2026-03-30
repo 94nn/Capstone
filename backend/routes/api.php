@@ -1230,6 +1230,91 @@ Route::get('/admin/challenge/{id}', function($id) {
     ->first();
 });
 
+// Analytics Routes
+Route::get('/admin/analytics', function() {
+    $totalStudents = DB::table('student')->count();
+    $totalSubchapterCompletions = DB::table('subchapter_progress')->where('status', 'completed')->count();
+    $totalChallengeCompletions = DB::table('student_challenge_completion')->count();
+    $totalBadges = DB::table('student_challenge_completion')->whereNotNull('badge_id')->count();
+    $avgXp = DB::table('student')->avg('xp_balance');
+    $avgLevel = DB::table('student')->avg('level');
+
+    return response()->json([
+        'total_students'               => $totalStudents,
+        'total_subchapter_completions' => $totalSubchapterCompletions,
+        'total_challenge_completions'  => $totalChallengeCompletions,
+        'total_badges'                 => $totalBadges,
+        'avg_xp'                       => round($avgXp ?? 0),
+        'avg_level'                    => round($avgLevel ?? 0, 1),
+    ]);
+});
+
+Route::get('/admin/analytics/modules', function() {
+    $modules = DB::table('modules')->get();
+    $totalStudents = DB::table('student')->count();
+
+    return response()->json($modules->map(function($module) use ($totalStudents) {
+        $studentsStarted = DB::table('progress')
+            ->where('module_id', $module->id)
+            ->where('progress', '>', 0)
+            ->distinct('student_id')
+            ->count('student_id');
+
+        $studentsCompleted = DB::table('progress')
+            ->where('module_id', $module->id)
+            ->where('progress', 100)
+            ->distinct('student_id')
+            ->count('student_id');
+
+        $avgProgress = DB::table('progress')
+            ->where('module_id', $module->id)
+            ->avg('progress');
+
+        return [
+            'id'                => $module->id,
+            'name'              => $module->name,
+            'students_started'  => $studentsStarted,
+            'students_completed'=> $studentsCompleted,
+            'avg_progress'      => round($avgProgress ?? 0),
+            'completion_rate'   => $totalStudents > 0 ? round($studentsCompleted / $totalStudents * 100) : 0,
+        ];
+    }));
+});
+
+Route::get('/admin/analytics/challenges', function() {
+    $challenges = DB::table('challenge')
+        ->leftJoin('badge', 'challenge.badge_id', '=', 'badge.id')
+        ->select('challenge.id', 'challenge.title', 'badge.name as badge_name')
+        ->get();
+
+    return response()->json($challenges->map(function($challenge) {
+        $completions = DB::table('student_challenge_completion')
+            ->where('challenge_id', $challenge->id)
+            ->get();
+
+        $totalCompletions = $completions->count();
+
+        $avgScore = 0;
+        if ($totalCompletions > 0) {
+            $totalScore = $completions->sum(function($c) {
+                return $c->total_questions > 0 ? ($c->correct_answers / $c->total_questions * 100) : 0;
+            });
+            $avgScore = round($totalScore / $totalCompletions);
+        }
+
+        $badgesAwarded = $completions->filter(fn($c) => !is_null($c->badge_id))->count();
+
+        return [
+            'id'               => $challenge->id,
+            'title'            => $challenge->title,
+            'badge_name'       => $challenge->badge_name,
+            'total_completions'=> $totalCompletions,
+            'avg_score'        => $avgScore,
+            'badges_awarded'   => $badgesAwarded,
+        ];
+    }));
+});
+
 Route::get('/admin/badge', function() {
     return DB::table('badge')->get();
 });

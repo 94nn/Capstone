@@ -16,11 +16,11 @@ const Footer = () => {
         <div className='footer-container'>
             <div className='footer-header'>
                 <div className='mathdex-header'>
-                    <h1>Mathdex</h1>
-                    <img src="/images/mathdex_logo.png" alt="Mathdex Logo" className='mathdex-logo' />
+                    <h1>MathDex</h1>
+                    <img src="/images/mathdex_logo.png" alt="MathDex Logo" className='mathdex-logo' />
                 </div>
                 <div>
-                    <p>Made with ❤️ from 6 bitches</p>
+                    <p>Made with ❤️ from 6 gud people :D</p>
                 </div>
             </div>
             <div className='footer-content'>

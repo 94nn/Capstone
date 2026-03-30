@@ -9,7 +9,7 @@
     font-family: "Press Start 2P", cursive;
 }
 
-.module-management-header, .chapter-management-header, .subchapter-management-header{
+.module-management-header, .chapter-management-header, .subchapter-management-header, .challenge-header{
     margin: 0;
     font-size: 1.75rem;
     letter-spacing: 0.03em;
@@ -40,6 +40,29 @@
     box-shadow: 0 22px 40px rgba(15, 23, 42, 0.9);
 }
 
+.challenge-card{
+    background: rgba(15, 23, 42, 0.92);
+    border-radius: 1.25rem;
+    padding: 1.5rem 1.75rem 1.75rem;
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    box-shadow: 0 22px 40px rgba(15, 23, 42, 0.9);
+    margin-bottom: 30px;
+}
+
+.admin-challenge-title{
+    margin: 0;
+    font-size: 1.5rem;
+    letter-spacing: 0.03em;
+    font-family: "Press Start 2P", cursive;
+}
+
+.admin-challenge-description{
+    margin: 0;
+    font-size: 1rem;
+    letter-spacing: 0.03em;
+    font-family: "Press Start 2P", cursive;
+}
+
 .admin-module-card{
     background: #0f172a;
     border-radius: 1.25rem;
@@ -59,17 +82,16 @@
     box-shadow: 8px 8px 0px #020617;
 }
 
-.button-row{
+/* .button-row{
     display: flex;
     justify-content: right;
     padding: 0.75rem 0.1rem 1rem 3.5rem;
-}
+} */
 
 .edit-button{
     justify-self: end;
     padding: 0.4rem 1.1rem;
     border-radius: 999px;
-    border: 1px solid rgba(56, 189, 248, 0.9);
     background: linear-gradient(to bottom, #a5f09d, #15d21f);
     color: #0f172a;
     font-weight: 700;
@@ -84,7 +106,6 @@
     justify-self: end;
     padding: 0.4rem 1.1rem;
     border-radius: 999px;
-    border: 1px solid rgba(56, 189, 248, 0.9);
     background: linear-gradient(to bottom, #e95757, #fb1414);
     color: #0f172a;
     font-weight: 700;
@@ -95,7 +116,21 @@
     transition: transform 0.08s ease;
 }
 
-.edit-button:hover, .delete-button:hover{
+.challenge-add-option-button{
+    justify-self: end;
+    padding: 0.4rem 1.1rem;
+    border-radius: 999px;
+    background: linear-gradient(to bottom, #95f463, #0ada72);
+    color: black;
+    font-weight: 700;
+    font-size: 0.7rem;
+    font-family: "Press Start 2P", monospace;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 #020617;
+    transition: transform 0.08s ease;
+}
+
+.edit-button:hover, .delete-button:hover, .save-quiz-button:hover, .delete-quiz-button:hover, .cancel-button:hover, .submit-button:hover, .challenge-add-option-button:hover {
     filter: brightness(1.05);
     transform: translate(2px,2px);
     box-shadow: 2px 2px 0 #020617;
@@ -119,9 +154,22 @@
     text-decoration: none;
 }
 
-.modal-box-header{
+.modal-box-header, .edit-popup-box-header{
     justify-content: space-between;
     display: flex;
+}
+
+.edit-popup-box {
+    position: fixed;
+    background: #0f172a;
+    border-radius: 16px;
+    padding: 24px;
+    width: 500px;
+    max-width: 85%;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    max-height: 80vh;   /* 🔥 limit height */
+    overflow-y: auto;   /* 🔥 internal scroll */
+    z-index: 9999;
 }
 
 .edit-module{
@@ -191,7 +239,7 @@
     justify-content: right !important;
     padding: 0.4rem 1.1rem !important;
     border-radius: 999px !important;
-    border: 1px solid rgba(56, 189, 248, 0.9) !important;
+    border: 1px solid rgba(241, 36, 36, 0.9);
     background: linear-gradient(to bottom, #e95757, #fb1414) !important;
     color: #0f172a !important;
     font-weight: 700 !important;
@@ -202,6 +250,141 @@
     transition: transform 0.08s ease !important;
 }
 
+.feedback-title, .edit-title{
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+    font-family: "Press Start 2P", cursive;
+    padding-top: 0.5rem;
+}
+
+.edit-challenge-title, .edit-challenge-description, .edit-challenge-content, .edit-challenge-badge-name, .edit-challenge-badge,
+.edit-challenge-module, .edit-challenge-chapter, .edit-challenge-xp, .edit-challenge-coins {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    background: rgba(2, 6, 23, 0.9);
+    color: #f8fafc;
+    font-family: "Press Start 2P", cursive;
+    font-size: 0.5rem;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.edit-challenge-title:focus, .edit-challenge-content:focus, .edit-challenge-module:focus, .edit-challenge-chapter:focus {
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+}
+
+.edit-challenge-content {
+    min-height: 140px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.edit-challenge-module, .edit-challenge-chapter {
+    cursor: pointer;
+}
+
+.feedback-content{
+    color: black;
+}
+
+.feedback-table {
+    width: 95%;
+    max-width: 1400px;
+    margin: 20px auto;
+
+    font-size: 0.9rem;
+    font-family: "Press Start 2P", cursive;
+    color: #e2e8f0;
+
+    border-collapse: separate;
+    border-spacing: 0 12px; /* spacing between rows */
+}
+
+/* Header */
+.feedback-table th {
+    text-align: left;
+    padding: 16px 20px;
+    color: white;
+    font-size: 1rem;
+}
+
+/* Table Rows */
+.feedback-table tbody tr {
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    transition: transform 0.2s ease;
+    font-size: 0.8rem;
+}
+
+/* Hover effect */
+.feedback-table tbody tr:hover {
+    transform: scale(1.01);
+}
+
+/* Cells */
+.feedback-table td {
+    padding: 16px 20px;
+}
+
+/* Rounded corners for row */
+.feedback-table tbody tr td:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.feedback-table tbody tr td:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+/* Column sizing */
+.feedback-table td:nth-child(1) { width: 60px; }   /* No */
+.feedback-table td:nth-child(2) { min-width: 160px; } /* Student */
+.feedback-table td:nth-child(3) { min-width: 140px; } /* Module */
+.feedback-table td:nth-child(4) { min-width: 300px; } /* Feedback */
+.feedback-table td:nth-child(5) { min-width: 140px; } /* Actions */
+
+/* Actions styling */
+.feedback-table td:last-child {
+    white-space: nowrap;
+}
+
+.feedback-table td:last-child span {
+    margin-right: 12px;
+    cursor: pointer;
+    color: #38bdf8;
+}
+
+.feedback-table td:last-child span:hover {
+    text-decoration: underline;
+}
+
+.filter-container {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.filter-student, .filter-module{
+    width: 20%; 
+    padding: 0.5rem;
+    font-size: 1rem;
+    border-radius: 1rem;
+    background: #0f172a;
+    border: 1px solid #38bdf8;
+    display: flex ;
+    flex-direction: column;
+    color: white;
+}
+
 /* Modal design */
 .modal-overlay {
     position: fixed;
@@ -210,10 +393,11 @@
     right: 0;
     bottom: 0;
     background: rgba(0,0,0,0.5);
-
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow-y: auto;
+    z-index: 9999;
 }
 
 .modal-box {
@@ -376,7 +560,7 @@
     font-size: 0.9rem;
 }
 
-.add-option-button{
+.quiz-add-option-button{
     margin: 0 !important;
     border-radius: 5rem !important;
     font-family: "Press Start 2P", cursive !important;
@@ -412,17 +596,31 @@ textarea {
 }
 
 .save-quiz-button{
-    background-color: greenyellow !important;
+    background: linear-gradient(to bottom, #95f463, #0ada72);
     color: black !important;
     cursor: pointer !important;
     border: none !important;
+    padding: 0.4rem 1.1rem !important;
+    border-radius: 999px !important;
+    font-weight: 500 !important;
+    font-size: 0.7rem !important;
+    font-family: "Press Start 2P", monospace !important;
+    box-shadow: 4px 4px 0 #020617 !important; 
+    transition: transform 0.08s ease !important;
 }
 
 .delete-quiz-button{
-    background-color: #e95757 !important;
+    background: linear-gradient(to bottom, #ff3305, #c20808) !important;
     color: black !important;
     cursor: pointer !important;
     border: none !important;
+    padding: 0.4rem 1.1rem !important;
+    border-radius: 999px !important;
+    font-weight: 500 !important;
+    font-size: 0.7rem !important;
+    font-family: "Press Start 2P", monospace !important;
+    box-shadow: 4px 4px 0 #020617 !important; 
+    transition: transform 0.08s ease !important;
 }
 
 /* 操作按钮组 */
@@ -568,4 +766,79 @@ button {
   margin-top: 5px;
   padding: 4px 10px;
   cursor: pointer;
+}
+
+.challenge-question {
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: "Press Start 2P", cursive;
+}
+
+.edit-challenge-question, .edit-challenge-explanation, .edit-challenge-option input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    background: rgba(2, 6, 23, 0.92);
+    color: #f8fafc;
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    margin-bottom: 0.5rem;
+}
+
+.edit-challenge-question:focus, .edit-challenge-explanation:focus, .edit-challenge-option input:focus {
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+}
+
+.edit-challenge-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(30, 41, 59, 0.65);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.edit-challenge-option input[type="text"], .edit-challenge-option input:not([type="checkbox"]) {
+    flex: 1;
+}
+
+.edit-challenge-option input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #22c55e;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.row{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.remove-option-button {
+    width: 25px;
+    height: 25px;
+    border-radius: 8px;
+    background: #ef4444;
+    color: white;
+
+    font-size: 14px;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.remove-option-button:hover {
+    transform: scale(1.1);
+    opacity: 0.9;
 }

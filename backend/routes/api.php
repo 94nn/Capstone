@@ -93,6 +93,73 @@ Route::delete('/modules/{id}', function ($id) {
     ]);
 });
 
+//Admin Modules
+Route::get('/admin', function () {
+    return DB::table('modules')->get();
+});
+
+Route::get('/admin/user/{id}', function ($id) {
+    $admin = DB::table('admin')->where('id', $id)->first();
+    if (!$admin) return response()->json(['error' => 'Admin not found'], 404);
+    return response()->json($admin);
+});
+
+//add Admin modules function
+Route::post('/admin', function (Request $request) {
+
+    $slug = Str::slug($request->name);
+
+    $id = DB::table('modules')->insertGetId([
+        'name' => $request->name,
+        'description' => $request->description,
+        'slug' => $slug
+    ]);
+
+    return response()->json([
+        'id' => $id,
+        'name' => $request->name,
+        'description' => $request->description,
+        'slug' => $slug,
+    ]);
+});
+
+//edit Admin modules function
+Route::put('/admin/{id}', function (Request $request, $id) {
+    $slug = Str::slug($request->name); 
+
+    // 处理重复
+    $count = DB::table('modules')
+        ->where('slug', 'LIKE', "$slug%")
+        ->where('id', '!=', $id)
+        ->count();
+
+    if ($count > 0) {
+        $slug = $slug . '-' . ($count + 1);
+    }
+
+    DB::table('modules')
+        ->where('id', $id)
+        ->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'slug' => $slug,
+        ]);
+
+    return response()->json([
+        'message' => 'Updated successfully',
+        'slug' => $slug
+    ]);
+});
+
+//delete function
+Route::delete('/admin/{id}', function ($id) {
+    DB::table('modules')->where('id', $id)->delete();
+
+    return response()->json([
+        'message' => 'Deleted successfully'
+    ]);
+});
+
 
 //Chapters
 Route::get('/modules/{slug}', function ($slug) {
@@ -186,14 +253,30 @@ Route::put('/modules/{slug}/{id}', function (Request $request, $slug, $id) {
 //delete chapter
 Route::delete('/modules/{slug}/{id}', function ($slug, $id) {
 
-    // 删除
-    DB::table('chapters')->where('id', $id)->delete();
-    $moduleId = $chapter->module_id;
+    // 1. 找 module
+    $module = DB::table('modules')->where('slug', $slug)->first();
+    if (!$module) {
+        return response()->json(['error' => 'Module not found'], 404);
+    }
+
+    // 2. 找 chapter（确保属于该 module）
+    $chapter = DB::table('chapters')
+        ->where('id', $id)
+        ->where('module_id', $module->id)
+        ->first();
+
+    if (!$chapter) {
+        return response()->json(['error' => 'Chapter not found'], 404);
+    }
+
     $deletedLevel = $chapter->level;
 
-    // 后面的往前补
+    // 3. 删除
+    DB::table('chapters')->where('id', $id)->delete();
+
+    // 4. 补位
     DB::table('chapters')
-        ->where('module_id', $moduleId)
+        ->where('module_id', $module->id)
         ->where('level', '>', $deletedLevel)
         ->decrement('level');
 
@@ -237,7 +320,8 @@ $maxOrder = DB::table('subchapters')
     return response()->json([
         'id' => $id,
         'title' => $request->title,
-        'description' => $request->description,  
+        'description' => $request->description, 
+        'subchapter_order' => $nextOrder,  
     ]);
 });
 
@@ -450,16 +534,28 @@ Route::delete('/modules/{slug}/{chapter_id}/{subchapter_id}/quiz/{quiz_id}', fun
 //Home Page Student
 Route::get('/student/{id}', function($id) {
     $student = DB::table('student')->where('id', $id)->first();
+    $badges = DB::table('student_challenge_completion')->where('student_id', $id)->whereNotNull('badge_id')->distinct()->pluck('badge_id')->toArray();
     return response()->json([
         'username' => $student->name,
         'level' => $student->level,
         'xp' => $student->xp_balance,
-        'badges' => $student->badges_balance,
+        'badges' => count($badges),
         'coins' => $student->coins_balance,
         'image_url' => $student->profile_pic,
         'bio' => $student->Bio,
-        'email' => $student->email
+        'email' => $student->email,
+        'badges_list' => $badges
     ]);
+});
+
+Route::get('/profile/badges', function() {
+    $badges = DB::table('badge')
+        ->join('challenge', 'badge.id', '=', 'challenge.badge_id')
+        ->select('badge.*')
+        ->distinct()
+        ->get();
+
+    return response()->json($badges);
 });
 
 // Leaderboard Page Leaderboard
@@ -725,7 +821,23 @@ Route::get('/hint/{quiz_id}', function($quiz_id) {
     return response()->json($hints);
 });
 
+Route::get('/hint/unlocked/{student_id}/{quiz_id}', function($student_id, $quiz_id) {
+    $unlockedHints = DB::table('hint_unlock')
+        ->join('hint', 'hint_unlock.hint_id', '=', 'hint.id')
+        ->where('hint_unlock.student_id', $student_id)
+        ->where('hint.quiz_id', $quiz_id)
+        ->select('hint.id', 'hint.content')
+        ->get();
+
+    return response()->json($unlockedHints);
+});
+
 Route::post('/hint/unlock', function (Request $request) {
+    $request->validate([
+        'student_id' => 'required|integer',
+        'hint_id' => 'required|integer',
+    ]);
+
     $student = DB::table('student')->where('id', $request->student_id)->first();
     $hint = DB::table('hint')->where('id', $request->hint_id)->first();
 
@@ -737,10 +849,29 @@ Route::post('/hint/unlock', function (Request $request) {
         return response()->json(['error' => 'Hint not found'], 404);
     }
 
-    if ($hint->type === 'free') {
+    $alreadyUnlocked = DB::table('hint_unlock')
+        ->where('student_id', $request->student_id)
+        ->where('hint_id', $request->hint_id)
+        ->exists();
+
+    if ($alreadyUnlocked) {
         return response()->json([
             'content' => $hint->content,
-            'coins_balance' => $student->coins_balance
+            'coins_balance' => $student->coins_balance,
+            'message' => 'Hint already unlocked'
+        ]);
+    }
+
+    if ($hint->type === 'free') {
+        DB::table('hint_unlock')->insert([
+            'student_id' => $request->student_id,
+            'hint_id' => $request->hint_id,
+        ]);
+
+        return response()->json([
+            'content' => $hint->content,
+            'coins_balance' => $student->coins_balance,
+            'message' => 'Free hint unlocked successfully'
         ]);
     }
 
@@ -752,22 +883,39 @@ Route::post('/hint/unlock', function (Request $request) {
         ], 400);
     }
 
-    $newBalance = $student->coins_balance - $price;
+    DB::beginTransaction();
 
-    DB::table('student')
-        ->where('id', $request->student_id)
-        ->update([
-            'coins_balance' => $newBalance
+    try {
+        $newBalance = $student->coins_balance - $price;
+
+        DB::table('student')
+            ->where('id', $request->student_id)
+            ->update([
+                'coins_balance' => $newBalance
+            ]);
+
+        DB::table('hint_unlock')->insert([
+            'student_id' => $request->student_id,
+            'hint_id' => $request->hint_id,
         ]);
 
-    return response()->json([
-        'content' => $hint->content,
-        'coins_balance' => $newBalance,
-        'message' => 'Hint unlocked successfully'
-    ]);
+        DB::commit();
+
+        return response()->json([
+            'content' => $hint->content,
+            'coins_balance' => $newBalance,
+            'message' => 'Hint unlocked successfully'
+        ]);
+    } catch (\Exception $e) {
+        DB::rollBack();
+
+        return response()->json([
+            'error' => 'Failed to unlock hint'
+        ], 500);
+    }
 });
 
-// GET all challenges
+// GET all  
 Route::get('/challenge', function () {
     $challenges = DB::table('challenge')
         ->join('modules', 'challenge.module_id', '=', 'modules.id')
@@ -827,6 +975,7 @@ Route::get('/challenge/{slug}', function ($slug) {
             'challenge.xp_quantity',
             'challenge.badge_id',
             'badge.name as badge_name',
+            'badge.image_path as badge_image',
             'challenge.coins_quantity',
             'modules.name as topic'
         )
@@ -888,6 +1037,21 @@ Route::post('/challenge-completion', function (Request $request) {
                     'badges_balance' => DB::raw("badges_balance + " . ($new_badge ? 1 : 0)),
                 ]);
 
+            if ($new_badge) {
+                $badge = DB::table('badge')->where('id', $badge_id)->first();
+                $challengeTitle = DB::table('challenge')->where('id', $challenge_id)->value('title');
+                if ($badge) {
+                    DB::table('notification')->insert([
+                        'student_id' => $student_id,
+                        'title'      => 'Badge Earned!',
+                        'message'    => "You earned the \"{$badge->name}\" badge for completing the {$challengeTitle} challenge!",
+                        'image_url'  => $badge->image_path,
+                        'is_read'    => 0,
+                        'created_at' => now(),
+                    ]);
+                }
+            }
+
             checkLevelUp($student_id);
         }
     } else {
@@ -919,6 +1083,20 @@ Route::post('/challenge-completion', function (Request $request) {
             'is_read'    => 0,
             'created_at' => now(),
         ]);
+
+        if ($badge_id) {
+            $badge = DB::table('badge')->where('id', $badge_id)->first();
+            if ($badge) {
+                DB::table('notification')->insert([
+                    'student_id' => $student_id,
+                    'title'      => 'Badge Earned!',
+                    'message'    => "You earned the \"{$badge->name}\" badge for completing the {$challengeTitle} challenge!",
+                    'image_url'  => $badge->image_path,
+                    'is_read'    => 0,
+                    'created_at' => now(),
+                ]);
+            }
+        }
 
         checkLevelUp($student_id);
     }
@@ -1026,73 +1204,98 @@ Route::delete('/feedback/{id}', function($id) {
 
 
 
-// Admin: 获取所有 challenge
-Route::get('/admin/challenge', function() {
-    return DB::table('challenge')->get();
+// 获取所有 challenge
+Route::get('/admin/challenge', function () {
+    return DB::table('challenge')
+        ->leftJoin('badge', 'challenge.badge_id', '=', 'badge.id')
+        ->select(
+            'challenge.*',
+            'badge.name as badge_name',
+            'badge.image_path as badge_image'
+        )
+        ->get();
 });
 
-// Admin: 获取单个 challenge + questions + options
+
+// 获取单个 challenge + questions + options
 Route::get('/admin/challenge/{id}', function($id) {
-    $challenge = DB::table('challenge')->where('id', $id)->first();
-    if (!$challenge) return response()->json(['error'=>'Challenge not found'], 404);
-
-    $questions = DB::table('challenge_question')
-        ->where('challenge_id', $id)
-        ->get()
-        ->map(function($q){
-            $q->options = DB::table('challenge_option')
-                ->where('c_question_id', $q->id)
-                ->get();
-            return $q;
-        });
-
-    $challenge->questions = $questions;
-
-    return response()->json($challenge);
+    $challenge = DB::table('challenge')
+    ->leftJoin('badge', 'challenge.badge_id', '=', 'badge.id')
+    ->where('challenge.id', $id)
+    ->select(
+        'challenge.*',
+        'badge.name as badge_name',
+        'badge.image_path as badge_image'
+    )
+    ->first();
 });
 
-// Admin: 创建 challenge + 内部 questions + options
+Route::get('/admin/badge', function() {
+    return DB::table('badge')->get();
+});
+
+// badge
+Route::post('/admin/badge', function (Request $request) {
+
+    // 验证
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+    ]);
+
+    $file = $request->file('image');
+    $filename = time() . '_' . $file->getClientOriginalName();
+    $file->move(public_path('images/badges'), $filename);
+    $path = 'images/badges/' . $filename;
+
+    // 存 DB
+    $id = DB::table('badge')->insertGetId([
+        'name' => $request->name,
+        'image_path' => $path,
+    ]);
+
+    return response()->json([
+        'message' => 'Badge created',
+        'id' => $id,
+        'image_path' => $path
+    ]);
+});
+
+// 创建 challenge + 内部 questions + options
 Route::post('/admin/challenge', function(Request $request) {
     DB::beginTransaction();
     try {
-        // 插入 challenge
         $challengeId = DB::table('challenge')->insertGetId([
             'title' => $request->title,
+            'description' => $request->description,
             'content' => $request->content,
-            'badges' => $request->badges,
+            'badge_id' => $request->badge_id,
+            'xp_quantity' => $request->xp_quantity ,
+            'coins_quantity' => $request->coins_quantity ,
             'module_id' => $request->module_id,
             'chapter_id' => $request->chapter_id,
-            'slug' => $request->slug,
+            'slug' => Str::slug($request->title),
         ]);
 
-        // 插入 questions + options
         foreach ($request->questions ?? [] as $q) {
-            $correctAnswer = null;
-            foreach ($q['options'] ?? [] as $opt) {
-                if ($opt['is_correct'] ?? false) {
-                    $correctAnswer = $opt['text'];
-                    break;
-                }
-            }
 
             $questionId = DB::table('challenge_question')->insertGetId([
                 'challenge_id' => $challengeId,
-                'question' => $q['question'],
-                'answer' => $correctAnswer,
+                'question' => $q['question'] ?? '',
                 'explanation' => $q['explanation'] ?? null,
             ]);
 
             foreach ($q['options'] ?? [] as $opt) {
-                DB::table('challenge_option')->insert([
+                DB::table('challenge_options')->insert([
                     'c_question_id' => $questionId,
-                    'option_text' => $opt['text'],
+                    'option_text' => $opt['option_text'] ?? '',
                     'is_correct' => $opt['is_correct'] ?? false,
                 ]);
             }
         }
 
         DB::commit();
-        return response()->json(['message' => 'Created']);
+        return response()->json(['message' => 'Created', 'id' => $challengeId]);
     } catch (\Exception $e) {
         DB::rollback();
         return response()->json(['error' => $e->getMessage()], 500);
@@ -1103,40 +1306,82 @@ Route::post('/admin/challenge', function(Request $request) {
 Route::put('/admin/challenge/{id}', function(Request $request, $id) {
     DB::beginTransaction();
     try {
-        // 更新 challenge
+        $moduleName = DB::table('modules')
+            ->where('id', $request->module_id)
+            ->value('name');
+
+        $badgeId = $request->badge_id ?? null;
+
+        // 更新 badge table
+        if ($badgeId) {
+            $badgeData = [];
+
+            if ($request->filled('badge_name')) {
+                $badgeData['name'] = $request->badge_name;
+            }
+
+            if ($request->hasFile('badge_image')) {
+                $oldBadge = DB::table('badge')->where('id', $badgeId)->first();
+                if ($oldBadge && $oldBadge->image_path && file_exists(public_path($oldBadge->image_path))) {
+                    unlink(public_path($oldBadge->image_path));
+                }
+                $file = $request->file('badge_image');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('images/badges'), $filename);
+                $badgeData['image_path'] = 'images/badges/' . $filename;
+            }
+
+            if (!empty($badgeData)) {
+                DB::table('badge')->where('id', $badgeId)->update($badgeData);
+            }
+        }
+
         DB::table('challenge')->where('id', $id)->update([
             'title' => $request->title,
-            'content' => $request->content,
-            'badges' => $request->badges,
+            'description' => $request->description ?? null,
+            'content' => $request->content ?? null,
+            'badge_id' => $badgeId,
+            'xp_quantity' => $request->xp_quantity ?? 0,
+            'coins_quantity' => $request->coins_quantity ?? 0,
             'module_id' => $request->module_id,
             'chapter_id' => $request->chapter_id,
-            'slug' => $request->slug,
+            'slug' => Str::slug($moduleName . '-' . $request->title),
         ]);
 
-        // 删除旧 questions + options
-        $questionIds = DB::table('challenge_question')->where('challenge_id', $id)->pluck('id');
-        DB::table('challenge_option')->whereIn('c_question_id', $questionIds)->delete();
-        DB::table('challenge_question')->where('challenge_id', $id)->delete();
+        $questions = $request->questions;
 
-        // 插入新的 questions + options
-        foreach ($request->questions ?? [] as $q) {
-            $correctAnswer = null;
-            foreach ($q['options'] ?? [] as $opt) {
-                if ($opt['is_correct'] ?? false) $correctAnswer = $opt['text'];
-            }
+        if (is_string($questions)) {
+            $questions = json_decode($questions, true);
+        }
+
+        $questions = $questions ?? [];
+
+        $questionIds = DB::table('challenge_question')
+            ->where('challenge_id', $id)
+            ->pluck('id');
+
+        DB::table('challenge_options')
+            ->whereIn('c_question_id', $questionIds)
+            ->delete();
+
+        DB::table('challenge_question')
+            ->where('challenge_id', $id)
+            ->delete();
+
+        foreach ($questions as $q) {
+
 
             $questionId = DB::table('challenge_question')->insertGetId([
                 'challenge_id' => $id,
-                'question' => $q['question'],
-                'answer' => $correctAnswer,
+                'question' => $q['question'] ?? '',
                 'explanation' => $q['explanation'] ?? null,
             ]);
 
             foreach ($q['options'] ?? [] as $opt) {
-                DB::table('challenge_option')->insert([
+                DB::table('challenge_options')->insert([
                     'c_question_id' => $questionId,
-                    'option_text' => $opt['text'],
-                    'is_correct' => $opt['is_correct'] ?? false,
+                    'option_text' => $opt['option_text'] ?? '',
+                    'is_correct' => !empty($opt['is_correct']),
                 ]);
             }
         }
@@ -1154,8 +1399,9 @@ Route::delete('/admin/challenge/{id}', function($id) {
     DB::beginTransaction();
     try {
         $questionIds = DB::table('challenge_question')->where('challenge_id', $id)->pluck('id');
-        DB::table('challenge_option')->whereIn('c_question_id', $questionIds)->delete();
+        DB::table('challenge_options')->whereIn('c_question_id', $questionIds)->delete();
         DB::table('challenge_question')->where('challenge_id', $id)->delete();
+        DB::table('student_challenge_completion')->where('challenge_id', $id)->delete();
         DB::table('challenge')->where('id', $id)->delete();
         DB::commit();
         return response()->json(['message' => 'Deleted']);
@@ -1163,51 +1409,78 @@ Route::delete('/admin/challenge/{id}', function($id) {
         DB::rollback();
         return response()->json(['error' => $e->getMessage()], 500);
     }
-
 });
-Route::post('/update-profile/{id}', function(Request $request, $id) {
-    $student = DB::table('student')->where('id', $id)->first();
 
-    if (!$student) {
-        return response()->json(['error' => 'Student not found'], 404);
+
+
+// 获取指定 module 下的 chapters
+Route::get('api/modules/{module_id}/chapters', function($module_id) {
+    $chapters = DB::table('chapters')
+        ->where('module_id', $module_id)
+        ->select('id', 'title') 
+        ->get();
+    
+    return response()->json($chapters);
+});
+
+
+Route::post('/update-profile/{id}', function(Request $request, $id) {
+    $role = $request->input('role');
+
+    if ($role === 'admin') {
+        $admin = DB::table('admin')->where('id', $id)->first();
+        if (!$admin) return response()->json(['error' => 'Admin not found'], 404);
+
+        $updateData = [];
+        if ($request->filled('name')) $updateData['name'] = $request->input('name');
+        if ($request->filled('bio')) $updateData['bio'] = $request->input('bio');
+
+        if ($request->hasFile('profile_pic')) {
+            $file = $request->file('profile_pic');
+            if ($admin->image_url && file_exists(public_path($admin->image_url))) {
+                unlink(public_path($admin->image_url));
+            }
+            $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
+                        . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('profile_pics'), $filename);
+            $updateData['image_url'] = '/profile_pics/' . $filename;
+        }
+
+        DB::table('admin')->where('id', $id)->update($updateData);
+        $updated = DB::table('admin')->where('id', $id)->first();
+
+        return response()->json([
+            'name' => $updated->name,
+            'bio' => $updated->bio,
+            'image_url' => $updated->image_url,
+        ]);
     }
 
-    $updateData = [];
+    $student = DB::table('student')->where('id', $id)->first();
+    if (!$student) return response()->json(['error' => 'Student not found'], 404);
 
-    // Update name and bio
+    $updateData = [];
     if ($request->filled('name')) $updateData['name'] = $request->input('name');
     if ($request->filled('bio')) $updateData['Bio'] = $request->input('bio');
 
-    // Handle profile image upload
     if ($request->hasFile('profile_pic')) {
         $file = $request->file('profile_pic');
-
-        // Delete old image if it exists
         if ($student->profile_pic && file_exists(public_path($student->profile_pic))) {
             unlink(public_path($student->profile_pic));
         }
-
-        // Unique filename
-        $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) 
+        $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
                     . '.' . $file->getClientOriginalExtension();
-
-        // Move to public/profile_pics
         $file->move(public_path('profile_pics'), $filename);
-
         $updateData['profile_pic'] = 'profile_pics/' . $filename;
     }
 
-    // Update DB
     DB::table('student')->where('id', $id)->update($updateData);
-
     $updatedStudent = DB::table('student')->where('id', $id)->first();
 
     return response()->json([
         'username' => $updatedStudent->name,
         'bio' => $updatedStudent->Bio,
-        'image_url' => $updatedStudent->profile_pic
-            ? url($updatedStudent->profile_pic)  // full URL
-            : null,
+        'image_url' => $updatedStudent->profile_pic ? url($updatedStudent->profile_pic) : null,
         'level' => $updatedStudent->level,
         'xp' => $updatedStudent->xp_balance,
         'badges' => $updatedStudent->badges_balance,

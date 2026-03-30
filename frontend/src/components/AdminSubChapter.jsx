@@ -15,7 +15,9 @@ function AdminSubChapter() {
     const [isEdit, setIsEdit] = useState(false);
     const [subchapter_order, setsubchapter_order] = useState("");
     const [currentId, setCurrentId] = useState(null);
+    const order = Number(subchapter_order);
 
+    
     useEffect(() => {
     
         async function loadSubChapter() {
@@ -37,7 +39,11 @@ function AdminSubChapter() {
     try {
         if (isEdit) {
             // UPDATE
-             await axios.put(`/api/modules/${slug}/${chapter_id}/${currentId}`, {
+                if (!order || order < 1 || order > subchapters.length) {
+                        alert("Subchapter order must be between 1 and " + subchapters.length);
+                        return;
+                    }
+             const res = await axios.put(`/api/modules/${slug}/${chapter_id}/${currentId}`, {
                 title: title,
                 description: description,
                 subchapter_order: subchapter_order,
@@ -56,7 +62,7 @@ function AdminSubChapter() {
              const res = await axios.post(`/api/modules/${slug}/${chapter_id}`, {
                 title: title,
                 description: description,
-                subchapter_order: subchapters.length + 1
+                // subchapter_order: subchapters.length + 1
             });
             // 更新 UI
                       
@@ -186,6 +192,8 @@ const closeModal = () => {
                                     className="module-name"
                                     placeholder="Subchapter order"
                                     value={subchapter_order}
+                                    min="1"
+                                    max={subchapters.length}
                                     onChange={(e) => setsubchapter_order(e.target.value)}
                                 />
                                 )} 

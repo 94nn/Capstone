@@ -8,35 +8,57 @@ function Hint({ quiz_id }) {
     const [unlockedHints, setUnlockedHints] = useState({});
 
     useEffect(() => {
-        async function loadHint() {
+        async function loadHintData() {
             try {
-                const {data} = await axios.get(`/api/hint/${quiz_id}`);
-                setHint(Array.isArray(data) ? data : []);
+                const hintRes = await axios.get(`/api/hint/${quiz_id}`);
+                const hintList = Array.isArray(hintRes.data) ? hintRes.data : [];
+                setHint(hintList);
+
+                if (student_id && quiz_id) {
+                    const unlockedRes = await axios.get(
+                        `/api/hint/unlocked/${student_id}/${quiz_id}`
+                    );
+
+                    const unlockedList = Array.isArray(unlockedRes.data)
+                        ? unlockedRes.data
+                        : [];
+
+                    const unlockedMap = {};
+                    unlockedList.forEach((h) => {
+                        unlockedMap[h.id] = h.content;
+                    });
+
+                    setUnlockedHints(unlockedMap);
+                } else {
+                    setUnlockedHints({});
+                }
             } catch (error) {
-                console.log("Failed to load hint", error);
+                console.log("Failed to load hint data", error);
                 setHint([]);
+                setUnlockedHints({});
             }
         }
-
         if (quiz_id) {
-            loadHint();
+            loadHintData();
         }
-    }, [quiz_id]);
+    }, [quiz_id, student_id]);
 
     async function unlockHint(h) {
         try {
             const { data } = await axios.post("/api/hint/unlock", {
-                student_id: student_id,
+                student_id,
                 hint_id: h.id,
             });
+
             setUnlockedHints((prev) => ({
                 ...prev,
                 [h.id]: data.content,
             }));
         } catch (error) {
             console.log("Failed to unlock hint", error);
+            alert(error.response?.data?.error || "Failed to unlock hint");
         }
-    };
+    }
 
     return (
         <aside className="learning-sidebar">

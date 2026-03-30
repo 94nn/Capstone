@@ -18,7 +18,6 @@ function QuizLayout({setCurrentQuizId}) {
     const [answered, setAnswered] = useState(false);
     const [correctCount, setCorrectCount] = useState(0);
     const [finished, setFinished] = useState(false);
-    const student_id = localStorage.getItem("student_id");
     const [feedback, setFeedback] = useState("");
     const [showFeedback, setShowFeedback] = useState(false);
 
@@ -56,6 +55,8 @@ const handleSubmitFeedback = async () => {
     alert("Failed to submit feedback");
   }
 };
+   
+
     useEffect(() => {
         if (!isLoggedIn || isBeforeLogin) {
             navigate('/login');
@@ -149,9 +150,12 @@ const handleSubmitFeedback = async () => {
     }
 
     async function updateProgress() {
+        const studentId = localStorage.getItem("student_id");
         try {
+            const student_id = localStorage.getItem("student_id");
+            
             await axios.post("/api/progress/update", {
-                student_id: student_id,
+                student_id: studentId,
                 subchapter_id: subchapter_id,
                 correct_answers: correctCount,
                 total_questions: quizzes.length,
@@ -290,11 +294,13 @@ const handleSubmitFeedback = async () => {
                             <button className="retry-button" onClick={handleFinishNow}>
                                 Finish Now
                             </button>
-                            <button onClick={() =>{
-                                setFinished(false);  
-                                setShowFeedback(true)}}>
-                                Give Feedback
-                            </button>
+                            <div className="feedback-button">
+                                <button onClick={() =>{
+                                    setFinished(false);  
+                                    setShowFeedback(true)}}>
+                                    Give Feedback
+                                </button>
+                            </div>
                             {!isLastSubchapter && (
                                 <button className="next-button" onClick={handleNextQuiz}>
                                     Next Quiz
@@ -306,24 +312,20 @@ const handleSubmitFeedback = async () => {
             )}
                 {showFeedback && (
                 <div className="modal-overlay">
-                    <div className="modal-content">
+                    <div className="feedback-popup-box">
 
-                    <h3>Feedback</h3>
+                        <h2 className="feedback-title">Feedback</h2>
 
-                    <textarea
-                        value={feedback}
-                        onChange={(e) => setFeedback(e.target.value)}
-                        placeholder="Write your feedback..."
-                    />
-
-                    <button onClick={handleSubmitFeedback}>
-                        Submit
-                    </button>
-
-                    <button onClick={() => setShowFeedback(false)}>
-                        Cancel
-                    </button>
-
+                        <textarea
+                            className="feedback-content"
+                            value={feedback}
+                            onChange={(e) => setFeedback(e.target.value)}
+                            placeholder="Write your feedback..."
+                        />
+                        <div className="button-row">
+                            <button className="submit-button" onClick={handleSubmitFeedback}>Submit</button>
+                            <button className="cancel-button" onClick={() => setShowFeedback(false)}>Cancel</button>
+                        </div>
                     </div>
                 </div>
                 )}

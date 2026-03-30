@@ -36,7 +36,7 @@ export default function EditProfilePage() {
         if (role === "student" && student_id) {
           res = await axios.get(`/api/student/${student_id}`);
         } else if (role === "admin" && admin_id) {
-          res = await axios.get(`/api/admin/${admin_id}`);
+          res = await axios.get(`/api/admin/user/${admin_id}`);
         }
 
         if (!res) return;
@@ -70,11 +70,18 @@ export default function EditProfilePage() {
 
 	// Save profile
 	const handleSaveProfile = async () => {
+
+    if (!name.trim()) {
+      alert("Name cannot be empty");
+      return;
+    }
+
 		const formData = new FormData();
 		formData.append("name", name);
 		formData.append("bio", bio);
 
 		if (selectedFile) formData.append("profile_pic", selectedFile);
+		formData.append("role", role);
 
 		try {
 			let res;
@@ -98,6 +105,10 @@ export default function EditProfilePage() {
 			setProfileImage(getImageUrl(data.image_url || data.profile_pic));
 			setSelectedFile(null);
 
+			// Update localStorage so navbar reflects changes
+			const updatedUser = { ...user, name: data.name || data.username || name, image_url: data.image_url || user?.image_url };
+			localStorage.setItem("user", JSON.stringify(updatedUser));
+
 			alert("Profile updated!");
 
 		} catch (err) {
@@ -108,10 +119,20 @@ export default function EditProfilePage() {
 
   // Save settings (email/password)
 	const handleSaveSettings = async () => {
+    if (!email.includes("@")) {
+      alert("Invalid email format");
+      return;
+    }
+    
 		if (newPassword && newPassword !== confirmPassword) {
 			alert("Passwords do not match");
 			return;
 		}
+
+    if (newPassword && newPassword.length < 6) {
+      alert("Password must be at least 6 characters");
+      return;
+    }
 		try {
 			let res;
 

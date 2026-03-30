@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import './ChallengeLayout.css';
+import { getImageUrl } from "../utils/imageUrl";
 
 function ChallengeQuestionLayout() {
     const { slug } = useParams();
@@ -214,7 +215,10 @@ function ChallengeQuestionLayout() {
                     </div>
                     {correctQ >= 2 && challenge.badge_name && (
                         <div className="cq-badge-earned">
-                            <span className="cq-badge-icon">🏅</span>
+                            {challenge.badge_image
+                                ? <img src={`http://127.0.0.1:8000/${challenge.badge_image}`} alt={challenge.badge_name} className="cq-badge-icon" style={{ width: '48px', height: '48px', objectFit: 'contain' }} />
+                                : <span className="cq-badge-icon">🏅</span>
+                            }
                             <div>
                                 <span className="cq-badge-label">Badge Earned</span>
                                 <span className="cq-badge-name">{challenge.badge_name}</span>

@@ -12,7 +12,7 @@ function LandingPage() {
                 style={{ backgroundImage: "url('/images/landingpage_background.gif')" }}
             >
                 <div className="absolute inset-0 bg-black/40" />
-                <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 lg:px-16 py-24 md:py-32">
+                <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 lg:px-16 pt-48 pb-24 md:pt-56 md:pb-32">
                     <div className="grid md:grid-cols-2 gap-12 items-center">
                     {/* Left side */}
                         <div className="max-w-xl">

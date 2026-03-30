@@ -63,8 +63,11 @@ function Avatar({ name, src, size }) {
     return (
         <div className="leaderboard-avatar" style={{ width: size, height: size, fontSize: size * 0.3 }}>
             {hasImage
-                ? <img src={imgSrc} alt={name} onError={e => { e.target.style.display = "none"; }} />
-                : initials}
+                ? <img src={imgSrc} alt={name} onError={e => { e.target.style.display = "none"; e.target.nextSibling.style.display = "flex"; }} />
+                : null}
+            <span style={{ display: hasImage ? "none" : "flex", width: "100%", height: "100%", alignItems: "center", justifyContent: "center" }}>
+                {initials}
+            </span>
         </div>
     );
 }

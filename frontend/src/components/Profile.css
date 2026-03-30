@@ -149,3 +149,75 @@
   color:#94a3b8;
   font-size:20px;
 }
+
+.profilePage-character-pic {
+  width: 70px;   /* adjust this */
+  height: auto;
+}
+
+.profilePage-character-container {
+  display: flex;
+  align-items: center; /* vertically align */
+  gap: 12px;
+}
+
+.profilePage-badge-card {
+  margin-top: 20px;
+  padding: 16px;
+}
+
+.profilePage-badge-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.profilePage-badge-subtext {
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+  color: #aaa;
+}
+
+.profilePage-badge-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  justify-items: center;
+}
+
+.profilePage-badge-icon {
+  width: 50px;
+  height: 50px;
+  transition: 0.3s ease;
+}
+
+/* LOCKED (greyed out) */
+.profilePage-badge-icon.locked {
+  filter: grayscale(100%) brightness(0.6);
+  opacity: 0.5;
+}
+
+/* EARNED (lit up) */
+.profilePage-badge-icon.earned {
+  filter: none;
+  opacity: 1;
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(0, 255, 200, 0.6);
+  border-radius: 8px;
+}
+
+.profilePage-badge-icon:hover {
+  transform: scale(1.1);
+}
+
+.profilePage-badge-card {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.profile-content {
+  margin-bottom: 250px;
+}

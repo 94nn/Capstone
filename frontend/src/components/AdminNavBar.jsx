@@ -71,6 +71,9 @@ const AdminNavBar = () => {
                 <NavLink to="/admin/challenge" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
                     Challenge
                 </NavLink>
+                <NavLink to="/admin/analytics" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
+                    Analytics
+                </NavLink>
             </nav>
             <div className="nav-bar-right">
                 <div className="profile-container" onClick={toggleDropdown}>

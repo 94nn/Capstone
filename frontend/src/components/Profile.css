@@ -221,3 +221,121 @@
 .profile-content {
   margin-bottom: 250px;
 }
+
+/* ── Student Analytics ── */
+.student-analytics {
+  margin: 2rem 3rem 3rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.analytics-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 1.5rem;
+}
+
+.analytics-card-title {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.7rem;
+  color: #94a3b8;
+  margin-bottom: 1.25rem;
+  letter-spacing: 0.04em;
+}
+
+/* Module progress rows */
+.sa-module-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.sa-module-name {
+  font-size: 0.78rem;
+  color: #e2e8f0;
+  width: 130px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sa-bar-wrap {
+  flex: 1;
+  background: rgba(148, 163, 184, 0.1);
+  border-radius: 99px;
+  height: 7px;
+  overflow: hidden;
+}
+
+.sa-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #38bdf8, #818cf8);
+  transition: width 0.7s ease;
+}
+
+.sa-bar-fill.complete {
+  background: linear-gradient(90deg, #4ade80, #22d3ee);
+}
+
+.sa-pct {
+  font-size: 0.72rem;
+  color: #64748b;
+  width: 36px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.sa-empty {
+  font-size: 0.78rem;
+  color: #475569;
+  text-align: center;
+  padding: 1rem 0;
+}
+
+/* Challenge rows */
+.sa-challenge-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  gap: 0.75rem;
+}
+
+.sa-challenge-row:last-child {
+  border-bottom: none;
+}
+
+.sa-challenge-title {
+  font-size: 0.78rem;
+  color: #e2e8f0;
+  flex: 1;
+}
+
+.sa-challenge-badge {
+  font-size: 0.65rem;
+  color: #facc15;
+  white-space: nowrap;
+}
+
+.sa-score {
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.sa-score.perfect { color: #4ade80; }
+.sa-score.good    { color: #38bdf8; }
+.sa-score.low     { color: #f87171; }
+
+@media (max-width: 768px) {
+  .student-analytics {
+    grid-template-columns: 1fr;
+    margin: 1rem;
+  }
+}

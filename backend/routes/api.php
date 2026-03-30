@@ -531,6 +531,37 @@ Route::delete('/modules/{slug}/{chapter_id}/{subchapter_id}/quiz/{quiz_id}', fun
     ]);
 });
 
+// Student Analytics
+Route::get('/student/{id}/analytics', function($id) {
+    $moduleProgress = DB::table('progress')
+        ->join('modules', 'progress.module_id', '=', 'modules.id')
+        ->where('progress.student_id', $id)
+        ->where('progress.progress', '>', 0)
+        ->orderBy('progress.progress', 'desc')
+        ->select('modules.name', 'modules.slug', 'progress.progress')
+        ->get();
+
+    $challengeStats = DB::table('student_challenge_completion')
+        ->join('challenge', 'student_challenge_completion.challenge_id', '=', 'challenge.id')
+        ->leftJoin('badge', 'student_challenge_completion.badge_id', '=', 'badge.id')
+        ->where('student_challenge_completion.student_id', $id)
+        ->orderBy('student_challenge_completion.completed_at', 'desc')
+        ->select(
+            'challenge.title',
+            'student_challenge_completion.correct_answers',
+            'student_challenge_completion.total_questions',
+            'student_challenge_completion.completed_at',
+            'badge.name as badge_name',
+            'badge.image_path as badge_image'
+        )
+        ->get();
+
+    return response()->json([
+        'module_progress' => $moduleProgress,
+        'challenge_stats' => $challengeStats,
+    ]);
+});
+
 //Home Page Student
 Route::get('/student/{id}', function($id) {
     $student = DB::table('student')->where('id', $id)->first();

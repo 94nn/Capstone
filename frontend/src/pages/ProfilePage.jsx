@@ -9,6 +9,8 @@ import '../components/Footer.css';
 function ProfilePage() {
   const [student, setStudent] = useState(null);
   const [badgesList, setBadgesList] = useState([]);
+  const [moduleProgress, setModuleProgress] = useState([]);
+  const [challengeStats, setChallengeStats] = useState([]);
 
   const user = JSON.parse(localStorage.getItem("user") || "null");
   const student_id = localStorage.getItem("student_id");
@@ -58,6 +60,16 @@ function ProfilePage() {
 
     loadData();
   }, [student_id, admin_id, role]);
+
+  useEffect(() => {
+    if (role !== "student" || !student_id) return;
+    axios.get(`/api/student/${student_id}/analytics`)
+      .then(res => {
+        setModuleProgress(res.data.module_progress);
+        setChallengeStats(res.data.challenge_stats);
+      })
+      .catch(err => console.error("Failed to load analytics", err));
+  }, [student_id, role]);
 
   return (
     <div >
@@ -151,6 +163,59 @@ function ProfilePage() {
           </div>
         </aside>
       </div>
+      {role === "student" && (
+        <div className="student-analytics">
+          {/* Module Progress */}
+          <div className="analytics-card">
+            <p className="analytics-card-title">Module Progress</p>
+            {moduleProgress.length === 0 ? (
+              <p className="sa-empty">No modules started yet.</p>
+            ) : (
+              moduleProgress.map((m, i) => (
+                <div key={i} className="sa-module-row">
+                  <span className="sa-module-name">{m.name}</span>
+                  <div className="sa-bar-wrap">
+                    <div
+                      className={`sa-bar-fill ${m.progress === 100 ? 'complete' : ''}`}
+                      style={{ width: `${m.progress}%` }}
+                    />
+                  </div>
+                  <span className="sa-pct">{m.progress}%</span>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* Challenge Stats */}
+          <div className="analytics-card">
+            <p className="analytics-card-title">Challenge History</p>
+            {challengeStats.length === 0 ? (
+              <p className="sa-empty">No challenges completed yet.</p>
+            ) : (
+              challengeStats.map((c, i) => {
+                const pct = c.total_questions > 0
+                  ? Math.round((c.correct_answers / c.total_questions) * 100)
+                  : 0;
+                const scoreClass = pct === 100 ? 'perfect' : pct >= 50 ? 'good' : 'low';
+                return (
+                  <div key={i} className="sa-challenge-row">
+                    <div>
+                      <p className="sa-challenge-title">{c.title}</p>
+                      {c.badge_name && (
+                        <span className="sa-challenge-badge">🏅 {c.badge_name}</span>
+                      )}
+                    </div>
+                    <span className={`sa-score ${scoreClass}`}>
+                      {c.correct_answers}/{c.total_questions}
+                    </span>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
+      )}
+
       <Footer />
     </div>
   );

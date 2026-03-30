@@ -132,11 +132,7 @@ const NavBar = () => {
                     <span className="coins">{coins}</span>
                 </div>
                 <div className="profile-container" onClick={toggleDropdown} ref={profileContainerRef}>
-<<<<<<< HEAD
-                    <Avatar name={username || user?.name} src={profileImage} size={48} />
-=======
                     <Avatar name={username || user?.name} src={profileImage} size={36} />
->>>>>>> origin/main
                     <span className="profile-name">{user?.name}</span>
                 </div>
             </div>

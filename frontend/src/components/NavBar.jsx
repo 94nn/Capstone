@@ -3,7 +3,6 @@ import { NavLink, useNavigate, useLocation } from 'react-router-dom'
 import './NavBar.css'
 import NotificationPopup from './NotificationPopup'
 import axios from 'axios'
-import { getImageUrl } from "../utils/imageUrl";
 import Avatar from './Avatar';
 
 const NavBar = () => {
@@ -117,6 +116,9 @@ const NavBar = () => {
                 <NavLink to="/leaderboard" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
                     Leaderboard
                 </NavLink>
+                <NavLink to="/analytics" className={({ isActive }) => `nav-item ${isActive ? "nav-item-active" : ""}`}>
+                    Analytics
+                </NavLink>
             </nav>
             <div className="nav-bar-right">
                 <div className="bell-container" onClick={toggleNotif}>
@@ -130,7 +132,11 @@ const NavBar = () => {
                     <span className="coins">{coins}</span>
                 </div>
                 <div className="profile-container" onClick={toggleDropdown} ref={profileContainerRef}>
+<<<<<<< HEAD
                     <Avatar name={username || user?.name} src={profileImage} size={48} />
+=======
+                    <Avatar name={username || user?.name} src={profileImage} size={36} />
+>>>>>>> origin/main
                     <span className="profile-name">{user?.name}</span>
                 </div>
             </div>

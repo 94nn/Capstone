@@ -3,8 +3,11 @@ import "../components/Profile.css";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 import Avatar from "../components/Avatar";
+<<<<<<< HEAD
 import Footer from '../components/Footer';
 import '../components/Footer.css';
+=======
+>>>>>>> origin/main
 
 function ProfilePage() {
   const [student, setStudent] = useState(null);
@@ -60,6 +63,7 @@ function ProfilePage() {
   }, [student_id, admin_id, role]);
 
   return (
+<<<<<<< HEAD
     <div >
       <div className='main-layout main-layout-split profile-content'>
         {/* LEFT SIDE */}
@@ -70,6 +74,21 @@ function ProfilePage() {
               alt='banner'
               className='profile-banner'
             />
+=======
+    <div className='main-layout main-layout-split'>
+      {/* LEFT SIDE */}
+      <div className='profile-left'>
+        <div className='banner-container'>
+          <img
+            src='/images/banner.png'
+            alt='banner'
+            className='profile-banner'
+          />
+
+          <div className='profile-picture'>
+            <Avatar name={student?.username} src={student?.image_url} size={120} className="profilePicBanner" />
+          </div>
+>>>>>>> origin/main
 
             <div className='profile-picture'>
               <Avatar name={student?.username} src={student?.image_url} size={120} className="profilePicBanner" />

@@ -17,7 +17,8 @@ import AdminQuizPage from "../pages/AdminQuizPage";
 import FeedbackPage from "../pages/FeedbackPage";
 import AdminChallengePage from "../pages/AdminChallengePage";
 import AdminChallengeQuesPage from "../pages/AdminChallengeQuesPage";
-import AdminProfilePage from "../pages/AdminProfilePage";
+import AnalyticsPage from "../pages/AnalyticsPage";
+import AdminAnalyticsPage from "../pages/AdminAnalyticsPage";
 
 function AppRoutes() {
 	return (
@@ -54,6 +55,10 @@ function AppRoutes() {
             <Route path="/admin/:slug" element={<AdminChapterPage />} />
             <Route path="/admin/:slug/:chapter_id" element={<AdminSubChapterPage />} />
             <Route path="/admin/:slug/:chapter_id/:subchapter_id" element={<AdminQuizPage />} />
+
+            <Route path="/analytics" element={<AnalyticsPage />} />
+
+            <Route path="/admin/analytics" element={<AdminAnalyticsPage />} />
 
             <Route path="/feedback" element={<FeedbackPage />} />
 

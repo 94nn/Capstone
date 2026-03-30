@@ -3,6 +3,7 @@ import { NavLink, useNavigate, useLocation } from 'react-router-dom'
 import './NavBar.css'
 import NotificationPopup from './NotificationPopup'
 import axios from 'axios'
+import { getImageUrl } from "../utils/imageUrl";
 import Avatar from './Avatar';
 
 const NavBar = () => {

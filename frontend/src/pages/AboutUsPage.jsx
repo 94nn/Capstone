@@ -4,7 +4,6 @@ import './AboutUsPage.css'
 import axios from 'axios'
 import { getImageUrl } from '../utils/imageUrl'
 import Footer from '../components/Footer'
-import { getImageUrl } from '../utils/imageUrl'
 
 const AboutUsPage = () => {
     const [team, setTeam] = useState([])

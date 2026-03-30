@@ -17,6 +17,7 @@ import AdminQuizPage from "../pages/AdminQuizPage";
 import FeedbackPage from "../pages/FeedbackPage";
 import AdminChallengePage from "../pages/AdminChallengePage";
 import AdminChallengeQuesPage from "../pages/AdminChallengeQuesPage";
+import AdminProfilePage from "../pages/AdminProfilePage";
 import AnalyticsPage from "../pages/AnalyticsPage";
 import AdminAnalyticsPage from "../pages/AdminAnalyticsPage";
 

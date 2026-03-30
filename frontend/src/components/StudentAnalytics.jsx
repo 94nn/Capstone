@@ -19,7 +19,11 @@ function StudentAnalytics() {
     if (loading) return <p className="an-loading">Loading analytics...</p>
     if (!data) return <p className="an-loading">No data available.</p>
 
-    const { student, module_stats, challenge_stats, quiz_accuracy, attempts } = data
+    const student = data?.student || {}
+    const module_stats = data?.module_stats || []
+    const challenge_stats = data?.challenge_stats || []
+    const quiz_accuracy = data?.quiz_accuracy || []
+    const attempts = data?.attempts || []
 
     const tabs = [
         { key: 'overview', label: 'Overview' },

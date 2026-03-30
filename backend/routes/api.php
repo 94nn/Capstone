@@ -1037,6 +1037,21 @@ Route::post('/challenge-completion', function (Request $request) {
                     'badges_balance' => DB::raw("badges_balance + " . ($new_badge ? 1 : 0)),
                 ]);
 
+            if ($new_badge) {
+                $badge = DB::table('badge')->where('id', $badge_id)->first();
+                $challengeTitle = DB::table('challenge')->where('id', $challenge_id)->value('title');
+                if ($badge) {
+                    DB::table('notification')->insert([
+                        'student_id' => $student_id,
+                        'title'      => 'Badge Earned!',
+                        'message'    => "You earned the \"{$badge->name}\" badge for completing the {$challengeTitle} challenge!",
+                        'image_url'  => $badge->image_path,
+                        'is_read'    => 0,
+                        'created_at' => now(),
+                    ]);
+                }
+            }
+
             checkLevelUp($student_id);
         }
     } else {

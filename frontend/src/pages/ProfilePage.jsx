@@ -67,147 +67,148 @@ function ProfilePage() {
   }, [student_id, role]);
 
   return (
-    <div className='main-layout main-layout-split'>
-      {/* LEFT SIDE */}
-      <div className='profile-left'>
-        <div className='banner-container'>
-          <img
-            src='/images/banner.png'
-            alt='banner'
-            className='profile-banner'
-          />
-
-          <div className='profile-picture'>
-            <Avatar name={student?.username} src={student?.image_url} size={120} className="profilePicBanner" />
-          </div>
-
-          <div className='profile-section'>
-            <div className='profile-text'>
-              <h1 className='profilePage-name'>{student?.username}</h1>
-              <span className='profile-bio'>{student?.bio}</span>
-            </div>
-          </div>
-
-          <NavLink to={`/student/${student_id || admin_id}/edit`}>
-            <button className='edit-profile-btn'>Edit profile</button>
-          </NavLink>
-        </div>
-      </div>
-
-      {/* RIGHT SIDE */}
-      <aside className='sidebar'>
-        <div className='card profile-card'>
-          <div className='profilePage-character-container'>
+    <div>
+      <div className='main-layout main-layout-split'>
+        {/* LEFT SIDE */}
+        <div className='profile-left'>
+          <div className='banner-container'>
             <img
-              src={getCharacterImage(student?.level)}
-              alt='character'
-              className='profilePage-character-pic'
+              src='/images/banner.png'
+              alt='banner'
+              className='profile-banner'
             />
-            <div className='character-info'>
-              <h1>
-                <span className='character-name'>{student?.username}</span>
-              </h1>
-              <span className='character-level'>Level {student?.level}</span>
-            </div>
-          </div>
 
-          <div className='profile-stats'>
-            <div className='stat-container'>
+            <div className='profile-picture'>
+              <Avatar name={student?.username} src={student?.image_url} size={120} className="profilePicBanner" />
+            </div>
+
+            <div className='profile-section'>
+              <div className='profile-text'>
+                <h1 className='profilePage-name'>{student?.username}</h1>
+                <span className='profile-bio'>{student?.bio}</span>
+              </div>
+            </div>
+
+            <NavLink to={`/student/${student_id || admin_id}/edit`}>
+              <button className='edit-profile-btn'>Edit profile</button>
+            </NavLink>
+          </div>
+        </div>
+
+        {/* RIGHT SIDE */}
+        <aside className='sidebar'>
+          <div className='card profile-card'>
+            <div className='profilePage-character-container'>
               <img
-                src='/images/diamond.png'
-                alt='Points'
-                className='stat-pic'
+                src={getCharacterImage(student?.level)}
+                alt='character'
+                className='profilePage-character-pic'
               />
-              <span className='stat-number'>{student?.xp}</span>
-              <span className='stat-text'>XP</span>
+              <div className='character-info'>
+                <h1>
+                  <span className='character-name'>{student?.username}</span>
+                </h1>
+                <span className='character-level'>Level {student?.level}</span>
+              </div>
             </div>
 
-            <div className='stat-container'>
-              <img src='/images/badge.png' alt='Badges' className='stat-pic' />
-              <span className='stat-number'>{student?.badges}</span>
-              <span className='stat-text'>Badges</span>
-            </div>
-          </div>
-        </div>
-
-        <div className='profilePage-badge-card'>
-          <div className='profilePage-badge-header'>
-            <h3>Course Badges</h3>
-            <span>{student?.badges || 0}/{badgesList.length}</span>
-          </div>
-
-          <div className='profilePage-badge-grid'>
-            {badgesList.map((badge) => {
-              const earned = student?.badges_list?.includes(badge.id);
-              return (
+            <div className='profile-stats'>
+              <div className='stat-container'>
                 <img
-                  key={badge.id}
-                  src={`/${badge.image_path}`}
-                  alt={`badge-${badge.id}`}
-                  className={`profilePage-badge-icon ${earned ? "earned" : "locked"}`}
+                  src='/images/diamond.png'
+                  alt='Points'
+                  className='stat-pic'
                 />
-              );
-            })}
-          </div>
-          <p className='profilePage-badge-subtext'>
-            Complete a chapter to earn a badge - collect them all!
-          </p>
-        </div>
-      </aside>
+                <span className='stat-number'>{student?.xp}</span>
+                <span className='stat-text'>XP</span>
+              </div>
 
-      {role === "student" && (
-        <div className="student-analytics">
-          {/* Module Progress */}
-          <div className="analytics-card">
-            <p className="analytics-card-title">Module Progress</p>
-            {moduleProgress.length === 0 ? (
-              <p className="sa-empty">No modules started yet.</p>
-            ) : (
-              moduleProgress.map((m, i) => (
-                <div key={i} className="sa-module-row">
-                  <span className="sa-module-name">{m.name}</span>
-                  <div className="sa-bar-wrap">
-                    <div
-                      className={`sa-bar-fill ${m.progress === 100 ? 'complete' : ''}`}
-                      style={{ width: `${m.progress}%` }}
-                    />
-                  </div>
-                  <span className="sa-pct">{m.progress}%</span>
-                </div>
-              ))
-            )}
+              <div className='stat-container'>
+                <img src='/images/badge.png' alt='Badges' className='stat-pic' />
+                <span className='stat-number'>{student?.badges}</span>
+                <span className='stat-text'>Badges</span>
+              </div>
+            </div>
           </div>
 
-          {/* Challenge Stats */}
-          <div className="analytics-card">
-            <p className="analytics-card-title">Challenge History</p>
-            {challengeStats.length === 0 ? (
-              <p className="sa-empty">No challenges completed yet.</p>
-            ) : (
-              challengeStats.map((c, i) => {
-                const pct = c.total_questions > 0
-                  ? Math.round((c.correct_answers / c.total_questions) * 100)
-                  : 0;
-                const scoreClass = pct === 100 ? 'perfect' : pct >= 50 ? 'good' : 'low';
+          <div className='profilePage-badge-card'>
+            <div className='profilePage-badge-header'>
+              <h3>Course Badges</h3>
+              <span>{student?.badges || 0}/{badgesList.length}</span>
+            </div>
+
+            <div className='profilePage-badge-grid'>
+              {badgesList.map((badge) => {
+                const earned = student?.badges_list?.includes(badge.id);
                 return (
-                  <div key={i} className="sa-challenge-row">
-                    <div>
-                      <p className="sa-challenge-title">{c.title}</p>
-                      {c.badge_name && (
-                        <span className="sa-challenge-badge">🏅 {c.badge_name}</span>
-                      )}
-                    </div>
-                    <span className={`sa-score ${scoreClass}`}>
-                      {c.correct_answers}/{c.total_questions}
-                    </span>
-                  </div>
+                  <img
+                    key={badge.id}
+                    src={`/${badge.image_path}`}
+                    alt={`badge-${badge.id}`}
+                    className={`profilePage-badge-icon ${earned ? "earned" : "locked"}`}
+                  />
                 );
-              })
-            )}
+              })}
+            </div>
+            <p className='profilePage-badge-subtext'>
+              Complete a chapter to earn a badge - collect them all!
+            </p>
           </div>
-        </div>
-      )}
+        </aside>
 
+        {role === "student" && (
+          <div className="student-analytics">
+            {/* Module Progress */}
+            <div className="analytics-card">
+              <p className="analytics-card-title">Module Progress</p>
+              {moduleProgress.length === 0 ? (
+                <p className="sa-empty">No modules started yet.</p>
+              ) : (
+                moduleProgress.map((m, i) => (
+                  <div key={i} className="sa-module-row">
+                    <span className="sa-module-name">{m.name}</span>
+                    <div className="sa-bar-wrap">
+                      <div
+                        className={`sa-bar-fill ${m.progress === 100 ? 'complete' : ''}`}
+                        style={{ width: `${m.progress}%` }}
+                      />
+                    </div>
+                    <span className="sa-pct">{m.progress}%</span>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Challenge Stats */}
+            <div className="analytics-card">
+              <p className="analytics-card-title">Challenge History</p>
+              {challengeStats.length === 0 ? (
+                <p className="sa-empty">No challenges completed yet.</p>
+              ) : (
+                challengeStats.map((c, i) => {
+                  const pct = c.total_questions > 0
+                    ? Math.round((c.correct_answers / c.total_questions) * 100)
+                    : 0;
+                  const scoreClass = pct === 100 ? 'perfect' : pct >= 50 ? 'good' : 'low';
+                  return (
+                    <div key={i} className="sa-challenge-row">
+                      <div>
+                        <p className="sa-challenge-title">{c.title}</p>
+                        {c.badge_name && (
+                          <span className="sa-challenge-badge">🏅 {c.badge_name}</span>
+                        )}
+                      </div>
+                      <span className={`sa-score ${scoreClass}`}>
+                        {c.correct_answers}/{c.total_questions}
+                      </span>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </div>
+        )}
+      </div>
       <Footer />
     </div>
   );

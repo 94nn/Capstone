@@ -1,0 +1,443 @@
+.an-page {
+    min-height: 100vh;
+    padding: 24px 20px 80px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.an-hero {
+    text-align: center;
+    padding: 48px 24px 24px;
+}
+
+.an-hero-title {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 28px;
+    color: #ffffff;
+    margin: 0 0 16px;
+    letter-spacing: 1px;
+    text-shadow: 0 0 18px rgba(96, 165, 250, 0.3);
+}
+
+.an-hero-subtitle {
+    font-family: 'Lucida Sans', Geneva, Verdana, sans-serif;
+    font-size: 15px;
+    color: #94a3b8;
+    margin: 0;
+}
+
+.an-loading {
+    text-align: center;
+    color: #94a3b8;
+    font-family: 'Lucida Sans', Geneva, Verdana, sans-serif;
+    font-size: 15px;
+    padding: 80px 0;
+}
+
+/* ── Tabs ────────────────────────────────────── */
+.an-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+}
+
+.an-tab {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 10px;
+    color: #94a3b8;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1.5px solid rgba(148, 163, 184, 0.2);
+    border-radius: 6px;
+    padding: 14px 40px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 0.3px;
+}
+
+.an-tab:hover {
+    color: #e2e8f0;
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.06);
+}
+
+.an-tab--active {
+    color: #ffffff;
+    border-color: #3b82f6;
+    background: linear-gradient(135deg, rgba(30, 64, 175, 0.3), rgba(59, 130, 246, 0.15));
+    box-shadow: 0 0 16px rgba(59, 130, 246, 0.15);
+}
+
+/* ── Overview Stats ─────────────────────────── */
+.an-overview-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.an-overview-grid--5 {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.an-stat-card {
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-radius: 12px;
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.an-stat-label {
+    font-family: 'Lucida Sans', Geneva, Verdana, sans-serif;
+    font-size: 11px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.an-stat-value {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 22px;
+    color: #facc15;
+    text-shadow: 0 0 12px rgba(250, 204, 21, 0.3);
+}
+
+/* ── Sections ───────────────────────────────── */
+.an-section {
+    margin-bottom: 28px;
+}
+
+.an-section-title {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 13px;
+    color: #e2e8f0;
+    margin: 0 0 14px;
+    letter-spacing: 0.5px;
+}
+
+.an-card {
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-radius: 12px;
+    padding: 24px;
+    overflow-x: auto;
+}
+
+.an-empty {
+    font-family: 'Lucida Sans', Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    color: #64748b;
+    text-align: center;
+    padding: 24px 0;
+    margin: 0;
+}
+
+/* ── Tables ─────────────────────────────────── */
+.an-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.an-table th {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 9px;
+    color: #94a3b8;
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.an-table td {
+    font-family: 'Lucida Sans', Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    color: #e2e8f0;
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+}
+
+.an-table tbody tr:hover {
+    background: rgba(148, 163, 184, 0.05);
+}
+
+.an-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* ── Bar Chart ──────────────────────────────── */
+.an-bar-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.an-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.an-bar-label {
+    font-family: 'Lucida Sans', Geneva, Verdana, sans-serif;
+    font-size: 13px;
+    color: #e2e8f0;
+    min-width: 140px;
+    flex-shrink: 0;
+}
+
+.an-bar-rank {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 9px;
+    color: #facc15;
+    margin-right: 6px;
+}
+
+.an-bar-track {
+    flex: 1;
+    height: 14px;
+    background: #0f172a;
+    border-radius: 7px;
+    overflow: hidden;
+    border: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.an-bar-fill {
+    height: 100%;
+    border-radius: 7px;
+    transition: width 0.5s ease;
+    min-width: 2px;
+}
+
+.an-bar-fill--blue {
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+}
+
+.an-bar-fill--green {
+    background: linear-gradient(90deg, #22c55e, #4ade80);
+}
+
+.an-bar-value {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 9px;
+    color: #94a3b8;
+    min-width: 60px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+/* ── Donut Chart ────────────────────────────── */
+.an-chart-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.an-donut-card {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.an-donut {
+    position: relative;
+    width: 140px;
+    height: 140px;
+}
+
+.an-donut-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.an-donut-value {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 16px;
+    color: #ffffff;
+}
+
+.an-donut-label {
+    font-family: 'Lucida Sans', Geneva, Verdana, sans-serif;
+    font-size: 11px;
+    color: #94a3b8;
+    margin-top: 4px;
+}
+
+.an-donut-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-family: 'Lucida Sans', Geneva, Verdana, sans-serif;
+    font-size: 12px;
+    color: #64748b;
+}
+
+/* ── XP Level Bar ───────────────────────────── */
+.an-xp-level-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.an-xp-level-label {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 11px;
+    color: #facc15;
+    white-space: nowrap;
+}
+
+.an-xp-bar-track {
+    flex: 1;
+    height: 16px;
+    background: #0f172a;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.an-xp-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #facc15, #f59e0b);
+    border-radius: 8px;
+    transition: width 0.5s ease;
+}
+
+.an-xp-detail {
+    font-family: 'Lucida Sans', Geneva, Verdana, sans-serif;
+    font-size: 13px;
+    color: #94a3b8;
+    text-align: center;
+    margin: 12px 0 0;
+}
+
+/* ── Accuracy Badge ─────────────────────────── */
+.an-accuracy-badge {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 9px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.an-accuracy-badge--good {
+    color: #14532d;
+    background: #bbf7d0;
+}
+
+.an-accuracy-badge--mid {
+    color: #78350f;
+    background: #fef3c7;
+}
+
+.an-accuracy-badge--low {
+    color: #7f1d1d;
+    background: #fecaca;
+}
+
+/* ── Type Badge ─────────────────────────────── */
+.an-type-badge {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 8px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.an-type-badge--quiz {
+    color: #1e3a8a;
+    background: #dbeafe;
+}
+
+.an-type-badge--challenge {
+    color: #7c2d12;
+    background: #fed7aa;
+}
+
+.an-date-cell {
+    font-size: 12px;
+    color: #64748b;
+    white-space: nowrap;
+}
+
+/* ── Student Cell ───────────────────────────── */
+.an-student-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ── Responsive ─────────────────────────────── */
+@media (max-width: 1024px) {
+    .an-page {
+        padding: 24px 30px 60px;
+    }
+
+    .an-overview-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .an-overview-grid--5 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .an-bar-label {
+        min-width: 100px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 640px) {
+    .an-page {
+        padding: 16px 16px 40px;
+    }
+
+    .an-hero-title {
+        font-size: 18px;
+    }
+
+    .an-overview-grid,
+    .an-overview-grid--5 {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .an-stat-value {
+        font-size: 18px;
+    }
+
+    .an-tabs {
+        gap: 6px;
+    }
+
+    .an-tab {
+        font-size: 8px;
+        padding: 10px 16px;
+    }
+
+    .an-bar-label {
+        min-width: 80px;
+        font-size: 11px;
+    }
+
+    .an-bar-value {
+        min-width: 45px;
+        font-size: 8px;
+    }
+
+    .an-chart-row {
+        flex-direction: column;
+        align-items: center;
+    }
+}

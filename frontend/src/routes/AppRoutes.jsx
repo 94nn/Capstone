@@ -20,6 +20,7 @@ import AdminChallengeQuesPage from "../pages/AdminChallengeQuesPage";
 import AdminProfilePage from "../pages/AdminProfilePage";
 import AnalyticsPage from "../pages/AnalyticsPage";
 import AdminAnalyticsPage from "../pages/AdminAnalyticsPage";
+import StudentAnalytics from "../components/StudentAnalytics";
 
 function AppRoutes() {
 	return (
@@ -44,6 +45,8 @@ function AppRoutes() {
 			<Route path="/challenge/:slug" element={<ChallengeQuestionPage />} />
 
 			<Route path="/leaderboard" element={<LeaderboardPage />}/>
+
+            <Route path="/analytics" element={<StudentAnalytics />} />
 
 			<Route path="/EditProfilePage" element={<EditProfilePage />} />
 

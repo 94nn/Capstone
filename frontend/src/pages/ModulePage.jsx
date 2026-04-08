@@ -1,10 +1,14 @@
 import ModuleLayout from "../components/ModuleLayout";
+import Footer from "../components/Footer";
 
 function ModulePage() {
     return (
-        <main className="main-layout-full">
-            <ModuleLayout />
-        </main>
+        <div>
+            <main className="main-layout-full">
+                <ModuleLayout />
+            </main>
+            <Footer />
+        </div>
     );
 }
 
